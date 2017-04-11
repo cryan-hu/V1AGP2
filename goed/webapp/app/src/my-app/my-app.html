@@ -174,7 +174,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <app-toolbar class="toolbar" >
         <paper-icon-button  icon="menu" drawer-toggle></paper-icon-button>
         <span>[[_ar_selected_object.title]] ([[_systeemdatumlokaal]]) </span>
-        <span class="logt" verborgen$="[[_are_strings_equal(rol, 'undefined')]]" >Ingelogd als [[rol]] [[docentnaam]]</span>
+        <span class="logt" verborgen$="[[_are_strings_equal(rol, 'undefined')]]" >Ingelogd als [[rol]] [[docentnaam]][[studentnaam]] [[studentnummer]]</span>
       </app-toolbar>
  
       <iron-pages 
@@ -228,7 +228,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                    title="UITLOGGEN"
                    element="my-logout">
             <paper-material elevation="1">
-              <my-logout rol="{{rol}}" docentnaam="{{docentnaam}}"></my-logout> <!-- rol="{{rol}}" docentnaam="{{docentnaam}}" kan mogelijk weg -->
+              <my-logout rol="{{rol}}" docentnaam="{{docentnaam}}" studentnaam="{{studentnaam}}" studentnummer="{{studentnummer}}"></my-logout>
             </paper-material>
           </section>
 		  
@@ -286,6 +286,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           docentnaam:{
             type: String,
             notify: true
+          },
+          studentnaam: {
+            type: String,
+            notify: true,
+          },
+          studentnummer:{
+            type: String,
+            notify: true,
           },
           username: {
             type: String,
@@ -384,8 +392,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         _ophalen_login_response_handler: function(request) {
           console.log("_ophalen_login_response_handler username="+this.username);
-		  this.rol = request.detail.response.rol;
+		      this.rol = request.detail.response.rol;
       	  this.docentnaam = request.detail.response.docentnaam;
+          this.studentnummer = request.detail.response.studentnummer;
+          this.studentnaam = request.detail.response.studentnaam;
           /* this._password = ""; /* om snel te kunnen testen is dit verwijderd */
           if (this.rol == "undefined") {                    //als aanloggen mislukt
             this.$.email_element.invalid = true;                // markeer email-element

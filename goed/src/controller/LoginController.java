@@ -45,6 +45,20 @@ class LoginController implements Handler {
 		
 		JsonObjectBuilder lJsonObjectBuilder = Json.createObjectBuilder();
 		lJsonObjectBuilder.add("rol", lRol);																	// en teruggekregen gebruikersrol als JSON-object...
+		
+		if(lRol == "docent"){
+			String lDocentnaam = informatieSysteem.getDocent(lGebruikersnaam).getVolledigeNaam();
+			System.out.println(lDocentnaam);
+			lJsonObjectBuilder.add("docentnaam", lDocentnaam);
+		}
+		if(lRol == "student"){
+			String lStudentnaam = informatieSysteem.getStudent(lGebruikersnaam).getVolledigeNaam();
+			int lStudentnummer = informatieSysteem.getStudent(lGebruikersnaam).getStudentNummer();
+			System.out.println(lStudentnaam +  " " + lStudentnummer);
+			lJsonObjectBuilder.add("studentnaam", lStudentnaam);
+			lJsonObjectBuilder.add("studentnummer", lStudentnummer);
+		}
+		
 		String lJsonOut = lJsonObjectBuilder.build().toString();
 		
 		conversation.sendJSONMessage(lJsonOut);															// terugsturen naar de Polymer-GUI!

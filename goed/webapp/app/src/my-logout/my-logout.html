@@ -34,12 +34,22 @@
             type: String,
             notify: true,
           },
+        studentnaam: {
+            type: String,
+            notify: true,
+          },
+        studentnummer:{
+            type: String,
+            notify: true,
+          },
         },		
 		
 		
         _logout_clicked: function() {
           this.rol = "undefined";
           this.docentnaam = null;
+          this.studentnummer = null;
+          this.studentnaam = null;
           this._go_home();
          },
         

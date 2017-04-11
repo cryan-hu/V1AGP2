@@ -66,9 +66,9 @@ public abstract class Persoon {
 	public String getVolledigeNaam(){
 		String volledigeNaam = voornaam;
 		if (this.tussenvoegsel != null && this.tussenvoegsel != "" && this.tussenvoegsel.length() > 0) {
-			volledigeNaam += " " + this.tussenvoegsel + " ";
+			volledigeNaam += " " + this.tussenvoegsel;
 		}
-		volledigeNaam += this.getAchternaam();
+		volledigeNaam += " " + this.getAchternaam();
 		return volledigeNaam;		
 	}
 
