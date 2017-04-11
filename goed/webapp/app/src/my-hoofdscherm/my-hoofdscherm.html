@@ -17,7 +17,7 @@
 		margin-right: auto;
 	  }
     iron-data-table{
-      width: 19%;
+      width: 17%;
       display: inline-block;
       height: 700px;
     }
@@ -51,7 +51,15 @@
 
     </style>
   <span><iron-icon icon="arrow-back" on-click="terug"></iron-icon>Week 19<iron-icon icon="arrow-forward" on-click="verder"></iron-icon></span>
-	<iron-ajax 	url="data2.json" on-response="handleResponse" last-response="{{data}}" auto></iron-ajax>
+	<iron-ajax
+    id="ajax_rooster_ophalen" 
+    url="/student/rooster/ophalen" 
+    method="POST" 
+    on-response="_rooster_ophalen_response_handler" 
+    last-response="{{data}}" 
+    handle-as="json"
+    auto>      
+  </iron-ajax>
 
   <iron-data-table items="[[data.maandag.lesgegevens]]" selection-enabled multi-selection>
     <data-table-column name="{{ma}}">
@@ -122,16 +130,6 @@
 	<tr><td><paper-button id="beterMelden" class="optie" raised>Beter melden</paper-button></td>
 	<td><paper-button id="afwezigheidVerwijderen" class="optie" raised>Afwezigheid verwijderen</paper-button></td></tr>
 	</table>
-
-
-
-     <iron-ajax
-      id="ajax_rooster_ophalen"
-      method="POST"
-      url="/student/rooster/ophalen"
-      handle-as="json"
-      on-response="_rooster_ophalen_response_handler">
-    </iron-ajax>
   </template>
 
   <script>
@@ -178,7 +176,11 @@
           selectedZondag:{
             type: Date,
             notify: true,
-          }
+          },
+          zondagDate:{
+            type: Date,
+            notify: true,
+          },
         },	
 
 		    handleResponse: function(e) {
@@ -208,10 +210,17 @@
            },
 
            _rooster_ophalen_response_handler: function(request) {
-             console.log("_rooster_ophalen_response_handler aantal studenten="+request.detail.response.length);
-             this._c_studenten = request.detail.response;
-             this.data =  request.detail.response
-             console.log(this._c_studenten);
+            let options = {  
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+            };
+             console.log(request.detail.response);
+              this.ma = "Maandag " + request.detail.response.maandag.datum;
+              this.di = "Dinsdag " + request.detail.response.dinsdag.datum;
+              this.wo = "Woensdag " + request.detail.response.woensdag.datum;
+              this.do = "Donderdag " + request.detail.response.donderdag.datum;
+              this.vr = "Vrijdag " + request.detail.response.vrijdag.datum; 
            },
           _get_zondag: function(d){
                 d = new Date(d);
@@ -225,15 +234,34 @@
                 month: '2-digit',
                 day: '2-digit',
             };
-
-            this.selectedZondag = this._get_zondag(new Date()).toLocaleString('nl-nl', options); //returned als 09-04-2017
-            console.log(this.selectedZondag)
+            this.zondagDate = this._get_zondag(new Date());
+            this.selectedZondag = this.zondagDate.toLocaleString('nl-nl', options); //returned als 09-04-2017;
+            console.log(this.selectedZondag);
+            this._rooster_ophalen_request_handler();
           },
           terug: function(){
-            console.log("Terug");
+            let options = {  
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+            };
+            var d = this.zondagDate;
+            d.setDate(d.getDate() - 7);
+            this.selectedZondag = d.toLocaleString('nl-nl', options); //returned als 09-04-2017
+            console.log(this.selectedZondag);
+            this._rooster_ophalen_request_handler();
           },
           verder: function(){
-            console.log("Verder");
+            let options = {  
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+            };
+            var d = this.zondagDate;
+            d.setDate(d.getDate() + 7);
+            this.selectedZondag = d.toLocaleString('nl-nl', options); //returned als 09-04-2017
+            console.log(this.selectedZondag);
+            this._rooster_ophalen_request_handler();
           },
       });
     })();
