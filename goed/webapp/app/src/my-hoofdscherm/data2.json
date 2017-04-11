@@ -1,0 +1,181 @@
+{
+	"maandag": 
+	
+		{
+			"datum" : "07-03",
+			"lesgegevens": [
+				  {"les": {
+				    "vak": "TICT-V1OODC-15_2016",
+					"startTijd": "10:00",
+					"eindTijd": "12:30",
+					"emailDocent": "peter.schuler@hu.nl",
+					"lokaal": "DL200-3.91",
+					"klas": "TICT-SIE-V1D"
+				  }},
+				  {"les": {
+				    "vak": "TICT-V1OODC-15_2016",
+					"startTijd": "10:00",
+					"eindTijd": "12:30",
+					"emailDocent": "peter.schuler@hu.nl",
+					"lokaal": "DL200-3.91",
+					"klas": "TICT-SIE-V1D"
+				  }},
+				  {"les": {
+				    "vak": "TICT-V1OODC-15_2016",
+					"startTijd": "10:00",
+					"eindTijd": "12:30",
+					"emailDocent": "peter.schuler@hu.nl",
+					"lokaal": "DL200-3.91",
+					"klas": "TICT-SIE-V1D"
+				  }}
+			]
+		},
+	"dinsdag": 
+	
+		{
+			"datum" : "08-04",
+			"lesgegevens": [
+				  {"les": {
+				    "vak": "TICT-V1OODC-15_2016",
+					"startTijd": "10:00",
+					"eindTijd": "12:30",
+					"emailDocent": "peter.schuler@hu.nl",
+					"lokaal": "DL200-3.91",
+					"klas": "TICT-SIE-V1D"
+				  }},
+				  {"les": {
+				    "vak": "TICT-V1OODC-15_2016",
+					"startTijd": "10:00",
+					"eindTijd": "12:30",
+					"emailDocent": "peter.schuler@hu.nl",
+					"lokaal": "DL200-3.91",
+					"klas": "TICT-SIE-V1D"
+				  }},
+				  {"les": {
+				    "vak": "TICT-V1OODC-15_2016",
+					"startTijd": "10:00",
+					"eindTijd": "12:30",
+					"emailDocent": "peter.schuler@hu.nl",
+					"lokaal": "DL200-3.91",
+					"klas": "TICT-SIE-V1D"
+				  }},
+				  {"les": {
+				    "vak": "TICT-V1OODC-15_2016",
+					"startTijd": "10:00",
+					"eindTijd": "12:30",
+					"emailDocent": "peter.schuler@hu.nl",
+					"lokaal": "DL200-3.91",
+					"klas": "TICT-SIE-V1D"
+				  }},
+				  {"les": {
+				    "vak": "TICT-V1OODC-15_2016",
+					"startTijd": "10:00",
+					"eindTijd": "12:30",
+					"emailDocent": "peter.schuler@hu.nl",
+					"lokaal": "DL200-3.91",
+					"klas": "TICT-SIE-V1D"
+				  }},
+				  {"les": {
+				    "vak": "TICT-V1OODC-15_2016",
+					"startTijd": "10:00",
+					"eindTijd": "12:30",
+					"emailDocent": "peter.schuler@hu.nl",
+					"lokaal": "DL200-3.91",
+					"klas": "TICT-SIE-V1D"
+				  }}
+			]
+		},
+	"woensdag": 
+	
+		{
+			"datum" : "09-03",
+			"lesgegevens": [
+				  {"les": {
+				    "vak": "TICT-V1OODC-15_2016",
+					"startTijd": "10:00",
+					"eindTijd": "12:30",
+					"emailDocent": "peter.schuler@hu.nl",
+					"lokaal": "DL200-3.91",
+					"klas": "TICT-SIE-V1D"
+				  }},
+				  {"les": {
+				    "vak": "TICT-V1OODC-15_2016",
+					"startTijd": "10:00",
+					"eindTijd": "12:30",
+					"emailDocent": "peter.schuler@hu.nl",
+					"lokaal": "DL200-3.91",
+					"klas": "TICT-SIE-V1D"
+				  }},
+				  {"les": {
+				    "vak": "TICT-V1OODC-15_2016",
+					"startTijd": "10:00",
+					"eindTijd": "12:30",
+					"emailDocent": "peter.schuler@hu.nl",
+					"lokaal": "DL200-3.91",
+					"klas": "TICT-SIE-V1D"
+				  }}
+			]
+		},
+"donderdag": 
+	
+		{
+			"datum" : "10-03",
+			"lesgegevens": [
+				  {"les": {
+				    "vak": "TICT-V1OODC-15_2016",
+					"startTijd": "10:00",
+					"eindTijd": "12:30",
+					"emailDocent": "peter.schuler@hu.nl",
+					"lokaal": "DL200-3.91",
+					"klas": "TICT-SIE-V1D"
+				  }},
+				  {"les": {
+				    "vak": "TICT-V1OODC-15_2016",
+					"startTijd": "10:00",
+					"eindTijd": "12:30",
+					"emailDocent": "peter.schuler@hu.nl",
+					"lokaal": "DL200-3.91",
+					"klas": "TICT-SIE-V1D"
+				  }},
+				  {"les": {
+				    "vak": "TICT-V1OODC-15_2016",
+					"startTijd": "10:00",
+					"eindTijd": "12:30",
+					"emailDocent": "peter.schuler@hu.nl",
+					"lokaal": "DL200-3.91",
+					"klas": "TICT-SIE-V1D"
+				  }}
+			]
+		},
+"vrijdag": 
+	
+		{
+			"datum" : "11-03",
+			"lesgegevens": [
+				  {"les": {
+				    "vak": "TICT-V1OODC-15_2016",
+					"startTijd": "10:00",
+					"eindTijd": "12:30",
+					"emailDocent": "peter.schuler@hu.nl",
+					"lokaal": "DL200-3.91",
+					"klas": "TICT-SIE-V1D"
+				  }},
+				  {"les": {
+				    "vak": "TICT-V1OODC-15_2016",
+					"startTijd": "10:00",
+					"eindTijd": "12:30",
+					"emailDocent": "peter.schuler@hu.nl",
+					"lokaal": "DL200-3.91",
+					"klas": "TICT-SIE-V1D"
+				  }},
+				  {"les": {
+				    "vak": "TICT-V1OODC-15_2016",
+					"startTijd": "10:00",
+					"eindTijd": "12:30",
+					"emailDocent": "peter.schuler@hu.nl",
+					"lokaal": "DL200-3.91",
+					"klas": "TICT-SIE-V1D"
+				  }}
+			]
+		}		
+}

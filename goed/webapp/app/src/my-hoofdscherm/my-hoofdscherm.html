@@ -1,0 +1,228 @@
+
+<dom-module id="my-hoofdscherm">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+      span {
+        @apply(--paper-font-body1);
+      }
+	  paper-button.optie{
+		width: 220px;
+	  }
+	  table#opties{
+	  margin-left: auto;
+		margin-right: auto;
+	  }
+    iron-data-table{
+      width: 19%;
+      display: inline-block;
+      height: 700px;
+    }
+    data-table-row[selected]{
+      border: 1px solid gray;
+      border-right: 1px solid gray;
+      background-color: #F5F6CE;
+    }
+    data-table-row[header]{
+      border: 0px solid gray;
+      height: 50px;
+    }
+    data-table-row{
+      border: 1px solid gray;
+    }
+    data-table-cell{
+      width: 100%;
+      height: 90px;
+      padding: 7px;
+    }
+    .tijden{
+      font-weight: bold;
+    }
+    span{
+      display: block;
+      text-align: center;
+    }
+
+    </style>
+  <div id="student" verboregen
+  <span><iron-icon icon="arrow-back"></iron-icon>Week 19<iron-icon icon="arrow-forward"></iron-icon></span>
+	<iron-ajax 	url="data2.json" on-response="handleResponse" last-response="{{data}}" auto></iron-ajax>
+
+  <iron-data-table items="[[data.maandag.lesgegevens]]" selection-enabled multi-selection>
+    <data-table-column name="{{ma}}">
+      <template>
+      <table>
+      <tr><td colspan="2">[[item.les.vak]]</td></tr>
+      <tr class="tijden"><td>[[item.les.startTijd]]</td><td>[[item.les.eindTijd]]</td></tr>
+      <tr><td>[[item.les.lokaal]]</td><td>[[item.les.klas]]</td></tr>
+      <tr><td colspan="2">[[item.les.emailDocent]]</td></tr>
+      </table>
+      </template>
+    </data-table-column>
+  </iron-data-table>
+  <iron-data-table items="[[data.dinsdag.lesgegevens]]" selection-enabled multi-selection>
+    <data-table-column name="{{di}}">
+      <template>
+      <table>
+      <tr><td colspan="2">[[item.les.vak]]</td></tr>
+      <tr class="tijden"><td>[[item.les.startTijd]]</td><td>[[item.les.eindTijd]]</td></tr>
+      <tr><td>[[item.les.lokaal]]</td><td>[[item.les.klas]]</td></tr>
+      <tr><td colspan="2">[[item.les.emailDocent]]</td></tr>
+      </table>
+      </template>
+    </data-table-column>
+  </iron-data-table>
+  <iron-data-table items="[[data.woensdag.lesgegevens]]" selection-enabled multi-selection>
+    <data-table-column name={{wo}}>
+      <template>
+      <table>
+      <tr><td colspan="2">[[item.les.vak]]</td></tr>
+      <tr class="tijden"><td>[[item.les.startTijd]]</td><td>[[item.les.eindTijd]]</td></tr>
+      <tr><td>[[item.les.lokaal]]</td><td>[[item.les.klas]]</td></tr>
+      <tr><td colspan="2">[[item.les.emailDocent]]</td></tr>
+      </table>
+      </template>
+    </data-table-column>
+  </iron-data-table>
+  <iron-data-table items="[[data.donderdag.lesgegevens]]" selection-enabled multi-selection>
+    <data-table-column name={{do}}>
+      <template>
+      <table>
+      <tr><td colspan="2">[[item.les.vak]]</td></tr>
+      <tr class="tijden"><td>[[item.les.startTijd]]</td><td>[[item.les.eindTijd]]</td></tr>
+      <tr><td>[[item.les.lokaal]]</td><td>[[item.les.klas]]</td></tr>
+      <tr><td colspan="2">[[item.les.emailDocent]]</td></tr>
+      </table>
+      </template>
+    </data-table-column>
+  </iron-data-table>
+    <iron-data-table items="[[data.vrijdag.lesgegevens]]" selection-enabled multi-selection>
+    <data-table-column name={{vr}}>
+      <template>
+      <table>
+      <tr><td colspan="2">[[item.les.vak]]</td></tr>
+      <tr class="tijden"><td>[[item.les.startTijd]]</td><td>[[item.les.eindTijd]]</td></tr>
+      <tr><td>[[item.les.lokaal]]</td><td>[[item.les.klas]]</td></tr>
+      <tr><td colspan="2">[[item.les.emailDocent]]</td></tr>
+      </table>
+      </template>
+    </data-table-column>
+  </iron-data-table>
+  
+ 
+	<table id="opties">
+	<tr>
+	<td><paper-button on-click="_rooster_ophalen_request_handler" id="ziekMelden" class="optie" raised>Ziek melden</paper-button></td>
+	<td><paper-button id="afwezigMelden" class="optie" raised>Afwezig melden</paper-button></td></tr>
+	<tr><td><paper-button id="beterMelden" class="optie" raised>Beter melden</paper-button></td>
+	<td><paper-button id="afwezigheidVerwijderen" class="optie" raised>Afwezigheid verwijderen</paper-button></td></tr>
+	</table>
+
+
+
+     <iron-ajax
+      id="ajax_rooster_ophalen"
+      method="POST"
+      url="/student/rooster/ophalen"
+      handle-as="json"
+      on-response="_rooster_ophalen_response_handler">
+    </iron-ajax>
+	
+
+  </template>
+
+  <script>
+    (function() {
+      'use strict';
+      /* _xxxx private              : geen external data binding      - geen notify
+         _c_xx private constant     : geen external binding, constant - geen notify
+         c_xx  public constant      : one way external databinding [[c_xx]] - geen notify nodig
+         xxxx  public               : two way external databinding {{xxxx}} - notify nodig
+      */
+      Polymer({
+        is: 'my-hoofdscherm',
+
+        properties: {
+		
+          rol: {
+            type: String,
+            notify: true,
+          },
+          ma: {
+            type: String,
+            notify: true,
+          },
+          di: {
+            type: String,
+            notify: true,
+          },
+          wo: {
+            type: String,
+            notify: true,
+          },
+          do: {
+            type: String,
+            notify: true,
+          },
+          vr: {
+            type: String,
+            notify: true,
+          },
+          c_username:{
+            type: String,
+            notify: true,
+          },
+          selectedZondag:{
+            type: Date,
+            notify: true,
+          }
+        },	
+
+		handleResponse: function(e) {
+          console.log(e.detail.response);
+          this.ma = "Maandag " + e.detail.response.maandag.datum;
+          this.di = "Dinsdag " + e.detail.response.dinsdag.datum;
+          this.wo = "Woensdag " + e.detail.response.woensdag.datum;
+          this.do = "Donderdag " + e.detail.response.donderdag.datum;
+          this.vr = "Vrijdag " + e.detail.response.vrijdag.datum;                                        
+
+        },
+      
+        _go_home: function() {
+          var lApp = document.querySelector('my-app');  //het polymer element <my-app>
+          var lAppRouter = lApp.$.approuter;            // het html-element <app-route> met id=approuter
+          lAppRouter.data={page: ""};                   // vul het data attribute met de homepage url
+                                                        // door de two way binding in <app-route> en <app-location>
+                                                        // zal ook de url echt wijzigen
+         },
+        _rooster_ophalen_request_handler: function() {
+             console.log("_rooster_ophalen_request_handler user="+this.c_username);
+             this.$.ajax_rooster_ophalen.contentType="application/json";
+             this.$.ajax_rooster_ophalen.body={
+               "username":this.c_username ,  "maandagVanDeWeek":this.selectedZondag
+             };
+             this.$.ajax_rooster_ophalen.generateRequest();
+           },
+
+           _rooster_ophalen_response_handler: function(request) {
+             console.log("_rooster_ophalen_response_handler aantal studenten="+request.detail.response.length);
+             this._c_studenten = request.detail.response;
+             console.log(this._c_studenten);
+           },
+          _get_zondag: function(d){
+                d = new Date(d);
+                var day = d.getDay(),
+                diff = d.getDate() - day + (day == 0 ? -6:0); // adjust when day is sunday
+                return new Date(d.setDate(diff));
+          },
+          ready: function(){
+            this.selectedZondag = this._get_zondag(new Date());
+            console.log(this.selectedZondag)
+          }
+      });
+    })();
+  </script>
+</dom-module>

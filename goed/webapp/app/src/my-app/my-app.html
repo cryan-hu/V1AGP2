@@ -1,0 +1,523 @@
+<!doctype html>
+<!-- editing in eclipse to change tabs to spaces
+1.Click Window » Preferences
+2.Expand General » Editors
+3.Click Text Editors
+4.Check Insert spaces for tabs
+5.Click OK ad nauseam to apply the changes.
+-->
+<!--
+@license
+Copyright (c) 2015 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="elements.html"> <!-- gewijzigd tov PSK -->
+<link rel="import" href="../my-hoofdscherm/my-hoofdscherm.html"> <!-- gewijzigd tov PSK -->
+<link rel="import" href="../my-logout/my-logout.html"> <!-- gewijzigd tov PSK -->
+<link rel="import" href="../my-medestudenten/my-medestudenten.html"> <!-- gewijzigd tov PSK -->
+
+<dom-module id="my-app">
+  <template>
+    <style>
+      :host {
+        --app-primary-color: #4285f4;
+        --app-secondary-color: black;
+        --app-very-lightgray: #fafafa;
+        --app-lightgray: #EEE;
+        --app-blue: #1a9fd9;
+        display: block;
+        font-size: 14px;                                        /*toegevoegd tov psk                */
+        font-weight: 400;                                       /*toegevoegd tov psk                */
+      }
+
+      app-drawer {                                                   /*toegevoegd tov psk */ 
+         --app-drawer-content-container: {                      
+          background-color: var(--app-lightgray);  
+         } 
+       }
+      .toolbar {
+        background: var(--app-blue);                            
+        color: white;
+        height: 56px;                                           /* to have a fixed height */
+      }
+      
+      #toolbarlogo {
+        height: 37px;
+        background: white;
+        padding: 4px;                                           /* to adjust the icon position */
+        padding-left: 11px;                                     /* to adjust the icon position */
+      }
+      
+      .drawer-list {
+        margin: 0 20px;
+        font-size: 14px;				                        /*toegevoegd tov psk */
+        font-weight: 400;                                       /*toegevoegd tov psk */
+       }
+ 
+       .drawer-list a {
+         display: block;
+         padding: 0 16px;
+         text-decoration: none;
+         color: black;
+         line-height: 40px;
+      }
+
+      .drawer-list a.iron-selected {            
+        color: #3f51b5;							/* blue-ish, gewijzigd tov psk      */     
+        color: var(--app-blue);
+        font-weight: bold;
+      }
+                                
+      .drawer-list a[verborgen] {               /* toegevoegd tov PSK               */	
+                        				        /* als verborgen true is dan ..     */
+        display: none;							/* onzichtbaar maken                */
+      }
+
+      span.logt[verborgen]{
+        display: none;
+      }
+      span.logt{
+        margin-left: auto;
+      }
+ 
+      paper-material {
+        padding: 16px 16px 16px  16px;
+        width: calc(98% - 132px);
+        margin: 16px auto 16px auto;
+        background: var(--app-lightgray);  
+      }
+       
+    </style>
+    
+    <app-location route="{{_ar_route}}" use-hash-as-path></app-location>
+ 
+    <!--  Matches everything starting with / 
+          and stores it in _ar_route_data.page
+          id toegevoegd zodat element ook in andere polymerElementen benaderbaar wordt
+          middels: document.querySelector('my-app').$.approuter.data={page: "xx"}
+    --> 
+    <app-route id="approuter"
+      route="{{_ar_route}}"
+      pattern="/:page"
+      data="{{_ar_route_data}}"
+      tail="{{_ar_subroute}}">
+    </app-route>
+    <!--  Matches everything starting with /xxx/ 
+          and stores it in _ar_subroute_data.subpage
+          geen id nodig -->
+    <app-route 
+      route="{{_ar_subroute}}"
+      pattern="/:subpage"
+      data="{{_ar_subroute_data}}"
+      tail="{{_ar_subsubroute}}">
+    </app-route>
+    <!--  Matches everything starting with /xxx/yyy/ 
+          and stores it in _ar_subsubroute_data.subsubpage
+          geen id nodig -->
+    <app-route 
+      route="{{_ar_subsubroute}}"
+      pattern="/:subsubpage"
+      data="{{_ar_subsubroute_data}}">
+    </app-route>
+     
+  
+    <!-- Main Toolbar -->
+    <app-drawer-layout  fullbleed> 
+ 	  <app-drawer id="drawer"> 
+ 	    <!--  _ar_page bepaald welk menu geselecteerd is. 
+ 			  het menu dat de gebruiker klikt veroorzaakt een andere url
+ 			  deze url wordt door <app-location> en <app-route> omgezet in variabelen
+ 			  _ar_route , _ar_route_data en _ar_subroute
+ 			  let op: _ar_page wordt niet door de selectie gewijzigd maar 
+ 					  vanuit de URL via een observer functie
+ 					  er is dus een sterke gelijkenis tussen _ar_page en de URL
+ 					  met name URL "xx/yy"  wordt _ar_page "xx_yy" maar ook
+ 						       URL "/"      wordt _ar_page "inloggen" en
+ 						       overige URL  wordt _ar_page "view404". 
+ 		-->
+ 		<!-- blue (empty) toolbar in menu -->
+        <app-toolbar class="toolbar">
+          <img id="toolbarlogo" src="../../images/hu_logo.png" alt="HU" />
+        </app-toolbar>
+        <iron-selector selected="[[_ar_page]]" attr-for-selected="name" class="drawer-list" role="navigation">
+          <a name="inlog" href$="[[_c_baseURL]]" verborgen$="[[_are_strings_equal(rol, 'docent', 'student')]]">
+            <iron-icon icon="home"></iron-icon>
+            <span>Inloggen</span>
+          </a>
+          <!-- altijd beschikbaar--------------------------------------------------------- -->
+ 
+          <a name="logout" href$="[[_c_baseURL]]logout"  verborgen$="[[_are_strings_equal(rol, 'undefined')]]">
+            <iron-icon icon="account-box"></iron-icon>
+            <span>Uitloggen</span>
+          </a>
+		      <a name="hoofdscherm" href$="[[_c_baseURL]]hoofdscherm"  verborgen$="[[_are_strings_equal(rol, 'undefined')]]">
+            <iron-icon icon="account-box"></iron-icon>
+            <span>Hoofdscherm</span>
+          </a>
+          <a name="medestudenten" href$="[[_c_baseURL]]medestudenten"  verborgen$="[[_are_strings_equal(rol, 'undefined', 'docent')]]">
+            <iron-icon icon="account-box"></iron-icon>
+            <span>Medestudenten</span>
+          </a>
+
+          <!-- beschikbaar voor docent---------------------------------------------------- -->
+
+        </iron-selector>
+      </app-drawer>
+
+      <!-- Main Content -->
+      <!-- blue title toolbar in menu -->
+      <app-toolbar class="toolbar" >
+        <paper-icon-button  icon="menu" drawer-toggle></paper-icon-button>
+        <span>[[_ar_selected_object.title]] ([[_systeemdatumlokaal]]) </span>
+        <span class="logt" verborgen$="[[_are_strings_equal(rol, 'undefined')]]" >Ingelogd als [[rol]] [[docentnaam]]</span>
+      </app-toolbar>
+ 
+      <iron-pages 
+        attr-for-selected="name" 
+        selected="[[_ar_page]]" 
+        selected-item="{{_ar_selected_object}}"
+        fallback-selection="view404"
+        role="main">
+        <!-- in iron-pages kun je niet handmatig een element selecteren.
+       	     Het is dus zinloos om te coderen selected=_ar_page met {{}}
+       	     Wel wordt _ar_selected_object gevuld met de sectie die hoort bij _ar_page
+       	     Via een observer kan hieruit de naam van het binnen de sectie horend
+       	     element bepaald worden gebruik makend van _ar_selected_object.attributes["element$"].nodeValue
+       	     en de titel via _ar_selected_object.title
+        -->
+ 
+        <!-- sections voor iedereen ---------------------------------------------------------------- -->
+        <!-- element$="none" of weglaten van element$ geeft beide aan dat er geen polymerElement gebruikt zal gaan worden -->
+        <section name="inloggen" title="INLOGGEN" element$="none"> 
+		
+		    <paper-toast id="toast_reeds_aangelogd" duration="0" text="U bent al ingelogd!">
+				<paper-button on-click="_toast_clicked" class="toast-button">Sluiten</paper-button>
+			</paper-toast>
+			<paper-material elevation="1">
+				<p>Log hier in!</p>
+				<div class="usericondiv">
+					<iron-icon icon="icons:perm-identity" class="my-icon"></iron-icon>
+				</div>
+				<div class="my-input">
+				<paper-input id="email_element" on-keydown="_checkForEnter" label="gebruikersnaam" value="{{username}}"></paper-input>
+				<paper-input id="wachtwoord_element" on-keydown="_checkForEnter" label="wachtwoord" type="password" value="{{_password}}"></paper-input>
+				</div>
+				<paper-button
+					id="login_button_element"
+					class="my-button"
+					on-click="_ophalen_login_request_handler"
+					raised>
+					Inloggen
+				</paper-button>
+				<iron-ajax
+					id="ajax_login"
+					method="POST"
+					url="/login"
+					handle-as="json"
+					on-response="_ophalen_login_response_handler">
+				</iron-ajax>
+			</paper-material>
+        </section>
+
+          <section name="logout" 
+                   title="UITLOGGEN"
+                   element="my-logout">
+            <paper-material elevation="1">
+              <my-logout rol="{{rol}}" docentnaam="{{docentnaam}}"></my-logout> <!-- rol="{{rol}}" docentnaam="{{docentnaam}}" kan mogelijk weg -->
+            </paper-material>
+          </section>
+		  
+		  <section name="hoofdscherm" 
+                   title="HOOFDSCHERM"
+                   element="my-hoofdscherm">
+            <paper-material elevation="2">
+              <my-hoofdscherm
+              	c_username="[[username]]">
+              </my-hoofdscherm>
+            </paper-material>
+          </section>
+
+      <section name="medestudenten" 
+                   title="MEDESTUDENTEN"
+                   element="my-medestudenten">
+            <paper-material elevation="1">
+              <!--
+                  c_visible="true" als deze section geselecteerd is.
+                  LET OP: boolean values moeten als string doorgegeven worden,
+                          vandaar de quotes rondom de function aanroep.
+                          De aanwezige literal waarde wordt met enkele quotes doorgegeven
+              -->
+              <my-medestudenten
+                c_visible="[[_are_strings_equal(_ar_page, 'medestudenten')]]"
+                c_rol="[[rol]]"
+                c_username="[[username]]">
+              </my-medestudenten>
+            </paper-material>
+          </section>
+
+
+</template>
+  <script>
+    (function() {
+      'use strict';
+
+      /* _xxxx private              : geen external data binding      - geen notify
+         _c_xx private constant     : geen external binding, constant - geen notify
+         c_xx  public constant      : one way external databinding [[c_xx]] - geen notify nodig
+         xxxx  public               : two way external databinding {{xxxx}} - notify nodig
+      */
+      Polymer({
+        is: 'my-app',
+
+        properties: {
+		  _password: {
+            type: String,
+            value: "geheim",                           /* om snel te testen zonder steeds input te doen */
+          },
+          rol: {
+            type: String,
+            notify: true,
+          },
+          docentnaam:{
+            type: String,
+            notify: true
+          },
+          username: {
+            type: String,
+            value: "jorrit.strikwerda@student.hu.nl",              /* om snel te testen zonder steeds input te doen */
+            notify: true
+          },
+          _c_baseURL: {
+            type: String,
+            value: "/#/",                          
+          },
+          _ar_page: {
+            type: String,
+            reflectToAttribute: true,
+            value: "",
+          },
+          _ar_route: {                  //route-object betreffende deel 1 van de URL vanwege pattern "/"
+            type: Object,
+          },
+          _ar_route_data: {                 
+            type: Object,               //{page: "xxx"} met xxx url-deel1
+          },
+          _ar_selected_object: {
+            type: Object,               //active section
+                                        //.element=xxx met xxx is de naam van het polymer element
+                                        //.title=yyyy  met yyy is de title voor in de header
+            observer: '_ar_selected_object_changed',
+          },
+          _ar_subroute: {							
+            type: Object,				//route-object dat niet matched vanuit <_ar_route> dwz alles na /xxx/ in de url
+          },
+          _ar_subroute_data: {                           
+            type: Object,               //{subpage: "yyy"} dat matched na /xxx/ in de url
+          },
+          _ar_subsubroute: {                           
+            type: Object,               //route-object dat niet matched vanuit <_ar_subroute> dwz alles na /xxx/yyy/ in de url
+          },
+          _ar_subsubroute_data: {                           
+              type: Object,             //{subsubpage: "zzz"} dat matched na /xxx/yyy/ in de url
+          },
+         _systeemdatumlokaal: {		//used as global in many element
+            type: String,
+          },
+          _systeemdatumstandaard: {		
+            type: String,
+          },
+          _username: {		
+            type: String,
+          },
+        },  //end of properties
+		  _checkForEnter: function (e) {
+          if (e.currentTarget.id == "email_element") {
+            if (e.keyCode === 13) {
+              var lWachtwoordElement =
+                this.$.wachtwoord_element;          /* haal uit de $ collectie van alle polymer element
+                                                       het element met id = "wachtwoord_element" */
+            lWachtwoordElement.focus();             // plaats de cursor er in
+            }
+          } else if (e.keyCode === 13) {
+            var lLoginButton =
+              this.$.login_button_element;          /* haal uit de $ collectie van alle polymer element
+                                                       het element met id = "login_button_element" */
+            this.$.login_button_element.click();    // forceer een klik
+          }
+        },
+
+        _go_home: function() {
+          var lApp = document.querySelector('my-app');  //het polymer element <my-app>
+          var lAppRouter = lApp.$.approuter;            // het html-element <app-route> met id=approuter
+          lAppRouter.data={page: "hoofdscherm"};                   // vul het data attribute met de homepage url
+                                                        // door de two way binding in <app-route> en <app-location>
+                                                        // zal ook de url echt wijzigen
+         },
+        _go_medestudenten: function() {
+          var lApp = document.querySelector('my-app');  //het polymer element <my-app>
+          var lAppRouter = lApp.$.approuter;            // het html-element <app-route> met id=approuter
+          lAppRouter.data={page: "medestudenten"};                   // vul het data attribute met de homepage url
+                                                        // door de two way binding in <app-route> en <app-location>
+                                                        // zal ook de url echt wijzigen
+         },
+
+         _ophalen_login_request_handler: function() {
+          console.log("_ophalen_login_request_handler username=" + this.username);
+          if (this.rol == "undefined") {
+            this.$.ajax_login.contentType="application/json";
+            this.$.ajax_login.body={
+              "username":this.username,
+              "password":this._password
+            };
+            this.$.ajax_login.generateRequest();
+          } else {
+            var lToast = this.$.toast_reeds_aangelogd;     // meldt reeds aangelogd
+            lToast.open();                                  /* het sluiten van deze error verwijst  */
+                                                            /* terug naar home page */
+          }
+        },
+
+        _ophalen_login_response_handler: function(request) {
+          console.log("_ophalen_login_response_handler username="+this.username);
+		  this.rol = request.detail.response.rol;
+      	  this.docentnaam = request.detail.response.docentnaam;
+          /* this._password = ""; /* om snel te kunnen testen is dit verwijderd */
+          if (this.rol == "undefined") {                    //als aanloggen mislukt
+            this.$.email_element.invalid = true;                // markeer email-element
+            this.$.wachtwoord_element.invalid = true;           // markeer wachtwoord-element
+
+          } else {                                            // als aanloggen ok
+            this.$.email_element.invalid = false;               // verwijder fout markering
+            this.$.wachtwoord_element.invalid = false;          // verwijder fout markering
+            this._go_home();                                    // ga naar de home page.
+          }
+        },
+
+        _toast_clicked: function(e) {
+          var lToast = e.path[1];       //path[0] is de button. path[1] is de owner etc.
+          lToast.toggle();              //sluit de foutmelding
+          this._go_home();              // en ga verder op de home page
+        },        
+
+		
+        observers: [
+          '_ar_route_data_page_changed(_ar_route_data.page)',
+          '_ar_subroute_data_subpage_changed(_ar_subroute_data.subpage)',
+        ],
+        
+        _ar_route_data_page_changed: function(pNewPage) {
+          if (!this.$.drawer.persistent) {
+            this.$.drawer.close();
+          }
+          if ((pNewPage == "") || (pNewPage == undefined)){
+              this._ar_page = "inloggen";
+            } else {
+              this._ar_page = pNewPage;         
+            } 
+        },
+         
+         _ar_selected_object_changed: function(pSelectedObject) {
+          // Load page import on demand. Show 404 page if fails
+          if (pSelectedObject == undefined) {
+            //no element to load
+            return
+          }
+          var lAttributeNode = pSelectedObject.attributes["element$"];
+          if (lAttributeNode== undefined) {
+              //no element to load
+              return
+          }
+          var lElementName = lAttributeNode.nodeValue;
+          if (lElementName== "none") {
+              //no element to load
+              return
+         }
+          var resolvedPageUrl = this.resolveUrl("../" + lElementName  + '/' + lElementName + '.html');
+          this.importHref(resolvedPageUrl, null, this._ar_showPage404, true);
+        },
+
+        _ar_showPage404: function() {
+          this._ar_page = 'view404';
+        },
+
+        _ar_subroute_data_subpage_changed(pNewSubpage) {
+          if ((pNewSubpage == "") || (pNewSubpage == undefined)){
+        	 // nothing to do 
+          } else {
+            this._ar_page =this._ar_route_data.page + "_" + pNewSubpage;
+          }
+        },
+       
+        /* de volgende functie wordt gebruikt om een boolean te produceren
+          die true is als de twee strings gelijk zijn.
+          wordt gebruikt in index.html
+        */
+	    _are_strings_equal: function(p_str1, p_str2,p_str3) {
+	      //console.log("_are_strings_equal: " + p_str1 + " met: " + p_str2);
+        if (p_str3 == null){
+	      return (p_str1==p_str2);
+        }
+        else{
+          return ((p_str1==p_str2) || (p_str1==p_str3))
+        }
+	    },   
+	    ready: function()  {
+	      /* deze functie wordt eenamalig aangeroepen wanneer de applicatie start
+		  /*  _systeemdatumlokaal variabele wordt gebruikt om de huidige systeem datum (of de test systeemdatum)
+		       in de pagina kop te vermelden
+		  */
+		  /* gebruikt het Javascript date object om op basis van een standaarddatumstring
+		     een object te maken en via dit een lokaledatumstring te maken */
+		  this.rol = "undefined";
+		  var eenDatumObject             = new Date(); // is vandaag
+		  this._systeemdatumstandaard    = this.date_to_standaard_string(eenDatumObject);
+		  this._systeemdatumlokaal       = eenDatumObject.toLocaleDateString();
+		  console.log("application ready to run");
+        },
+	      
+         // convert a JSDate-object to standaard format (=YYYY-MM-DD)
+	    date_to_standaard_string: function(p_JSDate) {
+	      var lJaar = p_JSDate.getFullYear();
+          var lMaand= p_JSDate.getMonth() + 1;
+          var lDag = p_JSDate.getDate();
+
+          var lMaandStr = lMaand.toString();
+          if (lMaandStr.length == 1) {
+            lMaandStr = "0"+ lMaandStr;
+          }
+          var lDagStr = lDag.toString();
+          if (lDagStr.length == 1) {
+            lDagStr = "0"+ lDagStr;
+          }
+          var lString =
+            lJaar.toString() + "-" +
+            lMaandStr + "-" +
+            lDagStr;
+          return lString;
+        },
+      
+	    // convert a YY-MM-DD string to local format (dutch lokaal: DD-MM-YYYY)
+	    standaarddatumstring_to_lokaledatumstring: function(p_standaarddatumstring) {
+	      var lokaledatumstring = "";
+	      if (p_standaarddatumstring !="") {
+	        /* gebruikt het Javascript date object om op basis van een standaarddatumstring
+	           een object te maken en via dit een lokaledatumstring te maken */
+	        var eenDatumObject = new Date(p_standaarddatumstring);
+	        lokaledatumstring = eenDatumObject.toLocaleDateString();
+	        /*deze conversie werk zowel voor nederlandse windows als internationale windows. */
+	      }
+	      return lokaledatumstring;
+        },
+      
+      });
+
+    })();
+  </script>
+  
+</dom-module>
+
