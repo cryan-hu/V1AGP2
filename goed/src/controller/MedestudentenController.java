@@ -44,9 +44,13 @@ public class MedestudentenController implements Handler {
 		} else if(conversation.getRequestedURI().startsWith("/student/rooster/ophalen")){
 			JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
 			String lGebruikersnaam = lJsonObjectIn.getString("username");
-			String selectedDatum = lJsonObjectIn.getString("maandagVanDeWeek");
-			
-			System.out.println(selectedDatum);
+			Date selectedDatum =new Date();
+			try {
+				selectedDatum = new SimpleDateFormat("dd-MM-yyyy").parse(lJsonObjectIn.getString("maandagVanDeWeek")); //de zondag van de week
+			} catch (ParseException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
 			Student lStudentZelf = informatieSysteem.getStudent(lGebruikersnaam);
 			String  lGroepIdZelf = lStudentZelf.getGroepId();
 			
