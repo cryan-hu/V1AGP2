@@ -26,32 +26,48 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
   <template>
     <style>
       :host {
-        --app-primary-color: #4285f4;
-        --app-secondary-color: black;
-        --app-very-lightgray: #fafafa;
-        --app-lightgray: #EEE;
-        --app-blue: #1a9fd9;
+        --app-primary-color: #1a237e;
+        --app-secondary-color: #3f51b5;
+        --app-highlight: #d32f2f;
+        --app-lightgray: #eceff1;
+        --app-bluegrey: #eceff1;
+        --app-white: #ffffff;
         display: block;
         font-size: 14px;                                        /*toegevoegd tov psk                */
         font-weight: 400;                                       /*toegevoegd tov psk                */
+      	background-color: var(--app-bluegrey);
       }
 
       app-drawer {                                                   /*toegevoegd tov psk */ 
          --app-drawer-content-container: {                      
-          background-color: var(--app-lightgray);  
+          background-color: var(--app-highlight);  
          } 
        }
+       
+      /*Main toolbar*/
       .toolbar {
-        background: var(--app-blue);                            
+        @apply(--layout-center-justified);
+        background: var(--app-primary-color);                            
         color: white;
         height: 56px;                                           /* to have a fixed height */
+        padding-left: 450px;
+      }
+      /*Onderste toolbar*/
+      .toolbar2 {
+        @apply(--layout-center-justified);
+        background: var(--app-secondary-color);                            
+        color: white;
+        height: 30px;                                           /* to have a fixed height */
+        font-size: 13px;
       }
       
       #toolbarlogo {
+      	@apply(--layout-fit);
         height: 37px;
-        background: white;
-        padding: 4px;                                           /* to adjust the icon position */
-        padding-left: 11px;                                     /* to adjust the icon position */
+        background: none;
+        padding: 10px;                                           /* to adjust the icon position */
+        padding-left: 350px;                                     /* to adjust the icon position */
+      	margin: 0 10px;
       }
       
       .drawer-list {
@@ -62,15 +78,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
  
        .drawer-list a {
          display: block;
-         padding: 0 16px;
+         padding: 0 160px;
          text-decoration: none;
-         color: black;
+         color: white;
          line-height: 40px;
       }
 
       .drawer-list a.iron-selected {            
-        color: #3f51b5;							/* blue-ish, gewijzigd tov psk      */     
-        color: var(--app-blue);
+		/* rode highlight, gewijzigd tov psk      */     
+        color: var(--app-highlight);
         font-weight: bold;
       }
                                 
@@ -78,20 +94,41 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         				        /* als verborgen true is dan ..     */
         display: none;							/* onzichtbaar maken                */
       }
+      /*navigatiemenu links*/
+      
+ 	  .drawer-list2 {
+ 	  	margin: 0 10px;
+        font-size: 14px;				                        /*toegevoegd tov psk */
+        font-weight: 400;
+ 	  }
+ 	  
+ 	  .drawer-list2 a {
+         display: block;
+         padding: 0 40px;
+         text-decoration: none;
+         color: white;
+         line-height: 40px;
+      }
 
-      span.logt[verborgen]{
-        display: none;
+      .drawer-list2 a.iron-selected {            
+							/* rode highlight, gewijzigd tov psk      */     
+        color: var(--app-secondary-color);
+        font-weight: bold;
+        background: var(--app-bluegrey);
       }
-      span.logt{
-        margin-left: auto;
+                                
+      .drawer-list2 a[verborgen] {               /* toegevoegd tov PSK               */	
+                        				        /* als verborgen true is dan ..     */
+        display: none;							/* onzichtbaar maken                */
       }
- 
+      
       paper-material {
         padding: 16px 16px 16px  16px;
-        width: calc(98% - 132px);
+        width: calc(80% - 132px);
         margin: 16px auto 16px auto;
-        background: var(--app-lightgray);  
+        background: var(--app-lightgrey);  
       }
+       
        
     </style>
     
@@ -128,7 +165,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
      
   
     <!-- Main Toolbar -->
-    <app-drawer-layout  fullbleed> 
+    <app-drawer-layout  force-narrow> 
  	  <app-drawer id="drawer"> 
  	    <!--  _ar_page bepaald welk menu geselecteerd is. 
  			  het menu dat de gebruiker klikt veroorzaakt een andere url
@@ -145,17 +182,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <app-toolbar class="toolbar">
           <img id="toolbarlogo" src="../../images/hu_logo.png" alt="HU" />
         </app-toolbar>
-        <iron-selector selected="[[_ar_page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-          <a name="inlog" href$="[[_c_baseURL]]" verborgen$="[[_are_strings_equal(rol, 'docent', 'student')]]">
-            <iron-icon icon="home"></iron-icon>
-            <span>Inloggen</span>
-          </a>
+          <iron-selector selected="[[_ar_page]]" attr-for-selected="name" class="drawer-list2" role="navigation">
           <!-- altijd beschikbaar--------------------------------------------------------- -->
  
-          <a name="logout" href$="[[_c_baseURL]]logout"  verborgen$="[[_are_strings_equal(rol, 'undefined')]]">
-            <iron-icon icon="account-box"></iron-icon>
-            <span>Uitloggen</span>
-          </a>
 		      <a name="hoofdscherm" href$="[[_c_baseURL]]hoofdscherm"  verborgen$="[[_are_strings_equal(rol, 'undefined', 'docent')]]">
             <iron-icon icon="account-box"></iron-icon>
             <span>Hoofdscherm</span>
@@ -179,7 +208,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <app-toolbar class="toolbar" >
         <paper-icon-button  icon="menu" drawer-toggle></paper-icon-button>
         <span>[[_ar_selected_object.title]] ([[_systeemdatumlokaal]]) </span>
-        <span class="logt" verborgen$="[[_are_strings_equal(rol, 'undefined')]]" >Ingelogd als [[rol]] [[docentnaam]][[studentnaam]] [[studentnummer]]</span>
+        <iron-selector selected="[[_ar_page]]" attr-for-selected="name" class="drawer-list" role="navigation">
+          <a name="inlog" href$="[[_c_baseURL]]" verborgen$="[[_are_strings_equal(rol, 'docent', 'student')]]">
+            <iron-icon icon="home"></iron-icon>
+            <span>Inloggen</span>
+          </a>
+        
+        <a name="logout" href$="[[_c_baseURL]]logout"  verborgen$="[[_are_strings_equal(rol, 'undefined')]]">
+            <iron-icon icon="account-box"></iron-icon>
+            <span>Uitloggen</span>
+          </a>
+      </iron-selector>
+      </app-toolbar>
+ 
+ 	  <app-toolbar class="toolbar2">
+      	<span class="logt" verborgen$="[[_are_strings_equal(rol, 'undefined')]]" >Ingelogd als [[rol]] [[docentnaam]][[studentnaam]] [[studentnummer]]</span>
       </app-toolbar>
  
       <iron-pages 
