@@ -41,8 +41,8 @@ public class StudentenController implements Handler {
 	
 		//csv elementen uitlezen
 		
-			ArrayList <Student> alleStudenten = new ArrayList<Student> alleStudenten;
-			ArrayList <Klas> alleKlassen = new ArrayList <Klas> alleKlassen; 
+			ArrayList <Student> alleStudenten = new ArrayList<Student>();
+			ArrayList <Klas> alleKlassen = new ArrayList <Klas>(); 
 			Student lStudent;
 			for (Klas k : alleKlassen) {			
 				String csvFile = "././CSV/" + k.getNaam() + ".csv";
@@ -64,7 +64,7 @@ public class StudentenController implements Handler {
 						String lStudentNrString  = element[0];
 						int lStudentNr = Integer.parseInt(lStudentNrString);
 						lStudent = new Student(element[3], element[2], element[1], "geheim", gebruikersnaam, lStudentNr); //Volgorde 3-2-1 = voornaam, tussenvoegsel en achternaam
-						pStudenten.add(lStudent);
+						alleStudenten.add(lStudent);
 						k.voegStudentToe(lStudent);
 						
 						//System.out.println(gebruikersnaam);
@@ -85,12 +85,12 @@ public class StudentenController implements Handler {
 					}
 				}	
 				
-			}
-		}	
+			}	
 		
 		JsonArrayBuilder lJsonArrayBuilder = Json.createArrayBuilder();						// Uiteindelijk gaat er een array...
 		
-		for (Student lMedeStudent : lStudentenVanKlas) {									        // met daarin voor elke medestudent een JSON-object... 
+		
+		for (Student lMedeStudent : alleStudenten) {									        // met daarin voor elke medestudent een JSON-object... 
 			if (lMedeStudent == lStudentZelf) 																			// behalve de student zelf...
 				continue;
 			else {
@@ -101,7 +101,7 @@ public class StudentenController implements Handler {
 				lJsonObjectBuilderVoorStudent
 					.add("id", lMedeStudent.getStudentNummer())																	//vul het JsonObject		     
 					.add("firstName", lMedeStudent.getVoornaam())	
-					.add("lastName", lLastName)				     
+					.add("lastName", lLastName);				     
 			  
 			  lJsonArrayBuilder.add(lJsonObjectBuilderVoorStudent);													//voeg het JsonObject aan het array toe				     
 			}

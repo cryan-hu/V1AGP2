@@ -252,12 +252,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                    element="my-studenten">
             <paper-material elevation="2">
               <my-studenten
-              	c_username="[[username]]">
+              	c_username="[[username]]"
+                c_visible="[[_are_strings_equal(_ar_page, 'studenten')]]"
+                c_rol="[[rol]]">
               </my-studenten>
             </paper-material>
           </section>
 
       <section name="medestudenten" 
+
                    title="MEDESTUDENTEN"
                    element="my-medestudenten">
             <paper-material elevation="1">
