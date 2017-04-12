@@ -40,13 +40,29 @@ public class StudentenController implements Handler {
 	private void ophalen(Conversation conversation) {
 		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
 		String lGebruikersnaam = lJsonObjectIn.getString("username");
-		Student lStudentZelf = informatieSysteem.getStudent(lGebruikersnaam);
-		String  lGroepIdZelf = lStudentZelf.getGroepId();
+		Student lStudentZelf = informatieSysteem.getStudent("jorrit.strikwerda@student.hu.nl");
+		Student lStudentZelf1 = informatieSysteem.getStudent("boris.blom@student.hu.nl");
+		Student lStudentZelf2 = informatieSysteem.getStudent("fabio.boer@student.hu.nl");
+		Student lStudentZelf3 = informatieSysteem.getStudent("owen.ashby@student.hu.nl");
+		Student lStudentZelf4= informatieSysteem.getStudent("martijn.bakker@student.hu.nl");
+		Student lStudentZelf5 = informatieSysteem.getStudent("ties.brouwer@student.hu.nl");
 	
 		//csv elementen uitlezen
-		
+			Klas lKlas1 = informatieSysteem.getKlasVanStudent(lStudentZelf);
+			Klas lKlas2 = informatieSysteem.getKlasVanStudent(lStudentZelf1);
+			Klas lKlas3 = informatieSysteem.getKlasVanStudent(lStudentZelf2);
+			Klas lKlas4 = informatieSysteem.getKlasVanStudent(lStudentZelf3);
+			Klas lKlas5 = informatieSysteem.getKlasVanStudent(lStudentZelf4);
+			Klas lKlas6 = informatieSysteem.getKlasVanStudent(lStudentZelf5);
 			ArrayList <Student> alleStudenten = new ArrayList<Student>();
 			ArrayList <Klas> alleKlassen = new ArrayList <Klas>(); 
+			alleKlassen.add(lKlas1);
+			alleKlassen.add(lKlas2);
+			alleKlassen.add(lKlas3);
+			alleKlassen.add(lKlas4);
+			alleKlassen.add(lKlas5);
+			alleKlassen.add(lKlas6);
+			
 			Student lStudent;
 			for (Klas k : alleKlassen) {			
 				String csvFile = "././CSV/" + k.getNaam() + ".csv";
@@ -63,11 +79,12 @@ public class StudentenController implements Handler {
 					    // use comma as separator
 						String[] element = line.split(cvsSplitBy);
 						String gebruikersnaam = (element[3] + "." + element[2] + element[1] + "@student.hu.nl").toLowerCase();
+						String klas = k.getNaam();
 						// verwijder spaties tussen  dubbele voornamen en tussen bv van der 
 						gebruikersnaam = gebruikersnaam.replace(" ","");
 						String lStudentNrString  = element[0];
 						int lStudentNr = Integer.parseInt(lStudentNrString);
-						lStudent = new Student(element[3], element[2], element[1], "geheim", gebruikersnaam, lStudentNr); //Volgorde 3-2-1 = voornaam, tussenvoegsel en achternaam
+						lStudent = new Student(element[3], element[2], element[1], "geheim", gebruikersnaam, lStudentNr,klas); //Volgorde 3-2-1 = voornaam, tussenvoegsel en achternaam
 						alleStudenten.add(lStudent);
 						k.voegStudentToe(lStudent);
 						
@@ -95,23 +112,20 @@ public class StudentenController implements Handler {
 		
 		
 		for (Student lMedeStudent : alleStudenten) {									        // met daarin voor elke medestudent een JSON-object... 
-			if (lMedeStudent == lStudentZelf) 																			// behalve de student zelf...
-				continue;
-			else {
-				String lGroepIdAnder = lMedeStudent.getGroepId();
-				boolean lZelfdeGroep = ((lGroepIdZelf != "") && (lGroepIdAnder==lGroepIdZelf));
 				JsonObjectBuilder lJsonObjectBuilderVoorStudent = Json.createObjectBuilder(); // maak het JsonObject voor een student
 				String lLastName = lMedeStudent.getVolledigeAchternaam();
+				String klas2 = lMedeStudent.getKlas();
 				lJsonObjectBuilderVoorStudent
 					.add("id", lMedeStudent.getStudentNummer())																	//vul het JsonObject		     
 					.add("firstName", lMedeStudent.getVoornaam())	
-					.add("lastName", lLastName);				     
+					.add("lastName", lLastName)
+					.add("klas", klas2);
 			  
 			  lJsonArrayBuilder.add(lJsonObjectBuilderVoorStudent);													//voeg het JsonObject aan het array toe				     
-			}
 		}
 		
     String lJsonOutStr = lJsonArrayBuilder.build().toString();												// maak er een string van
+    System.out.println(lJsonOutStr);
 		conversation.sendJSONMessage(lJsonOutStr);																				// string gaat terug naar de Polymer-GUI!
 	}
 
@@ -160,7 +174,10 @@ public class StudentenController implements Handler {
 
 	@Override
 	public void handle(Conversation conversation) {
-		// TODO Auto-generated method stub
-		
+		if (conversation.getRequestedURI().startsWith("/student/studenten/ophalen")) {
+			ophalen(conversation);
+		}else{
+		opslaan(conversation);
+		}
 	}
 }

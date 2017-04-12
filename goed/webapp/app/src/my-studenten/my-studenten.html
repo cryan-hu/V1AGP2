@@ -69,7 +69,7 @@
         <paper-button on-click="_toast_clicked" class="toast-button">Sluiten</paper-button>
     </paper-toast>
 
-    <div class="my-title">Overzicht van alle studenten als [[c_username]] [[c_visible]] [[c_rol]]</div>
+    <div class="my-title">Overzicht van alle studenten als [[c_username]]</div>
     <table>
       <tr>
         <th class="voornaam">Voornaam </th>
@@ -80,6 +80,7 @@
         <tr>
           <td class="voornaam">  <a href$="#/student/details/[[item.firstName]]-[[item.lastName]]">[[item.firstName]]</a></td>
           <td class="achternaam"><a href$="#/student/details/[[item.firstName]]-[[item.lastName]]">[[item.lastName]] </a></td>
+          <td class="klas"><a href$="#/student/details/[[item.firstName]]-[[item.lastName]]">[[item.klas]] </a></td>
           <td class="groepid">
              <paper-checkbox
               class="my-check"

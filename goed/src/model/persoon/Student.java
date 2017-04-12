@@ -11,6 +11,7 @@ public class Student extends Persoon {
 	private int studentNummer;
 	private String groepId;
 	private ArrayList<Afwezigheid> afwezigheden;
+	private String klas;
 
 	public Student(
 		String pVoornaam, 
@@ -29,6 +30,26 @@ public class Student extends Persoon {
 		this.setStudentNummer(pStudentNummer);
 		this.afwezigheden = new ArrayList<Afwezigheid>();
 	}
+	
+	public Student(
+			String pVoornaam, 
+			String pTussenvoegsel, 
+			String pAchternaam, 
+			String pWachtwoord, 
+			String pGebruikersnaam,
+			int pStudentNummer,
+			String klas){
+			super(
+				pVoornaam, 
+				pTussenvoegsel, 
+				pAchternaam, 
+				pWachtwoord, 
+				pGebruikersnaam);
+			this.setGroepId("");
+			this.setStudentNummer(pStudentNummer);
+			this.afwezigheden = new ArrayList<Afwezigheid>();
+			this.klas = klas;
+		}
 
 	public Afwezigheid getActieveZiektemelding(){
 		Calendar nowDate = Calendar.getInstance(); 
@@ -64,8 +85,12 @@ public class Student extends Persoon {
     this.groepId= pGroepId;	
   }
 
-	
-	
+	public void setKlas(String klas) {
+		this.klas = klas;
+	}
+	public String getKlas() {
+		return this.klas;
+	}
 	
 	
 	
