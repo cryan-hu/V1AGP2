@@ -91,23 +91,23 @@
     </table>
     <paper-button
       class="my-button"
-      on-click="_medestudenten_opslaan_request_handler">Opslaan
+      on-click="_studenten_opslaan_request_handler">Opslaan
     </paper-button>
 
     <iron-ajax
-      id="ajax_medestudenten_ophalen"
+      id="ajax_studenten_ophalen"
       method="POST"
-      url="/student/medestudenten/ophalen"
+      url="/student/studenten/ophalen"
       handle-as="json"
-      on-response="_medestudenten_ophalen_response_handler">
+      on-response="_studenten_ophalen_response_handler">
     </iron-ajax>
  
     <iron-ajax
-      id="ajax_medestudenten_opslaan"
+      id="ajax_studenten_opslaan"
       method="POST"
-      url="/student/medestudenten/opslaan"
+      url="/student/studenten/opslaan"
       handle-as="json"
-      on-response="_medestudenten_opslaan_response_handler">
+      on-response="_studenten_opslaan_response_handler">
     </iron-ajax>
 
   </template>
@@ -154,7 +154,7 @@
         _initializing : function() {
           if (this.c_visible) {                                 // zodra zichtbaar geworden moet er wat worden gedaan
             if (this.c_rol=="docent") {                        // voor studenten
-              this._medestudenten_ophalen_request_handler();    //    haal info op van server
+              this._studenten_ophalen_request_handler();    //    haal info op van server
             } else {                                            // na handmatige url wijziging zonder login
               var lToast = this.$.toast_invalid_aanroep;        // meldt ongeldige aanroep
               lToast.open();                                    /* het sluiten van deze error verwijst  */
@@ -163,32 +163,32 @@
           }
         },
 
-        _medestudenten_ophalen_request_handler: function() {
-          console.log("_medestudenten_ophalen_request_handler user="+this.c_username);
-          this.$.ajax_medestudenten_ophalen.contentType="application/json";
-          this.$.ajax_medestudenten_ophalen.body={
+        _studenten_ophalen_request_handler: function() {
+          console.log("_studenten_ophalen_request_handler user="+this.c_username);
+          this.$.ajax_studenten_ophalen.contentType="application/json";
+          this.$.ajax_studenten_ophalen.body={
             "username":this.c_username
           };
-          this.$.ajax_medestudenten_ophalen.generateRequest();
+          this.$.ajax_studenten_ophalen.generateRequest();
         },
 
-        _medestudenten_ophalen_response_handler: function(request) {
-          console.log("_mededestudenten_ophalen_response_handler aantal studenten="+request.detail.response.length);
+        _studenten_ophalen_response_handler: function(request) {
+          console.log("_studenten_ophalen_response_handler aantal studenten="+request.detail.response.length);
           this._c_studenten = request.detail.response;
         },
 
-        _medestudenten_opslaan_request_handler: function() {
-          console.log("_medestudenten_opslaan_request_handler user="+this.c_username);
-          this.$.ajax_medestudenten_opslaan.contentType="application/json";
-          this.$.ajax_medestudenten_opslaan.body={
+        _studenten_opslaan_request_handler: function() {
+          console.log("_studenten_opslaan_request_handler user="+this.c_username);
+          this.$.ajax_studenten_opslaan.contentType="application/json";
+          this.$.ajax_studenten_opslaan.body={
               "username":this.c_username,
               "groupMembers": this._c_studenten
           };
-          this.$.ajax_medestudenten_opslaan.generateRequest();
+          this.$.ajax_studenten_opslaan.generateRequest();
         },
 
-        _medestudenten_opslaan_response_handler: function(request) {
-          console.log("_mededestudenten_opslaan_response_handler errorcode="+request.detail.response.errorcode);
+        _studenten_opslaan_response_handler: function(request) {
+          console.log("_studenten_opslaan_response_handler errorcode="+request.detail.response.errorcode);
           this._go_home();		/* verlaat de pagina en ga terug naar home page */
         },
 

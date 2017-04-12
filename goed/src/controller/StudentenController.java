@@ -33,6 +33,10 @@ public class StudentenController implements Handler {
 	 * 
 	 * @param conversation - alle informatie over het request
 	 */
+	
+	public StudentenController(PrIS infoSys) {
+		informatieSysteem = infoSys;
+	}
 	private void ophalen(Conversation conversation) {
 		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
 		String lGebruikersnaam = lJsonObjectIn.getString("username");
