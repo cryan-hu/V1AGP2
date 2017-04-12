@@ -61,11 +61,11 @@
     auto>      
   </iron-ajax>
 
-  <iron-data-table items="[[data.maandag.lesgegevens]]" selection-enabled multi-selection>
+  <iron-data-table datum="{{ma}}" items="[[data.maandag.lesgegevens]]" selection-enabled multi-selection>
     <data-table-column name="{{ma}}">
       <template>
       <table>
-      <tr><td colspan="2">[[item.les.vak]]</td></tr>
+      <tr><td colspan="2" id="vak">[[item.les.vak]]</td></tr>
       <tr class="tijden"><td>[[item.les.startTijd]]</td><td>[[item.les.eindTijd]]</td></tr>
       <tr><td>[[item.les.lokaal]]</td><td>[[item.les.klas]]</td></tr>
       <tr><td colspan="2">[[item.les.emailDocent]]</td></tr>
@@ -73,7 +73,7 @@
       </template>
     </data-table-column>
   </iron-data-table>
-  <iron-data-table items="[[data.dinsdag.lesgegevens]]" selection-enabled multi-selection>
+  <iron-data-table datum="{{di}}" items="[[data.dinsdag.lesgegevens]]" selection-enabled multi-selection>
     <data-table-column name="{{di}}">
       <template>
       <table>
@@ -85,7 +85,7 @@
       </template>
     </data-table-column>
   </iron-data-table>
-  <iron-data-table items="[[data.woensdag.lesgegevens]]" selection-enabled multi-selection>
+  <iron-data-table datum="{{wo}}" items="[[data.woensdag.lesgegevens]]" selection-enabled multi-selection>
     <data-table-column name={{wo}}>
       <template>
       <table>
@@ -97,7 +97,7 @@
       </template>
     </data-table-column>
   </iron-data-table>
-  <iron-data-table items="[[data.donderdag.lesgegevens]]" selection-enabled multi-selection>
+  <iron-data-table datum="{{do}}" items="[[data.donderdag.lesgegevens]]" selection-enabled multi-selection>
     <data-table-column name={{do}}>
       <template>
       <table>
@@ -109,7 +109,7 @@
       </template>
     </data-table-column>
   </iron-data-table>
-    <iron-data-table items="[[data.vrijdag.lesgegevens]]" selection-enabled multi-selection>
+    <iron-data-table datum="{{vr}}" items="[[data.vrijdag.lesgegevens]]" selection-enabled multi-selection>
     <data-table-column name={{vr}}>
       <template>
       <table>
@@ -128,7 +128,7 @@
 	<td><paper-button on-click="_rooster_ophalen_request_handler" id="ziekMelden" class="optie" raised>Ziek melden</paper-button></td>
 	<td><paper-button id="afwezigMelden" class="optie" raised>Afwezig melden</paper-button></td></tr>
 	<tr><td><paper-button id="beterMelden" class="optie" raised>Beter melden</paper-button></td>
-	<td><paper-button id="afwezigheidVerwijderen" class="optie" raised>Afwezigheid verwijderen</paper-button></td></tr>
+	<td><paper-button id="afwezigheidVerwijderen" on-click="_testen" class="optie" raised>Afwezigheid verwijderen</paper-button></td></tr>
 	</table>
   </template>
 
@@ -181,6 +181,7 @@
             type: Date,
             notify: true,
           },
+          selectedItems:Array,
         },	
 
 		    handleResponse: function(e) {
@@ -262,6 +263,14 @@
             this.selectedZondag = d.toLocaleString('nl-nl', options); //returned als 09-04-2017
             console.log(this.selectedZondag);
             this._rooster_ophalen_request_handler();
+          },
+          _testen: function(){
+            this.selectedItems = this.shadowRoot.querySelectorAll('data-table-row[selected]');
+            console.log(this.selectedItems);
+            for(var i=this.selectedItems.length - 1; i >= 0; i--){
+              console.log(this.selectedItems[i].innerText);
+              console.log(this.selectedItems[i].parentElement.datum);  
+            }
           },
       });
     })();
