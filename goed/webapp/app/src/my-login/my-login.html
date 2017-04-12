@@ -165,7 +165,12 @@
           } else {                                            // als aanloggen ok
             this.$.email_element.invalid = false;               // verwijder fout markering
             this.$.wachtwoord_element.invalid = false;          // verwijder fout markering
-            this._go_home();                                    // ga naar de home page.
+            if (this.rol=="leerling"){
+            	this._go_home();                                    // ga naar de home page.
+            } else {
+            	this._go_leeringen();
+            }
+            
           }
         },
 

@@ -20,6 +20,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../my-hoofdscherm/my-hoofdscherm.html"> <!-- gewijzigd tov PSK -->
 <link rel="import" href="../my-logout/my-logout.html"> <!-- gewijzigd tov PSK -->
 <link rel="import" href="../my-medestudenten/my-medestudenten.html"> <!-- gewijzigd tov PSK -->
+<link rel="import" href="../my-studenten/my-studenten.html"> <!-- gewijzigd tov PSK -->
 
 <dom-module id="my-app">
   <template>
@@ -155,13 +156,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <iron-icon icon="account-box"></iron-icon>
             <span>Uitloggen</span>
           </a>
-		      <a name="hoofdscherm" href$="[[_c_baseURL]]hoofdscherm"  verborgen$="[[_are_strings_equal(rol, 'undefined')]]">
+		      <a name="hoofdscherm" href$="[[_c_baseURL]]hoofdscherm"  verborgen$="[[_are_strings_equal(rol, 'undefined', 'docent')]]">
             <iron-icon icon="account-box"></iron-icon>
             <span>Hoofdscherm</span>
           </a>
           <a name="medestudenten" href$="[[_c_baseURL]]medestudenten"  verborgen$="[[_are_strings_equal(rol, 'undefined', 'docent')]]">
             <iron-icon icon="account-box"></iron-icon>
             <span>Medestudenten</span>
+          </a>
+          <a name="studenten" href$="[[_c_baseURL]]studenten"  verborgen$="[[_are_strings_equal(rol, 'undefined', 'student')]]">
+            <iron-icon icon="account-box"></iron-icon>
+            <span>Studentenlijst</span>
           </a>
 
           <!-- beschikbaar voor docent---------------------------------------------------- -->
@@ -239,6 +244,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               <my-hoofdscherm
               	c_username="[[username]]">
               </my-hoofdscherm>
+            </paper-material>
+          </section>
+          
+          <section name="studenten" 
+                   title="STUDENTEN"
+                   element="my-studenten">
+            <paper-material elevation="2">
+              <my-studenten
+              	c_username="[[username]]">
+              </my-studenten>
             </paper-material>
           </section>
 
@@ -366,6 +381,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                                         // door de two way binding in <app-route> en <app-location>
                                                         // zal ook de url echt wijzigen
          },
+         
+         _go_studenten: function() {
+             var lApp = document.querySelector('my-app');  //het polymer element <my-app>
+             var lAppRouter = lApp.$.approuter;            // het html-element <app-route> met id=approuter
+             lAppRouter.data={page: "studenten"};                   // vul het data attribute met de homepage url
+                                                           // door de two way binding in <app-route> en <app-location>
+                                                           // zal ook de url echt wijzigen
+            },
+            
         _go_medestudenten: function() {
           var lApp = document.querySelector('my-app');  //het polymer element <my-app>
           var lAppRouter = lApp.$.approuter;            // het html-element <app-route> met id=approuter
