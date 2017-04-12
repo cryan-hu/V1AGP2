@@ -56,17 +56,21 @@
     url="/student/rooster/ophalen" 
     method="POST" 
     on-response="_rooster_ophalen_response_handler" 
-    last-response="{{data}}" 
-    handle-as="json"
-    auto>      
+    last-response="{{data}}" >      
+  </iron-ajax>
+  <iron-ajax
+    id="ajax_ziek_melden" 
+    url="/student/ziekmelden/ophalen" 
+    method="POST" 
+    on-response="_ziek_melden_response_handler" >      
   </iron-ajax>
 
   <iron-data-table datum="{{ma}}" items="[[data.maandag.lesgegevens]]" selection-enabled multi-selection>
-    <data-table-column name="{{ma}}">
+    <data-table-column name="Maandag {{ma}}">
       <template>
       <table>
       <tr><td colspan="2" id="vak">[[item.les.vak]]</td></tr>
-      <tr class="tijden"><td>[[item.les.startTijd]]</td><td>[[item.les.eindTijd]]</td></tr>
+      <tr><td><span class="tijden">[[item.les.startTijd]]</span></td><td><span class="tijden">[[item.les.eindTijd]]</span></td></tr>
       <tr><td>[[item.les.lokaal]]</td><td>[[item.les.klas]]</td></tr>
       <tr><td colspan="2">[[item.les.emailDocent]]</td></tr>
       </table>
@@ -74,11 +78,11 @@
     </data-table-column>
   </iron-data-table>
   <iron-data-table datum="{{di}}" items="[[data.dinsdag.lesgegevens]]" selection-enabled multi-selection>
-    <data-table-column name="{{di}}">
+    <data-table-column name="Dinsdag {{di}}">
       <template>
       <table>
       <tr><td colspan="2">[[item.les.vak]]</td></tr>
-      <tr class="tijden"><td>[[item.les.startTijd]]</td><td>[[item.les.eindTijd]]</td></tr>
+      <tr><td><span class="tijden">[[item.les.startTijd]]</span></td><td><span class="tijden">[[item.les.eindTijd]]</span></td></tr>
       <tr><td>[[item.les.lokaal]]</td><td>[[item.les.klas]]</td></tr>
       <tr><td colspan="2">[[item.les.emailDocent]]</td></tr>
       </table>
@@ -86,11 +90,11 @@
     </data-table-column>
   </iron-data-table>
   <iron-data-table datum="{{wo}}" items="[[data.woensdag.lesgegevens]]" selection-enabled multi-selection>
-    <data-table-column name={{wo}}>
+    <data-table-column name="Woensdag {{wo}}">
       <template>
       <table>
       <tr><td colspan="2">[[item.les.vak]]</td></tr>
-      <tr class="tijden"><td>[[item.les.startTijd]]</td><td>[[item.les.eindTijd]]</td></tr>
+      <tr><td><span class="tijden">[[item.les.startTijd]]</span></td><td><span class="tijden">[[item.les.eindTijd]]</span></td></tr>
       <tr><td>[[item.les.lokaal]]</td><td>[[item.les.klas]]</td></tr>
       <tr><td colspan="2">[[item.les.emailDocent]]</td></tr>
       </table>
@@ -98,11 +102,11 @@
     </data-table-column>
   </iron-data-table>
   <iron-data-table datum="{{do}}" items="[[data.donderdag.lesgegevens]]" selection-enabled multi-selection>
-    <data-table-column name={{do}}>
+    <data-table-column name="Donderdag {{do}}">
       <template>
       <table>
       <tr><td colspan="2">[[item.les.vak]]</td></tr>
-      <tr class="tijden"><td>[[item.les.startTijd]]</td><td>[[item.les.eindTijd]]</td></tr>
+      <tr><td><span class="tijden">[[item.les.startTijd]]</span></td><td><span class="tijden">[[item.les.eindTijd]]</span></td></tr>
       <tr><td>[[item.les.lokaal]]</td><td>[[item.les.klas]]</td></tr>
       <tr><td colspan="2">[[item.les.emailDocent]]</td></tr>
       </table>
@@ -110,11 +114,11 @@
     </data-table-column>
   </iron-data-table>
     <iron-data-table datum="{{vr}}" items="[[data.vrijdag.lesgegevens]]" selection-enabled multi-selection>
-    <data-table-column name={{vr}}>
+    <data-table-column name="Vrijdag {{vr}}">
       <template>
       <table>
       <tr><td colspan="2">[[item.les.vak]]</td></tr>
-      <tr class="tijden"><td>[[item.les.startTijd]]</td><td>[[item.les.eindTijd]]</td></tr>
+      <tr><td><span class="tijden">[[item.les.startTijd]]</span></td><td><span class="tijden">[[item.les.eindTijd]]</span></td></tr>
       <tr><td>[[item.les.lokaal]]</td><td>[[item.les.klas]]</td></tr>
       <tr><td colspan="2">[[item.les.emailDocent]]</td></tr>
       </table>
@@ -125,7 +129,7 @@
  
 	<table id="opties">
 	<tr>
-	<td><paper-button on-click="_rooster_ophalen_request_handler" id="ziekMelden" class="optie" raised>Ziek melden</paper-button></td>
+	<td><paper-button on-click="_ziek_melden_request_handler" id="ziekMelden" class="optie" raised>Ziek melden</paper-button></td>
 	<td><paper-button id="afwezigMelden" class="optie" raised>Afwezig melden</paper-button></td></tr>
 	<tr><td><paper-button id="beterMelden" class="optie" raised>Beter melden</paper-button></td>
 	<td><paper-button id="afwezigheidVerwijderen" on-click="_testen" class="optie" raised>Afwezigheid verwijderen</paper-button></td></tr>
@@ -217,11 +221,11 @@
                 day: '2-digit',
             };
              console.log(request.detail.response);
-              this.ma = "Maandag " + request.detail.response.maandag.datum;
-              this.di = "Dinsdag " + request.detail.response.dinsdag.datum;
-              this.wo = "Woensdag " + request.detail.response.woensdag.datum;
-              this.do = "Donderdag " + request.detail.response.donderdag.datum;
-              this.vr = "Vrijdag " + request.detail.response.vrijdag.datum; 
+              this.ma = request.detail.response.maandag.datum;
+              this.di = request.detail.response.dinsdag.datum;
+              this.wo = request.detail.response.woensdag.datum;
+              this.do = request.detail.response.donderdag.datum;
+              this.vr = request.detail.response.vrijdag.datum; 
            },
           _get_zondag: function(d){
                 d = new Date(d);
@@ -266,12 +270,38 @@
           },
           _testen: function(){
             this.selectedItems = this.shadowRoot.querySelectorAll('data-table-row[selected]');
-            console.log(this.selectedItems);
+            var afwezigheden = [];
             for(var i=this.selectedItems.length - 1; i >= 0; i--){
-              console.log(this.selectedItems[i].innerText);
-              console.log(this.selectedItems[i].parentElement.datum);  
+              var tDatum = this.selectedItems[i].parentElement.datum;
+              var lines =this.selectedItems[i].innerText.split('\n');
+              var tVak = lines[0];
+              var tStart = lines[1];
+              var tEind = lines[2];
+              var tKlas = lines[3];
+              var tDocent = lines[4];
+              var tLes = [tDatum,tVak,tStart,tEind,tKlas,tDocent];
+              afwezigheden.push(tLes);
             }
+              return afwezigheden;
+
           },
+
+          _ziek_melden_request_handler: function() {
+            if(this._testen().length>0){
+             console.log("_ziek_melden_request_handler user="+this.c_username);
+             this.$.ajax_ziek_melden.contentType="application/json";
+             this.$.ajax_ziek_melden.body={
+               "afwezigheden":this._testen()
+             };
+             this.$.ajax_ziek_melden.generateRequest();
+           } else{
+            console.log("geen afwezigheden");
+           }
+           },
+          _ziek_melden_response_handler: function(request) {
+            console.log(request.detail.response.terugString);
+           },
+
       });
     })();
   </script>
