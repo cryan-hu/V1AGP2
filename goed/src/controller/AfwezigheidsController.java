@@ -42,10 +42,11 @@ public class AfwezigheidsController implements Handler {
 		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();		
     JsonArray lineItems = lJsonObjectIn.getJsonArray("afwezigheden");
     String useCase = lJsonObjectIn.getString("useCase");
+    String username = lJsonObjectIn.getString("username");
     for (Object o : lineItems) {  // dit moet Afwezigheid o worden , op de juiste manier casten.
     	System.out.println(o);
     }
-    System.out.println(useCase);
+    System.out.println(useCase + " voor " + username);
     JsonObjectBuilder lJsonObjectTerug = Json.createObjectBuilder();
     lJsonObjectTerug.add("terugString", useCase);
     String terug = lJsonObjectTerug.build().toString();		

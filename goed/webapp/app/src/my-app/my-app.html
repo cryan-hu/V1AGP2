@@ -300,7 +300,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                    element="my-hoofdscherm">
             <paper-material elevation="2">
               <my-hoofdscherm
-              	c_username="[[username]]">
+                rol="[[rol]]"
+                c_username="[[username]]"
+                c_visible="[[_are_strings_equal(_ar_page, 'hoofdscherm')]]"
+                >
               </my-hoofdscherm>
             </paper-material>
           </section>
@@ -487,7 +490,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
          },
 
          _ophalen_login_request_handler: function() {
-          console.log("_ophalen_login_request_handler username=" + this.username);
+          console.log("_login_request username=" + this.username);
           if (this.rol == "undefined") {
             this.$.ajax_login.contentType="application/json";
             this.$.ajax_login.body={
@@ -503,7 +506,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         },
 
         _ophalen_login_response_handler: function(request) {
-          console.log("_ophalen_login_response_handler username="+this.username);
+          console.log("_login_response username="+this.username);
 		      this.rol = request.detail.response.rol;
       	  this.docentnaam = request.detail.response.docentnaam;
           this.studentnummer = request.detail.response.studentnummer;
