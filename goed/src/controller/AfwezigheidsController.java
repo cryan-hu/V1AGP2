@@ -41,11 +41,13 @@ public class AfwezigheidsController implements Handler {
 	private void ophalen(Conversation conversation) {
 		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();		
     JsonArray lineItems = lJsonObjectIn.getJsonArray("afwezigheden");
+    String useCase = lJsonObjectIn.getString("useCase");
     for (Object o : lineItems) {  // dit moet Afwezigheid o worden , op de juiste manier casten.
     	System.out.println(o);
     }
+    System.out.println(useCase);
     JsonObjectBuilder lJsonObjectTerug = Json.createObjectBuilder();
-    lJsonObjectTerug.add("terugString", "string terug");
+    lJsonObjectTerug.add("terugString", useCase);
     String terug = lJsonObjectTerug.build().toString();		
     conversation.sendJSONMessage(terug);																		
 	}
@@ -84,7 +86,7 @@ public class AfwezigheidsController implements Handler {
 
 	@Override
 	public void handle(Conversation conversation) {
-		if (conversation.getRequestedURI().startsWith("/student/ziekmelden/ophalen")) {
+		if (conversation.getRequestedURI().startsWith("/student/useCase/ophalen")) {
 			ophalen(conversation);
 		}else{
 			opslaan(conversation);

@@ -59,10 +59,10 @@
     last-response="{{data}}" >      
   </iron-ajax>
   <iron-ajax
-    id="ajax_ziek_melden" 
-    url="/student/ziekmelden/ophalen" 
+    id="ajax_use_case" 
+    url="/student/useCase/ophalen" 
     method="POST" 
-    on-response="_ziek_melden_response_handler" >      
+    on-response="_use_case_response_handler" >      
   </iron-ajax>
 
   <iron-data-table datum="{{ma}}" items="[[data.maandag.lesgegevens]]" selection-enabled multi-selection>
@@ -129,10 +129,10 @@
  
 	<table id="opties">
 	<tr>
-	<td><paper-button on-click="_ziek_melden_request_handler" id="ziekMelden" class="optie" raised>Ziek melden</paper-button></td>
-	<td><paper-button id="afwezigMelden" class="optie" raised>Afwezig melden</paper-button></td></tr>
-	<tr><td><paper-button id="beterMelden" class="optie" raised>Beter melden</paper-button></td>
-	<td><paper-button id="afwezigheidVerwijderen" on-click="_testen" class="optie" raised>Afwezigheid verwijderen</paper-button></td></tr>
+	<td><paper-button on-click="_use_case_request_handler" args="ziekMelden" id="ziekMelden" class="optie" raised>Ziek melden</paper-button></td>
+	<td><paper-button on-click="_use_case_request_handler" args="afwezigMelden" id="afwezigMelden" class="optie" raised>Afwezig melden</paper-button></td></tr>
+	<tr><td><paper-button on-click="_use_case_request_handler" args="beterMelden" id="beterMelden" class="optie" raised>Beter melden</paper-button></td>
+	<td><paper-button on-click="_use_case_request_handler" args="afwezigheidVerwijderen" id="afwezigheidVerwijderen" class="optie" raised>Afwezigheid verwijderen</paper-button></td></tr>
 	</table>
   </template>
 
@@ -209,7 +209,8 @@
              console.log("_rooster_ophalen_request_handler user="+this.c_username);
              this.$.ajax_rooster_ophalen.contentType="application/json";
              this.$.ajax_rooster_ophalen.body={
-               "username":this.c_username ,  "maandagVanDeWeek":this.selectedZondag
+               "username":this.c_username ,
+               "maandagVanDeWeek":this.selectedZondag
              };
              this.$.ajax_rooster_ophalen.generateRequest();
            },
@@ -268,7 +269,7 @@
             console.log(this.selectedZondag);
             this._rooster_ophalen_request_handler();
           },
-          _testen: function(){
+          _get_selectie: function(){
             this.selectedItems = this.shadowRoot.querySelectorAll('data-table-row[selected]');
             var afwezigheden = [];
             for(var i=this.selectedItems.length - 1; i >= 0; i--){
@@ -286,20 +287,22 @@
 
           },
 
-          _ziek_melden_request_handler: function() {
-            if(this._testen().length>0){
-             console.log("_ziek_melden_request_handler user="+this.c_username);
-             this.$.ajax_ziek_melden.contentType="application/json";
-             this.$.ajax_ziek_melden.body={
-               "afwezigheden":this._testen()
+          _use_case_request_handler: function(e) {
+            var useCase = e.target.getAttribute('args');
+            if(this._get_selectie().length>0){
+             console.log("_use_case_request_handler useCase= " + useCase);
+             this.$.ajax_use_case.contentType="application/json";
+             this.$.ajax_use_case.body={
+               "afwezigheden":this._get_selectie(),
+               "useCase":useCase
              };
-             this.$.ajax_ziek_melden.generateRequest();
+             this.$.ajax_use_case.generateRequest();
            } else{
-            console.log("geen afwezigheden");
+            console.log("geen selectie");
            }
            },
-          _ziek_melden_response_handler: function(request) {
-            console.log(request.detail.response.terugString);
+          _use_case_response_handler: function(request) {
+            console.log("_use_case_response_handler useCase= " + request.detail.response.terugString);
            },
 
       });
