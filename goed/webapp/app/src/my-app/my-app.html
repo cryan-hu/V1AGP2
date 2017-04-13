@@ -191,7 +191,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <!-- altijd beschikbaar--------------------------------------------------------- -->
  
 		      <a name="hoofdscherm" href$="[[_c_baseURL]]hoofdscherm"  verborgen$="[[_are_strings_equal(rol, 'undefined', 'docent')]]">
-            <iron-icon icon="account-box"></iron-icon>
+            <iron-icon icon="home"></iron-icon>
             <span>Hoofdscherm</span>
           </a>
           <a name="medestudenten" href$="[[_c_baseURL]]medestudenten"  verborgen$="[[_are_strings_equal(rol, 'undefined', 'docent')]]">
@@ -201,6 +201,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           <a name="studenten" href$="[[_c_baseURL]]studenten"  verborgen$="[[_are_strings_equal(rol, 'undefined', 'student')]]">
             <iron-icon icon="account-box"></iron-icon>
             <span>Studentenlijst</span>
+          </a>
+          
+          <a name="afwezigheid" href$="[[_c_baseURL]]afwezigheid"  verborgen$="[[_are_strings_equal(rol, 'undefined', 'docent')]]">
+            <iron-icon icon="account-box"></iron-icon>
+            <span>Mijn afwezigheid</span>
+          </a>
+          
+          <a name="studentenabsentie" href$="[[_c_baseURL]]studentenabsentie"  verborgen$="[[_are_strings_equal(rol, 'undefined', 'student')]]">
+            <iron-icon icon="account-box"></iron-icon>
+            <span>Absenties studenten</span>
           </a>
 
           <!-- beschikbaar voor docent---------------------------------------------------- -->
@@ -326,6 +336,29 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </paper-material>
           </section>
 
+			<section name="afwezigheid" 
+                   title="AFWEZIGHEID"
+                   element="my-afwezigheid">
+            <paper-material elevation="2">
+              <my-afwezigheid
+              	c_username="[[username]]"
+                c_visible="[[_are_strings_equal(_ar_page, 'afwezigheid')]]"
+                c_rol="[[rol]]">
+              </my-afwezigheid>
+            </paper-material>
+         	 </section>
+         	 
+         	 <section name="studentenabsentie" 
+                   title="ABSENTIE VAN STUDENTEN"
+                   element="my-studentenabsentie">
+            	<paper-material elevation="2">
+              	<my-studentenabsentie
+	              	c_username="[[username]]"
+	                c_visible="[[_are_strings_equal(_ar_page, 'studentenabsentie')]]"
+	                c_rol="[[rol]]">
+              	</my-studentenabsentie>
+            	</paper-material>
+         	 </section>
 
 </template>
   <script>
