@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class PrIS {
 	private ArrayList<Docent> deDocenten;
@@ -423,7 +424,76 @@ public ArrayList<Presentie> getPresentieStudent(String student){
 		}
 	}	
 
-	// private void vulLessen() is hier een vulLessen methode nodig!?
+	private void vulLessen( ArrayList<Les> lessen){
+		String csvFile = "././CSV/rooster.csv";
+		BufferedReader br = null;
+		String line = "";
+		String cvsSplitBy = ",";
+		try {
+			
+			br = new BufferedReader(new FileReader(csvFile));
+			while ((line = br.readLine()) != null) {
+	
+			        // use comma as separator
+				String[] element = line.split(cvsSplitBy);
+				String lesDatum = element[0];
+				String lesBeginDatumTijdString = lesDatum+" "+element[1];
+				String lesEindDatumTijdString = lesDatum+" "+element[2];
+				String lesVakCode = element[3];
+				String lesDocentEmail = element[4];
+				String lesLocatie = element[5];
+				String lesKlasCode = element[6];
+				Calendar lesBeginDatumTijdCal = null;
+				Calendar lesEindDatumTijdCal = null;
+				
+				
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:");
+				lesBeginDatumTijdCal.setTime(sdf.parse(lesBeginDatumTijdString));
+				lesEindDatumTijdCal.setTime(sdf.parse(lesEindDatumTijdString));
+				
+				
+				Vak lesVak = null;
+				Klas lesKlas = null;
+				Docent lesDocent = null;
+						
+				for( Docent d: deDocenten){
+					if(d.getGebruikersnaam().equals(lesDocentEmail)){
+						lesDocent = d;
+					}
+				}
+				for(Vak v: deVakken){
+					if(v.getVakCode().equals(lesVakCode)){
+						lesVak = v;
+					}
+				}
+				for(Klas k: deKlassen){
+					if(k.getKlasCode().equals(lesKlasCode)){
+						lesKlas = k;
+					}
+				}		
+				
+				lessen.add(new Les(
+						lesBeginDatumTijdCal, 
+						lesEindDatumTijdCal, 
+						lesLocatie, 
+						lesVak, 
+						lesKlas, 
+						lesDocent));
+				
+				//System.out.println(gebruikersnaam);
+		
+			}
+	
+		}catch (IOException e) {
+			e.printStackTrace();
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	
 
 
 

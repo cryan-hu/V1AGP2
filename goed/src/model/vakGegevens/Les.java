@@ -8,7 +8,6 @@ import model.klas.Klas;
 import model.persoon.Docent;
 
 public class Les {
-	private String id; 
 	private Calendar startDate;
 	private Calendar eindDate;
 	private String locatie;
@@ -16,24 +15,19 @@ public class Les {
 	private Klas deKlas; 
 	private Docent deDocent;
 	
-	public Les(String id,
+	public Les(
 			Calendar startDate, 
 			Calendar eindDate, 
 			String locatie, 
 			Vak hetVak, 
 			Klas deKlas, 
 			Docent deDocent){
-		this.id = id;
 		this.startDate = startDate;
 		this.eindDate = eindDate; 
 		this.locatie = locatie;
 		this.hetVak = hetVak;
 		this.deKlas = deKlas;
 		this.deDocent = deDocent;
-	}
-	
-	public String getId(){
-		return id;
 	}
 
 	public Docent getDocent(){
