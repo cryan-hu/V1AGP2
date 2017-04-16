@@ -1,6 +1,8 @@
 package model.presentie;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Formatter;
 
 public class Afwezigheid {
 	private Calendar beginDatum;
@@ -13,11 +15,17 @@ public class Afwezigheid {
 		this.eindDatum = eindDatum;
 	}
 
-	public Calendar getBeginDatum() {
+	public String getBeginDatum() {
+	  Calendar bDatum = Calendar.getInstance();
+		SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+		String beginDatum= format1.format(bDatum);
 		return beginDatum;
 	}
 
-	public Calendar getEindDatum() {
+	public String getEindDatum() {
+	  Calendar eDatum = Calendar.getInstance();
+		SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+		String eindDatum= format1.format(eDatum);
 		return eindDatum;
 	}
 
