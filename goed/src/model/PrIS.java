@@ -61,9 +61,6 @@ public class PrIS {
 		deLessen = new ArrayList<Les>();
 		dePresenties = new ArrayList<Presentie>();
 
-		//vulLessen(deLessen); // CODE VOOR vulLessen CHECKEN!!! is het nodig!!??
-		
-		vulVakken(deVakken);
 
 		// Inladen klassen
 		vulKlassen(deKlassen);
@@ -73,6 +70,13 @@ public class PrIS {
 
 		// Inladen docenten
 		vulDocenten(deDocenten);
+		
+		vulVakken(deVakken);
+
+		vulLessen(deLessen);
+
+
+		
 	
 	} //Einde Pris constructor
 	
@@ -424,11 +428,17 @@ public ArrayList<Presentie> getPresentieStudent(String student){
 		}
 	}	
 
+
 	private void vulLessen( ArrayList<Les> lessen){
 		String csvFile = "././CSV/rooster.csv";
 		BufferedReader br = null;
 		String line = "";
 		String cvsSplitBy = ",";
+		
+		Vak lesVak = null;
+		Klas lesKlas = null ;
+		Docent lesDocent = null;
+		
 		try {
 			
 			br = new BufferedReader(new FileReader(csvFile));
@@ -443,18 +453,16 @@ public ArrayList<Presentie> getPresentieStudent(String student){
 				String lesDocentEmail = element[4];
 				String lesLocatie = element[5];
 				String lesKlasCode = element[6];
-				Calendar lesBeginDatumTijdCal = null;
-				Calendar lesEindDatumTijdCal = null;
+				Calendar lesBeginDatumTijdCal = Calendar.getInstance();
+				Calendar lesEindDatumTijdCal = Calendar.getInstance();
 				
+				Date lesBeginDatum = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(lesBeginDatumTijdString);
+				Date lesEindDatum = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(lesEindDatumTijdString);
 				
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:");
-				lesBeginDatumTijdCal.setTime(sdf.parse(lesBeginDatumTijdString));
-				lesEindDatumTijdCal.setTime(sdf.parse(lesEindDatumTijdString));
+
 				
-				
-				Vak lesVak = null;
-				Klas lesKlas = null;
-				Docent lesDocent = null;
+				lesBeginDatumTijdCal.setTime(lesBeginDatum);
+				lesEindDatumTijdCal.setTime(lesEindDatum);
 						
 				for( Docent d: deDocenten){
 					if(d.getGebruikersnaam().equals(lesDocentEmail)){
@@ -479,9 +487,7 @@ public ArrayList<Presentie> getPresentieStudent(String student){
 						lesVak, 
 						lesKlas, 
 						lesDocent));
-				
-				//System.out.println(gebruikersnaam);
-		
+
 			}
 	
 		}catch (IOException e) {

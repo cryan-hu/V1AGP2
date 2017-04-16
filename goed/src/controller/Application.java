@@ -27,7 +27,7 @@ public class Application {
 	 * 
 	 */
 	public static void main(String[] args) {
-		JSONFileServer server = new JSONFileServer(new File("webapp/app"), 8280);
+		JSONFileServer server = new JSONFileServer(new File("webapp/app"), 8380);
 		
 		PrIS infoSysteem = new PrIS();
 		

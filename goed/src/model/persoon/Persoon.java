@@ -85,11 +85,10 @@ public abstract class Persoon {
 		
 		if (andereObject instanceof Persoon){
 			Persoon anderePersoon = (Persoon) andereObject;
-			if(anderePersoon.voornaam.equals(this.voornaam)&&
-					anderePersoon.achternaam.equals(this.achternaam)&&
-					anderePersoon.tussenvoegsel.equals(this.tussenvoegsel)&&
-					anderePersoon.wachtwoord.equals(this.wachtwoord)&&
-					anderePersoon.gebruikersnaam.equals(this.gebruikersnaam)){
+			if(anderePersoon.getVolledigeNaam().equals(this.getVolledigeNaam())&&
+					anderePersoon.getVolledigeAchternaam().equals(this.getVolledigeAchternaam())&&
+					anderePersoon.getWachtwoord().equals(this.wachtwoord)&&
+					anderePersoon.getGebruikersnaam().equals(this.gebruikersnaam)){
 				gelijkeObj = true;
 			}
 		}
