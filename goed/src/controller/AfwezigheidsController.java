@@ -1,9 +1,5 @@
 package controller;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,7 +15,6 @@ import javax.json.JsonObjectBuilder;
 import model.PrIS;
 import model.persoon.Student;
 import model.presentie.Afwezigheid;
-import model.klas.Klas;
 
 import server.Conversation;
 import server.Handler;
@@ -38,59 +33,96 @@ public class AfwezigheidsController implements Handler {
 	public AfwezigheidsController(PrIS infoSys) {
 		informatieSysteem = infoSys;
 	}
-	private void ophalen(Conversation conversation) {
+	private void opslaan(Conversation conversation) throws ParseException {
 		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();		
     JsonArray lineItems = lJsonObjectIn.getJsonArray("afwezigheden");
     String useCase = lJsonObjectIn.getString("useCase");
     String username = lJsonObjectIn.getString("username");
-    for (Object o : lineItems) {  // dit moet Afwezigheid o worden , op de juiste manier casten.
-    	System.out.println(o);
+    
+    Student student = informatieSysteem.getStudent(username);
+    
+    ArrayList<String> lessenAS = new ArrayList<String>();
+    
+    for (Object o : lineItems) { 						 // dit moet Afwezigheid o worden , op de juiste manier casten.
+    	lessenAS.add(o.toString());
     }
     System.out.println(useCase + " voor " + username);
-    JsonObjectBuilder lJsonObjectTerug = Json.createObjectBuilder();
-    lJsonObjectTerug.add("terugString", useCase);
-    String terug = lJsonObjectTerug.build().toString();		
-    conversation.sendJSONMessage(terug);																		
+    System.out.println(lessenAS);
+    JsonArrayBuilder lJsonArrayBuilder = Json.createArrayBuilder();	
+    for(String s : lessenAS){
+    	String[] element = s.split("\",\"");
+    	String lesDatum = element[0].replace("[","").replace("\"", "");
+    	String lesBeginDatumTijdString = lesDatum+" "+element[2];
+			String lesEindDatumTijdString = lesDatum+" "+element[3];
+			Calendar lesBeginDatumTijdCal = Calendar.getInstance();
+			Calendar lesEindDatumTijdCal = Calendar.getInstance();
+			
+			System.out.println(lesBeginDatumTijdString);
+			
+			
+			Date lesBeginDatum = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(lesBeginDatumTijdString);
+			Date lesEindDatum = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(lesEindDatumTijdString);
+
+			
+			lesBeginDatumTijdCal.setTime(lesBeginDatum);
+			lesEindDatumTijdCal.setTime(lesEindDatum);
+    	Afwezigheid afwezigheidStudent = new Afwezigheid(useCase, lesBeginDatumTijdCal, lesEindDatumTijdCal);
+    	student.voegAfwezigheidToe(afwezigheidStudent);
+    	
+    	
+    	JsonObjectBuilder lJsonObjectTerug = Json.createObjectBuilder();
+    	lJsonObjectTerug
+    	.add("Student afgemeld", username);
+    	
+    	lJsonArrayBuilder.add(lJsonObjectTerug);
+    	
+    	
+    	
+    }
+    
+
+    String terug = lJsonArrayBuilder.build().toString();	
+    System.out.println(terug);
+    conversation.sendJSONMessage(terug);			
 	}
 
 
-	private void opslaan(Conversation conversation) {
+	private void ophalen(Conversation conversation) {
 		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
 		String lGebruikersnaam = lJsonObjectIn.getString("username");
-		Student lStudent = informatieSysteem.getStudent(lGebruikersnaam);
+		Student student = informatieSysteem.getStudent(lGebruikersnaam);
 		
-  	JsonArray lGroepMembers_jArray = lJsonObjectIn.getJsonArray("groupMembers"); 
-    if (lGroepMembers_jArray != null) { 
-    	// bepaal op basis van de huidige tijd een unieke string
-    	Calendar lCal = Calendar.getInstance();
-    	long lMilliSeconds = lCal.getTimeInMillis();
-    	String lGroepId = String.valueOf(lMilliSeconds);   
-    	
-    	lStudent.setGroepId(lGroepId);
-    	for (int i=0;i<lGroepMembers_jArray.size();i++){
-    		JsonObject lGroepMember_jsonObj = lGroepMembers_jArray.getJsonObject(i );
-    		int lStudentNummer = lGroepMember_jsonObj.getInt("id");
-    		boolean lZelfdeGroep = lGroepMember_jsonObj.getBoolean("sameGroup");
-    		if (lZelfdeGroep) {
-    			Student lGroepStudent = informatieSysteem.getStudent(lStudentNummer);
-     		  lGroepStudent.setGroepId(lGroepId);
-    		}
-    	}
-    }
-    
-  	JsonObjectBuilder lJob =	Json.createObjectBuilder(); 
-  	lJob.add("errorcode", 0);
+		ArrayList<Afwezigheid> afwezighedenStudent = student.getAfwezigheden();
+		JsonArrayBuilder lJsonArrayBuilder = Json.createArrayBuilder();	
+		
+		for(Afwezigheid a : afwezighedenStudent){
+			JsonObjectBuilder lJob =	Json.createObjectBuilder(); 
+			lJob
+			.add("vollegdige afwezigheid", a.getVolledigeAfwezigheid());
+			
+			lJsonArrayBuilder.add(lJob);
+			
+		}
+  	
+  	
+  	
+  	
    	//nothing to return use only errorcode to signal: ready!
-  	String lJsonOutStr = lJob.build().toString();
+  	String lJsonOutStr = lJsonArrayBuilder.build().toString();
  		conversation.sendJSONMessage(lJsonOutStr);					// terug naar de Polymer-GUI!
 	}
 
 	@Override
 	public void handle(Conversation conversation) {
 		if (conversation.getRequestedURI().startsWith("/student/useCase/ophalen")) {
-			ophalen(conversation);
+			try {
+				opslaan(conversation);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}else{
-			opslaan(conversation);
+			ophalen(conversation);
 		}
 	}
 }
