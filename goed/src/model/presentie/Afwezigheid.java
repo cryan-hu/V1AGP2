@@ -15,9 +15,10 @@ public class Afwezigheid {
 	private String vak;
 	private String klas;
 	private String docent;
+	private String lokaal;
 	
 
-	public Afwezigheid(String useCase, Date beginTijd, Date eindTijd, String username, String vak, String klas, String docent) {
+	public Afwezigheid(String useCase, Date beginTijd, Date eindTijd, String username, String vak, String klas, String lokaal, String docent) {
 		this.useCase = useCase;
 		this.beginTijd= beginTijd;
 		this.eindTijd = eindTijd;
@@ -25,6 +26,7 @@ public class Afwezigheid {
 		this.vak = vak;
 		this.klas = klas;
 		this.docent = docent;
+		this.lokaal = lokaal;
 	}
 
 	public Date geteindTijd() { //aanpassen
@@ -89,7 +91,8 @@ public class Afwezigheid {
 				this.username.equals(andereAfwezigheid.username) &&	
 				this.vak.equals(andereAfwezigheid.vak) &&	
 				this.klas.equals(andereAfwezigheid.klas) &&	
-				this.docent.equals(andereAfwezigheid.docent)
+				this.docent.equals(andereAfwezigheid.docent) &&
+				this.lokaal.equals(andereAfwezigheid.lokaal)
 				
 				) {
 			gelijkeObjecten = true;
@@ -110,7 +113,7 @@ public class Afwezigheid {
 	}
 	
 	public String toString(){
-		return  this.useCase + "," + this.beginTijd + "," + this.eindTijd + "," + this.username + "," + this.vak + "," + this.klas + "," + this.docent;
+		return  this.useCase + "," + this.beginTijd + "," + this.eindTijd + "," + this.username + "," + this.vak + "," + this.klas + "," + this.lokaal + "," +  this.docent;
 				
 				
 	}

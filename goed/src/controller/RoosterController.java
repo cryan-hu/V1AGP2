@@ -123,9 +123,8 @@ public class RoosterController implements Handler {
 								lJsonObjectBuilderVoorLesMa.add("eindTijd", element[2]);
 								lJsonObjectBuilderVoorLesMa.add("vak", element[3]);
 								lJsonObjectBuilderVoorLesMa.add("emailDocent", element[4]);
-								lJsonObjectBuilderVoorLesMa.add("locatie", element[5]);
+								lJsonObjectBuilderVoorLesMa.add("lokaal", element[5]);
 								lJsonObjectBuilderVoorLesMa.add("klas", element[6]);
-								System.out.println(afwezigheidControle(format1.format(maandag),element[1],element[2],lGebruikersnaam));
 								lJsonObjectBuilderVoorLesMa.add("afwezigheid",afwezigheidControle(format1.format(maandag),element[1],element[2],lGebruikersnaam));
 							lJsonObjectBuilderLesMa.add("les",lJsonObjectBuilderVoorLesMa);
 							lJsonArrayBuilderMa.add(lJsonObjectBuilderLesMa);
@@ -137,8 +136,9 @@ public class RoosterController implements Handler {
 								lJsonObjectBuilderVoorLesDi.add("eindTijd", element[2]);
 								lJsonObjectBuilderVoorLesDi.add("vak", element[3]);
 								lJsonObjectBuilderVoorLesDi.add("emailDocent", element[4]);
-								lJsonObjectBuilderVoorLesDi.add("locatie", element[5]);
+								lJsonObjectBuilderVoorLesDi.add("lokaal", element[5]);
 								lJsonObjectBuilderVoorLesDi.add("klas", element[6]);
+								lJsonObjectBuilderVoorLesDi.add("afwezigheid",afwezigheidControle(format1.format(dinsdag),element[1],element[2],lGebruikersnaam));
 							lJsonObjectBuilderLesDi.add("les",lJsonObjectBuilderVoorLesDi);
 							lJsonArrayBuilderDi.add(lJsonObjectBuilderLesDi);
 							}
@@ -149,8 +149,9 @@ public class RoosterController implements Handler {
 								lJsonObjectBuilderVoorLesWo.add("eindTijd", element[2]);
 								lJsonObjectBuilderVoorLesWo.add("vak", element[3]);
 								lJsonObjectBuilderVoorLesWo.add("emailDocent", element[4]);
-								lJsonObjectBuilderVoorLesWo.add("locatie", element[5]);
+								lJsonObjectBuilderVoorLesWo.add("lokaal", element[5]);
 								lJsonObjectBuilderVoorLesWo.add("klas", element[6]);
+								lJsonObjectBuilderVoorLesWo.add("afwezigheid",afwezigheidControle(format1.format(woensdag),element[1],element[2],lGebruikersnaam));
 							lJsonObjectBuilderLesWo.add("les",lJsonObjectBuilderVoorLesWo);
 							lJsonArrayBuilderWo.add(lJsonObjectBuilderLesWo);
 							}
@@ -161,8 +162,9 @@ public class RoosterController implements Handler {
 								lJsonObjectBuilderVoorLesDo.add("eindTijd", element[2]);
 								lJsonObjectBuilderVoorLesDo.add("vak", element[3]);
 								lJsonObjectBuilderVoorLesDo.add("emailDocent", element[4]);
-								lJsonObjectBuilderVoorLesDo.add("locatie", element[5]);
+								lJsonObjectBuilderVoorLesDo.add("lokaal", element[5]);
 								lJsonObjectBuilderVoorLesDo.add("klas", element[6]);
+								lJsonObjectBuilderVoorLesDo.add("afwezigheid",afwezigheidControle(format1.format(donderdag),element[1],element[2],lGebruikersnaam));
 							lJsonObjectBuilderLesDo.add("les",lJsonObjectBuilderVoorLesDo);
 							lJsonArrayBuilderDo.add(lJsonObjectBuilderLesDo);
 							}
@@ -173,8 +175,9 @@ public class RoosterController implements Handler {
 								lJsonObjectBuilderVoorLesVr.add("eindTijd", element[2]);
 								lJsonObjectBuilderVoorLesVr.add("vak", element[3]);
 								lJsonObjectBuilderVoorLesVr.add("emailDocent", element[4]);
-								lJsonObjectBuilderVoorLesVr.add("locatie", element[5]);
+								lJsonObjectBuilderVoorLesVr.add("lokaal", element[5]);
 								lJsonObjectBuilderVoorLesVr.add("klas", element[6]);
+								lJsonObjectBuilderVoorLesVr.add("afwezigheid",afwezigheidControle(format1.format(vrijdag),element[1],element[2],lGebruikersnaam));
 							lJsonObjectBuilderLesVr.add("les",lJsonObjectBuilderVoorLesVr);
 							lJsonArrayBuilderVr.add(lJsonObjectBuilderLesVr);
 							}
@@ -229,26 +232,41 @@ public class RoosterController implements Handler {
 			}
 
 	private String afwezigheidControle(String datum, String startTijd, String eindTijd, String lGebruikersnaam) throws ParseException, IOException {
+		DateFormat format1 = new SimpleDateFormat("dd-MM-yyyy HH:mm");  
 		ArrayList<Afwezigheid> afwezigheden = getAfwezigheden();
-		DateFormat format1 = new SimpleDateFormat("dd-MM-yyyy HH:mm");   
 		String lesDatum = datum.replace("[","").replace("\"", "");
   	String lesBeginDatumTijdString = lesDatum+" "+startTijd;
 		String lesEindDatumTijdString = lesDatum+" "+eindTijd;	
 		Date lesBeginTijd = format1.parse(lesBeginDatumTijdString);
 		Date lesEindTijd = format1.parse(lesEindDatumTijdString);	
-		String s = "white";
+		String s = null;
+		String ziek = "#ffffb3";
+		String afwezig = "#b3b3ff";
+		String beiden = "#d1b3ff";
+		Boolean afwezigheid2 = false;
+		Boolean ziekte = false;
+
 		
   	for(Afwezigheid a : afwezigheden){
-  		if(a.getBeginTijd().equals(lesBeginTijd) && a.geteindTijd().equals(lesEindTijd) && a.getUsername().equals(lGebruikersnaam)){
-  			if(a.getUseCase().equals("ziekMelden")){
-  				s = "red";
-  				break;
-  			}
-  			else if(a.getUseCase().equals("afwezigMelden")){
-  				s = "blue";
-  				break;
-  			}
+  		System.out.println("pizza");
+  		if(a.getBeginTijd().equals(lesBeginTijd) && a.geteindTijd().equals(lesEindTijd) && a.getUsername().equals(lGebruikersnaam) && a.getUseCase().equals("afwezigMelden")){
+  				afwezigheid2 = true;
   		}
+  		if(a.getBeginTijd().equals(lesBeginTijd) && a.geteindTijd().equals(lesEindTijd) && a.getUsername().equals(lGebruikersnaam) && a.getUseCase().equals("ziekMelden")){
+  				ziekte = true;  			
+  		}
+  	}
+  	if(afwezigheid2 == true && ziekte == true){
+  		s = beiden;
+  	}
+  	else if(afwezigheid2 == true){
+  		s = afwezig;
+  	}
+  	else if(ziekte == true){
+  		s = ziek;
+  	}
+  	else{
+  		s = "transparent";
   	}
   	return s;
 
@@ -265,7 +283,7 @@ public class RoosterController implements Handler {
 			String[] values = regel.split(",");
 			Date lesBeginTijd = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.UK).parse(values[1]);
 			Date lesEindTijd = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.UK).parse(values[2]);
-			Afwezigheid b = new Afwezigheid(values[0],lesBeginTijd,lesEindTijd,values[3],values[4],values[5],values[6]);
+			Afwezigheid b = new Afwezigheid(values[0],lesBeginTijd,lesEindTijd,values[3],values[4],values[5],values[6],values[7]);
 			afwezigBestaand.add(b);
 			regel = br.readLine();
 		}

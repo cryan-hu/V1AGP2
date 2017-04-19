@@ -33,21 +33,19 @@
       height: 480px;
     }
     data-table-row[selected]{
-      border: 1px solid gray;
-      border-right: 1px solid gray;
-      background-color: #F5F6CE;
+      border: 2px solid #000037;
     }
     data-table-row[header]{
       border: 0px solid gray;
       height: 50px;
     }
     data-table-row{
-      border: 1px solid gray;
+      border: 2px solid gray;
+      margin-bottom: 2px;
     }
     data-table-cell{
-      width: 100%;
-      height: 90px;
-      padding: 7px;
+      height: 101px;
+      padding: 0px;
     }
     .tijden{
       font-weight: bold;
@@ -61,6 +59,14 @@
     }
     td[background="red"]{
       background-color: red;
+    }
+    table#dag{
+      table-layout:fixed;
+      width: 100%;
+      height: 101px;
+    }
+    .jumbotron {
+      width: 100%;
     }
 
     </style>
@@ -89,60 +95,70 @@
   <iron-data-table datum="{{ma}}" items="[[data.maandag.lesgegevens]]" selection-enabled multi-selection>
     <data-table-column name="Maandag {{ma}}">
       <template>
-      <table>
-      <tr><td colspan="2" id="vak" style="background-color:[[item.les.afwezigheid]];">[[item.les.vak]]</td></tr>
+      <div class="jumbotron" style="background-color:[[item.les.afwezigheid]];">
+      <table class="dag" >
+      <tr><td colspan="2" id="vak">[[item.les.vak]]</td></tr>
       <tr><td><span class="tijden">[[item.les.startTijd]]</span></td><td><span class="tijden">[[item.les.eindTijd]]</span></td></tr>
-      <tr><td>[[item.les.lokaal]]</td><td>[[item.les.klas]]</td></tr>
+      <tr><td><span>[[item.les.lokaal]]</span></td><td><span>[[item.les.klas]]</span></td></tr>
       <tr><td colspan="2">[[item.les.emailDocent]]</td></tr>
       </table>
+      </div>
       </template>
     </data-table-column>
   </iron-data-table>
   <iron-data-table datum="{{di}}" items="[[data.dinsdag.lesgegevens]]" selection-enabled multi-selection>
     <data-table-column name="Dinsdag {{di}}">
       <template>
-      <table>
-      <tr><td colspan="2" background={{back}}>[[item.les.vak]]</td></tr>
+      <div class="jumbotron" style="background-color:[[item.les.afwezigheid]];">
+      <table class="dag" >
+      <tr><td colspan="2" id="vak">[[item.les.vak]]</td></tr>
       <tr><td><span class="tijden">[[item.les.startTijd]]</span></td><td><span class="tijden">[[item.les.eindTijd]]</span></td></tr>
-      <tr><td>[[item.les.lokaal]]</td><td>[[item.les.klas]]</td></tr>
+      <tr><td><span>[[item.les.lokaal]]</span></td><td><span>[[item.les.klas]]</span></td></tr>
       <tr><td colspan="2">[[item.les.emailDocent]]</td></tr>
       </table>
+      </div>
       </template>
     </data-table-column>
   </iron-data-table>
   <iron-data-table datum="{{wo}}" items="[[data.woensdag.lesgegevens]]" selection-enabled multi-selection>
     <data-table-column name="Woensdag {{wo}}">
       <template>
-      <table>
-      <tr><td colspan="2"> [[item.les.vak]]</td></tr>
+      <div class="jumbotron" style="background-color:[[item.les.afwezigheid]];">
+      <table class="dag" >
+      <tr><td colspan="2" id="vak">[[item.les.vak]]</td></tr>
       <tr><td><span class="tijden">[[item.les.startTijd]]</span></td><td><span class="tijden">[[item.les.eindTijd]]</span></td></tr>
-      <tr><td>[[item.les.lokaal]]</td><td>[[item.les.klas]]</td></tr>
+      <tr><td><span>[[item.les.lokaal]]</span></td><td><span>[[item.les.klas]]</span></td></tr>
       <tr><td colspan="2">[[item.les.emailDocent]]</td></tr>
       </table>
+      </div>
       </template>
     </data-table-column>
   </iron-data-table>
   <iron-data-table datum="{{do}}" items="[[data.donderdag.lesgegevens]]" selection-enabled multi-selection>
     <data-table-column name="Donderdag {{do}}">
       <template>
-      <table>
-      <tr><td colspan="2">[[item.les.vak]]</td></tr>
+      <div class="jumbotron" style="background-color:[[item.les.afwezigheid]];">
+      <table class="dag" >
+      <tr><td colspan="2" id="vak">[[item.les.vak]]</td></tr>
       <tr><td><span class="tijden">[[item.les.startTijd]]</span></td><td><span class="tijden">[[item.les.eindTijd]]</span></td></tr>
-      <tr><td>[[item.les.lokaal]]</td><td>[[item.les.klas]]</td></tr>
+      <tr><td><span>[[item.les.lokaal]]</span></td><td><span>[[item.les.klas]]</span></td></tr>
       <tr><td colspan="2">[[item.les.emailDocent]]</td></tr>
       </table>
+      </div>
       </template>
     </data-table-column>
   </iron-data-table>
-    <iron-data-table datum="{{vr}}" items="[[data.vrijdag.lesgegevens]]" selection-enabled multi-selection>
+  <iron-data-table datum="{{vr}}" items="[[data.vrijdag.lesgegevens]]" selection-enabled multi-selection>
     <data-table-column name="Vrijdag {{vr}}">
       <template>
-      <table>
-      <tr><td colspan="2">[[item.les.vak]]</td></tr>
+      <div class="jumbotron" style="background-color:[[item.les.afwezigheid]];">
+      <table class="dag" >
+      <tr><td colspan="2" id="vak">[[item.les.vak]]</td></tr>
       <tr><td><span class="tijden">[[item.les.startTijd]]</span></td><td><span class="tijden">[[item.les.eindTijd]]</span></td></tr>
-      <tr><td>[[item.les.lokaal]]</td><td>[[item.les.klas]]</td></tr>
+      <tr><td><span>[[item.les.lokaal]]</span></td><td><span>[[item.les.klas]]</span></td></tr>
       <tr><td colspan="2">[[item.les.emailDocent]]</td></tr>
       </table>
+      </div>
       </template>
     </data-table-column>
   </iron-data-table>
@@ -246,6 +262,7 @@
                "maandagVanDeWeek":this.selectedZondag
              };
              this.$.ajax_rooster_ophalen.generateRequest();
+
            },
 
            _rooster_ophalen_response_handler: function(request) {
@@ -261,6 +278,7 @@
             this.wo = request.detail.response.woensdag.datum;
             this.do = request.detail.response.donderdag.datum;
             this.vr = request.detail.response.vrijdag.datum; 
+            this.updateStyles();
            },
           _get_zondag: function(d){
                 d = new Date(d);
@@ -319,8 +337,10 @@
               var tStart = lines[1];
               var tEind = lines[2];
               var tKlas = lines[3];
-              var tDocent = lines[4];
-              var tLes = [tDatum,tVak,tStart,tEind,tKlas,tDocent];
+              var tLokaal = lines[4];
+              var tDocent = lines[5];
+              var tLes = [tDatum,tVak,tStart,tEind,tLokaal,tKlas,tDocent];
+              console.log(tLes);
               afwezigheden.push(tLes);
             }
               return afwezigheden;
@@ -338,8 +358,10 @@
                "username":this.c_username
              };
              this.$.ajax_use_case.generateRequest();
+             this._rooster_ophalen_request_handler();
            } else{
             console.log("geen selectie");
+            this.updateStyles();
            }
            },
           _use_case_response_handler: function(request) {

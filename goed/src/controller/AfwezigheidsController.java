@@ -72,13 +72,13 @@ public class AfwezigheidsController implements Handler {
     	String lesDatum = element[0].replace("[","").replace("\"", "");
     	String lesBeginDatumTijdString = lesDatum+" "+element[2];
 			String lesEindDatumTijdString = lesDatum+" "+element[3];	
-			String docent = element[5].replace("]","").replace("\"", "");
+			String docent = element[6].replace("]","").replace("\"", "");
 
 			
 			Date lesBeginTijd = format1.parse(lesBeginDatumTijdString);
 			Date lesEindTijd = format1.parse(lesEindDatumTijdString);
 			
-    	Afwezigheid afwezigheidStudent = new Afwezigheid(useCaseVoor, lesBeginTijd, lesEindTijd, username, element[1], element[4], docent);
+    	Afwezigheid afwezigheidStudent = new Afwezigheid(useCaseVoor, lesBeginTijd, lesEindTijd, username, element[1], element[4],element[5], docent);
     	
     	if(useCase.equals("ziekMelden") || useCase.equals("afwezigMelden")){	//ziekMelden en afwezigMelden useCase
     		if(!afwezigheden.contains(afwezigheidStudent)){
@@ -103,10 +103,13 @@ public class AfwezigheidsController implements Handler {
     }    
   
     if(useCase.equals("beterMelden")){                                    //beterMelden useCase
+    	System.out.println("beter");
       Iterator<Afwezigheid> it = afwezigheden.iterator();
       while (it.hasNext()) {
-          if (it.next().getUseCase().equals("ziekMelden")) {
-              it.remove();
+      		Afwezigheid i = it.next();
+          if (i.getUseCase().equals("ziekMelden") && i.getUsername().equals(username)) {
+          	System.out.println("useCase klopt!");
+             it.remove();
           }
       }
       berichtTerug = "Je bent nu beter gemeld, alle ziekmeldingen verwijdert!";
@@ -138,7 +141,7 @@ public class AfwezigheidsController implements Handler {
 			String[] values = regel.split(",");
 			Date lesBeginTijd = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.UK).parse(values[1]);
 			Date lesEindTijd = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.UK).parse(values[2]);
-			Afwezigheid b = new Afwezigheid(values[0],lesBeginTijd,lesEindTijd,values[3],values[4],values[5],values[6]);
+			Afwezigheid b = new Afwezigheid(values[0],lesBeginTijd,lesEindTijd,values[3],values[4],values[5],values[6],values[7]);
 			afwezigBestaand.add(b);
 			regel = br.readLine();
 		}
@@ -156,15 +159,14 @@ public class AfwezigheidsController implements Handler {
 	}
 
 
-	private void ophalen(Conversation conversation) {
+	private void ophalen(Conversation conversation) throws ParseException, IOException {
 		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
 		String lGebruikersnaam = lJsonObjectIn.getString("username");
-		Student student = informatieSysteem.getStudent(lGebruikersnaam);
 		
-		ArrayList<Afwezigheid> afwezighedenStudent = student.getAfwezigheden();
+		ArrayList<Afwezigheid> afwezigheden = getAfwezigheden();
 		JsonArrayBuilder lJsonArrayBuilder = Json.createArrayBuilder();	
 		
-		for(Afwezigheid a : afwezighedenStudent){
+		for(Afwezigheid a : afwezigheden){
 			JsonObjectBuilder lJob =	Json.createObjectBuilder(); 
 			lJob
 			.add("vollegdige afwezigheid", a.getAfwezigheid());
@@ -191,7 +193,12 @@ public class AfwezigheidsController implements Handler {
 				e.printStackTrace();
 			}
 		}else{
-			ophalen(conversation);
+			try {
+				ophalen(conversation);
+			} catch (ParseException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 }
