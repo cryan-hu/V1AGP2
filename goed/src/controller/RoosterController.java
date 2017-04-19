@@ -248,7 +248,6 @@ public class RoosterController implements Handler {
 
 		
   	for(Afwezigheid a : afwezigheden){
-  		System.out.println("pizza");
   		if(a.getBeginTijd().equals(lesBeginTijd) && a.getEindTijd().equals(lesEindTijd) && a.getUsername().equals(lGebruikersnaam) && a.getUseCase().equals("afwezigMelden")){
   				afwezigheid2 = true;
   		}

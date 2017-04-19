@@ -11,8 +11,11 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 
 import javax.json.Json;
@@ -103,12 +106,10 @@ public class AfwezigheidsController implements Handler {
     }    
   
     if(useCase.equals("beterMelden")){                                    //beterMelden useCase
-    	System.out.println("beter");
       Iterator<Afwezigheid> it = afwezigheden.iterator();
       while (it.hasNext()) {
       		Afwezigheid i = it.next();
           if (i.getUseCase().equals("ziekMelden") && i.getUsername().equals(username)) {
-          	System.out.println("useCase klopt!");
              it.remove();
           }
       }
@@ -164,35 +165,56 @@ public class AfwezigheidsController implements Handler {
 		String lGebruikersnaam = lJsonObjectIn.getString("username");
 		
 		ArrayList<Afwezigheid> afwezigheden = getAfwezigheden();
-		JsonArrayBuilder lJsonArrayBuilder = Json.createArrayBuilder();	
+		JsonArrayBuilder lJsonArrayZiektes = Json.createArrayBuilder();
+		JsonArrayBuilder lJsonArrayAfwezigheden = Json.createArrayBuilder();
+		JsonObjectBuilder lTotaal =	Json.createObjectBuilder(); 
+		
+		
+		Collections.sort(afwezigheden, new Comparator<Afwezigheid>() {
+	    public int compare(Afwezigheid m1, Afwezigheid m2) {
+	        return m1.getBeginTijd().compareTo(m2.getEindTijd());
+	    }
+		});
 		
 		for(Afwezigheid a : afwezigheden){
 			if(a.getUsername().equals(lGebruikersnaam)){
 				String datum = new SimpleDateFormat("dd-MM-yyyy").format(a.getBeginTijd());
 				String startTijd = new SimpleDateFormat("HH:mm").format(a.getBeginTijd());
 				String eindTijd = new SimpleDateFormat("HH:mm").format(a.getEindTijd());	
-  			JsonObjectBuilder lJob =	Json.createObjectBuilder();   			
-  			lJob
-  			.add("datum", datum)
-  			.add("startTijd", startTijd)
-  			.add("eindTijd", eindTijd)
-  			.add("vak", a.getVak())
-  			.add("klas", a.getKlas())
-  			.add("lokaal", a.getLokaal())
-  			.add("docent", a.getDocent())
-  			.add("usecase", a.getUseCase());	
-  			
-  			
-  			lJsonArrayBuilder.add(lJob);
+  			if(a.getUseCase().equals("ziekMelden")){
+  			JsonObjectBuilder lJob =	Json.createObjectBuilder(); 
+    			lJob
+    			.add("datum", datum)
+    			.add("startTijd", startTijd)
+    			.add("eindTijd", eindTijd)
+    			.add("vak", a.getVak())
+    			.add("klas", a.getKlas())
+    			.add("lokaal", a.getLokaal())
+    			.add("docent", a.getDocent());
+    			lJsonArrayZiektes.add(lJob);
+  			}
+  			if(a.getUseCase().equals("afwezigMelden")){
+  			JsonObjectBuilder lJob =	Json.createObjectBuilder(); 
+    			lJob
+    			.add("datum", datum)
+    			.add("startTijd", startTijd)
+    			.add("eindTijd", eindTijd)
+    			.add("vak", a.getVak())
+    			.add("klas", a.getKlas())
+    			.add("lokaal", a.getLokaal())
+    			.add("docent", a.getDocent());
+    			lJsonArrayAfwezigheden.add(lJob);
+  			}
 			}
 		}
   	
   	
   	
-  	
+		lTotaal.add("ziektes", lJsonArrayZiektes);
+		lTotaal.add("afwezigheden", lJsonArrayAfwezigheden);
+		
    	//nothing to return use only errorcode to signal: ready!
-  	String lJsonOutStr = lJsonArrayBuilder.build().toString();
-  	System.out.println(lJsonOutStr);
+  	String lJsonOutStr = lTotaal.build().toString();
  		conversation.sendJSONMessage(lJsonOutStr);					// terug naar de Polymer-GUI!
 	}
 

@@ -37,16 +37,14 @@
         border-bottom: 1px solid red;           /* a red line */
         padding-bottom: 2px;                    /* space above the border line */
       }
-      .startTijd {
-        min-width: 100px;
-        text-align: left;
-       }
-      .eindTijd {
-        min-width: 100px;
-        text-align: left;
+      .vak{
+        width: 150px;
       }
-      .datum {
-        min-width: 100px;
+      table{
+        border-collapse: separate;
+        border-spacing: 18px 3px;
+      }
+      th,tr,td{
         text-align: left;
       }
     </style>
@@ -58,31 +56,53 @@
         <paper-button on-click="_toast_clicked" class="toast-button">Sluiten</paper-button>
     </paper-toast>
 
-    <div class="my-title">Overzicht van afwezigheid [[c_rol]] [[c_username]]</div>
+    <div class="my-title">Overzicht van afwezigheid</div>
     <table>
       <tr>
-        <th class="type">Afwezigheid </th>
-      	<th class="datum">Datum </th>
-        <th class="startTijd">Begintijd </th>
-        <th class="eindTijd">Eindtijd </th>
+      	<th>Datum </th>
+        <th>Begintijd </th>
+        <th>Eindtijd </th>
         <th class="vak">Vak </th>
-        <th class="klas">Klas </th>
-        <th class="lokaal">Lokaal </th>
-        <th class="docent">Docent </th>
+        <th>Klas </th>
+        <th>Lokaal </th>
+        <th>Docent </th>
 
       </tr>
       <template is="dom-repeat" items="[[_c_afwezigheden]]">
         <tr>
-          <td class="type">[[item.usecase]]</td>
-          <td class="datum">[[item.datum]]</td>
-          <td class="startTijd">[[item.startTijd]]</td>
-          <td class="eindTijd">[[item.eindTijd]]</td>
+          <td>[[item.datum]]</td>
+          <td>[[item.startTijd]]</td>
+          <td>[[item.eindTijd]]</td>
           <td class="vak">[[item.vak]]</td>
-          <td class="klas">[[item.klas]]</td>
-          <td class="lokaal">[[item.lokaal]]</td>
-          <td class="docent">[[item.docent]]</td>
-        
+          <td>[[item.klas]]</td>
+          <td>[[item.lokaal]]</td>
+          <td>[[item.docent]]</td>   
+        </tr>
+      </template>
+    </table>
 
+    <br><br>
+    <div class="my-title">Overzicht van ziekte</div>
+    <table>
+      <tr>
+        <th>Datum </th>
+        <th>Begintijd </th>
+        <th>Eindtijd </th>
+        <th class="vak">Vak </th>
+        <th>Klas </th>
+        <th>Lokaal </th>
+        <th>Docent </th>
+
+      </tr>
+      <template is="dom-repeat" items="[[_c_ziektes]]">
+        <tr>
+          <td>[[item.datum]]</td>
+          <td>[[item.startTijd]]</td>
+          <td>[[item.eindTijd]]</td>
+          <td class="vak">[[item.vak]]</td>
+          <td>[[item.klas]]</td>
+          <td>[[item.lokaal]]</td>
+          <td>[[item.docent]]</td>
         </tr>
       </template>
     </table>
@@ -112,6 +132,10 @@
           _c_afwezigheden: {
             type: Array,           /* array<student-info>: student-info = {id, firstName, lastName, datum} 
 										array is constant groepnr is changable */
+          },
+          _c_ziektes: {
+            type: Array,           /* array<student-info>: student-info = {id, firstName, lastName, datum} 
+                    array is constant groepnr is changable */
           },
           c_rol: {
             type: String,
@@ -158,8 +182,8 @@
         },
 
         _afwezigheid_ophalen_response_handler: function(request) {
-          this._c_afwezigheden = request.detail.response;
-          console.log(this._c_afwezigheden);
+          this._c_afwezigheden = request.detail.response.afwezigheden;
+          this._c_ziektes = request.detail.response.ziektes;
         },
 
         
