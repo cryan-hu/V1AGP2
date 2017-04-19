@@ -78,8 +78,8 @@
       </tr>
       <template is="dom-repeat" items="[[_c_studenten]]">
         <tr>
-          <td class="voornaam">  <a href$="#/student/details/[[item.firstName]]-[[item.lastName]]">[[item.firstName]]</a></td>
-          <td class="achternaam"><a href$="#/student/details/[[item.firstName]]-[[item.lastName]]">[[item.lastName]] </a></td>
+          <td class="voornaam">[[item.firstName]]</td>
+          <td class="achternaam">[[item.lastName]]</td>
           <td class="groepid">
              <paper-checkbox
               class="my-check"
