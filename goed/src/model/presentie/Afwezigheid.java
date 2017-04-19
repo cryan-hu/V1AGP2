@@ -1,46 +1,56 @@
 package model.presentie;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Formatter;
 
+
 public class Afwezigheid {
-	private Calendar beginDatum;
-	private Calendar eindDatum;
-	private String type;
+	private Date beginTijd;
+	private Date eindTijd;
+	private String useCase;
+	private String username;
+	private String vak;
+	private String klas;
+	private String docent;
+	
 
-	public Afwezigheid(String type, Calendar beginDatum, Calendar eindDatum) {
-		this.type = type;
-		this.beginDatum = beginDatum;
-		this.eindDatum = eindDatum;
+	public Afwezigheid(String useCase, Date beginTijd, Date eindTijd, String username, String vak, String klas, String docent) {
+		this.useCase = useCase;
+		this.beginTijd= beginTijd;
+		this.eindTijd = eindTijd;
+		this.username = username;
+		this.vak = vak;
+		this.klas = klas;
+		this.docent = docent;
 	}
 
-	public String getBeginDatum() {
-	  Calendar bDatum = Calendar.getInstance();
-		SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
-		String beginDatum= format1.format(bDatum);
-		return beginDatum;
+	public Date geteindTijd() { //aanpassen
+		return this.eindTijd;
+	}
+	
+	public Date getBeginTijd() { //aanpassen
+		return this.beginTijd;
 	}
 
-	public String getEindDatum() {
-	  Calendar eDatum = Calendar.getInstance();
-		SimpleDateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
-		String eindDatum= format1.format(eDatum);
-		return eindDatum;
+	public String getUseCase() {
+		return useCase;
+	}
+	
+	public String getUsername() {
+		return username;
 	}
 
-	private String getType() {
-		return type;
-	}
-
-	public String getVolledigeAfwezigheid() {
-		String s= "De Volledige afwezigheid is van: "+beginDatum+" tot "+eindDatum+"."; 
-		return s; // beginDatum + eindDatum;
+	public String getAfwezigheid() {
+		String s= "De afwezigheid is van " + this.beginTijd + " tot " + this.eindTijd; 
+		return s; // datum + eindTijd;
 	}
 
 	public boolean isActieveZiektemelding() {
 		Calendar nowDate = Calendar.getInstance(); 
-		if (nowDate.after(beginDatum) && nowDate.before(eindDatum)) { // begin<huidigedatum<eind
+		if (nowDate.after(this.beginTijd) && nowDate.before(eindTijd)) { // begin<huidigedatum<eind
 			return true;
 		} else {
 			return false; // hier moet met huidige datum gekeken worden of dat wel in
@@ -51,7 +61,7 @@ public class Afwezigheid {
 
 	public boolean isZiektemelding(){
 		
-		if(this.type.contains("ziek")){
+		if(this.useCase.contains("ziek")){
 			return true;
 		}else{
 			return false;
@@ -60,7 +70,7 @@ public class Afwezigheid {
 		
 		
 		
-			/*if (beginDatum!=null && eindDatum!=null){
+			/*if (datum!=null && eindTijd!=null){
 				return true;
 			} else{
 			return false; // kijken of er begin en eind datum zijn ingesteld zoja dan returnt True anders false;
@@ -68,16 +78,41 @@ public class Afwezigheid {
 		}*/
 	}
 
-	private void setBeginDatum(Calendar beginDatum) {
-		this.beginDatum = beginDatum;
+	
+	public boolean equals(Object obj){
+		boolean gelijkeObjecten = false; 
+		if (obj instanceof Afwezigheid) {
+		Afwezigheid andereAfwezigheid = (Afwezigheid) obj;
+		if (this.useCase.equals(andereAfwezigheid.useCase) &&	
+				this.beginTijd.equals(andereAfwezigheid.beginTijd)	&&
+				this.eindTijd.equals(andereAfwezigheid.eindTijd) &&	
+				this.username.equals(andereAfwezigheid.username) &&	
+				this.vak.equals(andereAfwezigheid.vak) &&	
+				this.klas.equals(andereAfwezigheid.klas) &&	
+				this.docent.equals(andereAfwezigheid.docent)
+				
+				) {
+			gelijkeObjecten = true;
+			}
+		}
+		return gelijkeObjecten;
+	}
+	private void setBeginTijd(Date beginTijd) {
+		this.beginTijd = beginTijd;
 	}
 	
-	public void setEindDatum(Calendar eindDatum){
-		this.eindDatum = eindDatum;
+	public void seteindTijd(Date eindTijd){
+		this.eindTijd = eindTijd;
 	}
 
-	private void setType(String type) {
-		this.type = type;
+	private void setuseCase(String useCase) {
+		this.useCase = useCase;
+	}
+	
+	public String toString(){
+		return  this.useCase + "," + this.beginTijd + "," + this.eindTijd + "," + this.username + "," + this.vak + "," + this.klas + "," + this.docent;
+				
+				
 	}
 
 }

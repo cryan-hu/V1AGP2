@@ -1,10 +1,19 @@
 package controller;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
+import java.util.Locale;
 
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -33,57 +42,117 @@ public class AfwezigheidsController implements Handler {
 	public AfwezigheidsController(PrIS infoSys) {
 		informatieSysteem = infoSys;
 	}
-	private void opslaan(Conversation conversation) throws ParseException {
+	private void opslaan(Conversation conversation) throws ParseException, IOException {
 		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();		
     JsonArray lineItems = lJsonObjectIn.getJsonArray("afwezigheden");
+  	JsonObjectBuilder lJsonObjectTerug = Json.createObjectBuilder();
     String useCase = lJsonObjectIn.getString("useCase");
+    String useCaseVoor = useCase;
+    String berichtTerug = null;
+		if(useCase.equals("afwezigheidVerwijderen")){
+			useCaseVoor = "afwezigMelden";
+		}
+		if(useCase.equals("beterMelden")){
+			useCaseVoor = "beterMelden";
+		}
     String username = lJsonObjectIn.getString("username");
-    
-    Student student = informatieSysteem.getStudent(username);
-    
-    ArrayList<String> lessenAS = new ArrayList<String>();
-    
-    for (Object o : lineItems) { 						 // dit moet Afwezigheid o worden , op de juiste manier casten.
+    DateFormat format1 = new SimpleDateFormat("dd-MM-yyyy HH:mm");     
+  	ArrayList<Afwezigheid> afwezigheden = getAfwezigheden();
+  	
+  	
+
+    ArrayList<String> lessenAS = new ArrayList<String>();    
+    for (Object o : lineItems) { 
     	lessenAS.add(o.toString());
     }
     System.out.println(useCase + " voor " + username);
-    System.out.println(lessenAS);
-    JsonArrayBuilder lJsonArrayBuilder = Json.createArrayBuilder();	
+    
     for(String s : lessenAS){
     	String[] element = s.split("\",\"");
     	String lesDatum = element[0].replace("[","").replace("\"", "");
     	String lesBeginDatumTijdString = lesDatum+" "+element[2];
-			String lesEindDatumTijdString = lesDatum+" "+element[3];
-			Calendar lesBeginDatumTijdCal = Calendar.getInstance();
-			Calendar lesEindDatumTijdCal = Calendar.getInstance();
-			
-			System.out.println(lesBeginDatumTijdString);
-			
-			
-			Date lesBeginDatum = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(lesBeginDatumTijdString);
-			Date lesEindDatum = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(lesEindDatumTijdString);
+			String lesEindDatumTijdString = lesDatum+" "+element[3];	
+			String docent = element[5].replace("]","").replace("\"", "");
 
 			
-			lesBeginDatumTijdCal.setTime(lesBeginDatum);
-			lesEindDatumTijdCal.setTime(lesEindDatum);
-    	Afwezigheid afwezigheidStudent = new Afwezigheid(useCase, lesBeginDatumTijdCal, lesEindDatumTijdCal);
-    	student.voegAfwezigheidToe(afwezigheidStudent);
+			Date lesBeginTijd = format1.parse(lesBeginDatumTijdString);
+			Date lesEindTijd = format1.parse(lesEindDatumTijdString);
+			
+    	Afwezigheid afwezigheidStudent = new Afwezigheid(useCaseVoor, lesBeginTijd, lesEindTijd, username, element[1], element[4], docent);
     	
+    	if(useCase.equals("ziekMelden") || useCase.equals("afwezigMelden")){	//ziekMelden en afwezigMelden useCase
+    		if(!afwezigheden.contains(afwezigheidStudent)){
+    			afwezigheden.add(afwezigheidStudent);
+    			berichtTerug = "Afwezigheid/ziekmelding succesvol toegevoegd!";
+    		}
+    		else{
+    			berichtTerug = "Er bestaat al eenzelfde afwezigheid/ziekmelding!";
+    		}
+    	}	else if(useCase.equals("afwezigheidVerwijderen")){					//afwezigheidVerwijderen useCase
+    		if(afwezigheden.contains(afwezigheidStudent)){
+    			berichtTerug = "Afwezigheid succesvol verwijdert!";
+    			afwezigheden.remove(afwezigheidStudent);
+    		} else {
+    			berichtTerug = "Geen afwezigheid om te verwijderen!";
+    		}
+    	}
     	
-    	JsonObjectBuilder lJsonObjectTerug = Json.createObjectBuilder();
-    	lJsonObjectTerug
-    	.add("Student afgemeld", username);
-    	
-    	lJsonArrayBuilder.add(lJsonObjectTerug);
-    	
-    	
-    	
-    }
     
+    	
+    	
+    }    
+  
+    if(useCase.equals("beterMelden")){                                    //beterMelden useCase
+      Iterator<Afwezigheid> it = afwezigheden.iterator();
+      while (it.hasNext()) {
+          if (it.next().getUseCase().equals("ziekMelden")) {
+              it.remove();
+          }
+      }
+      berichtTerug = "Je bent nu beter gemeld, alle ziekmeldingen verwijdert!";
+    }
 
-    String terug = lJsonArrayBuilder.build().toString();	
-    System.out.println(terug);
-    conversation.sendJSONMessage(terug);			
+    try {
+  		writeData(afwezigheden);
+  	} catch (IOException e) {
+  		// TODO Auto-generated catch block
+  		e.printStackTrace();
+  	}
+    
+    lJsonObjectTerug.add("terugString", berichtTerug);
+    String terug = lJsonObjectTerug.build().toString();		
+    conversation.sendJSONMessage(terug);
+  	
+
+
+
+		
+	}
+	
+	private ArrayList<Afwezigheid> getAfwezigheden() throws ParseException, IOException {
+		FileReader fr = new FileReader("CSV/afwezigheden.csv");
+		BufferedReader br = new BufferedReader(fr);
+  	ArrayList<Afwezigheid> afwezigBestaand = new ArrayList<Afwezigheid>();
+  	String regel = br.readLine();
+		while(regel != null){
+			String[] values = regel.split(",");
+			Date lesBeginTijd = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.UK).parse(values[1]);
+			Date lesEindTijd = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.UK).parse(values[2]);
+			Afwezigheid b = new Afwezigheid(values[0],lesBeginTijd,lesEindTijd,values[3],values[4],values[5],values[6]);
+			afwezigBestaand.add(b);
+			regel = br.readLine();
+		}
+		br.close();
+		return afwezigBestaand;
+	}
+	private void writeData(ArrayList<Afwezigheid> afwezigheden) throws IOException, ParseException{		
+		
+		FileWriter fw = new FileWriter("CSV/afwezigheden.csv");
+		PrintWriter pw = new PrintWriter(fw);
+		for(Afwezigheid a : afwezigheden){
+			pw.println(a.toString());
+		}
+		pw.close();		
 	}
 
 
@@ -98,7 +167,7 @@ public class AfwezigheidsController implements Handler {
 		for(Afwezigheid a : afwezighedenStudent){
 			JsonObjectBuilder lJob =	Json.createObjectBuilder(); 
 			lJob
-			.add("vollegdige afwezigheid", a.getVolledigeAfwezigheid());
+			.add("vollegdige afwezigheid", a.getAfwezigheid());
 			
 			lJsonArrayBuilder.add(lJob);
 			
@@ -117,7 +186,7 @@ public class AfwezigheidsController implements Handler {
 		if (conversation.getRequestedURI().startsWith("/student/useCase/ophalen")) {
 			try {
 				opslaan(conversation);
-			} catch (ParseException e) {
+			} catch (ParseException | IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}

@@ -4,11 +4,13 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -18,6 +20,7 @@ import javax.json.JsonObjectBuilder;
 
 import model.PrIS;
 import model.persoon.Student;
+import model.presentie.Afwezigheid;
 import model.klas.Klas;
 
 import server.Conversation;
@@ -71,7 +74,6 @@ public class RoosterController implements Handler {
 			
 			
 			Student lStudentZelf = informatieSysteem.getStudent(lGebruikersnaam);
-			String  lGroepIdZelf = lStudentZelf.getGroepId();
 			
 			Klas lKlas = informatieSysteem.getKlasVanStudent(lStudentZelf);		// klas van de student opzoeken
 			String klasCode = lKlas.getKlasCode(); // code van de klas
@@ -105,7 +107,7 @@ public class RoosterController implements Handler {
 			String csvFile = "././CSV/rooster.csv";
 			BufferedReader br = null;
 			String line = "";
-			ArrayList data = new ArrayList<Date>();
+			ArrayList<Date> data = new ArrayList<Date>();
 			try {
 				br = new BufferedReader(new FileReader(csvFile));
 				while ((line = br.readLine()) != null) {
@@ -116,13 +118,15 @@ public class RoosterController implements Handler {
 							data.add(yourDate);
 						}
 						if(yourDate.equals(maandag)){
-							if(klasCode.equals(klas)){							
+							if(klasCode.equals(klas)){	
 								lJsonObjectBuilderVoorLesMa.add("startTijd", element[1]);
 								lJsonObjectBuilderVoorLesMa.add("eindTijd", element[2]);
 								lJsonObjectBuilderVoorLesMa.add("vak", element[3]);
 								lJsonObjectBuilderVoorLesMa.add("emailDocent", element[4]);
 								lJsonObjectBuilderVoorLesMa.add("locatie", element[5]);
 								lJsonObjectBuilderVoorLesMa.add("klas", element[6]);
+								System.out.println(afwezigheidControle(format1.format(maandag),element[1],element[2],lGebruikersnaam));
+								lJsonObjectBuilderVoorLesMa.add("afwezigheid",afwezigheidControle(format1.format(maandag),element[1],element[2],lGebruikersnaam));
 							lJsonObjectBuilderLesMa.add("les",lJsonObjectBuilderVoorLesMa);
 							lJsonArrayBuilderMa.add(lJsonObjectBuilderLesMa);
 							}
@@ -202,8 +206,6 @@ public class RoosterController implements Handler {
 				 lJsonTotaal.add("woensdag", lJsonWoensdag);
 				 lJsonTotaal.add("donderdag", lJsonDonderdag);
 				 lJsonTotaal.add("vrijdag", lJsonVrijdag);
-				 String jsonmaandag = lJsonMaandag.build().toString();	
-				 String jsondinsdag = lJsonDinsdag.build().toString();	
 			   String lJsonOutStr = lJsonTotaal.build().toString();												// maak er een string van
 			   conversation.sendJSONMessage(lJsonOutStr);		
 			} catch (FileNotFoundException e1) {
@@ -224,10 +226,52 @@ public class RoosterController implements Handler {
 					}
 				}
 				}
-			}	
+			}
 
-	private void add(String string, String string2) {
-		// TODO Auto-generated method stub
+	private String afwezigheidControle(String datum, String startTijd, String eindTijd, String lGebruikersnaam) throws ParseException, IOException {
+		ArrayList<Afwezigheid> afwezigheden = getAfwezigheden();
+		DateFormat format1 = new SimpleDateFormat("dd-MM-yyyy HH:mm");   
+		String lesDatum = datum.replace("[","").replace("\"", "");
+  	String lesBeginDatumTijdString = lesDatum+" "+startTijd;
+		String lesEindDatumTijdString = lesDatum+" "+eindTijd;	
+		Date lesBeginTijd = format1.parse(lesBeginDatumTijdString);
+		Date lesEindTijd = format1.parse(lesEindDatumTijdString);	
+		String s = "white";
 		
+  	for(Afwezigheid a : afwezigheden){
+  		if(a.getBeginTijd().equals(lesBeginTijd) && a.geteindTijd().equals(lesEindTijd) && a.getUsername().equals(lGebruikersnaam)){
+  			if(a.getUseCase().equals("ziekMelden")){
+  				s = "red";
+  				break;
+  			}
+  			else if(a.getUseCase().equals("afwezigMelden")){
+  				s = "blue";
+  				break;
+  			}
+  		}
+  	}
+  	return s;
+
+		
+		
+	}	
+	
+	private ArrayList<Afwezigheid> getAfwezigheden() throws ParseException, IOException {
+		FileReader fr = new FileReader("CSV/afwezigheden.csv");
+		BufferedReader br = new BufferedReader(fr);
+  	ArrayList<Afwezigheid> afwezigBestaand = new ArrayList<Afwezigheid>();
+  	String regel = br.readLine();
+		while(regel != null){
+			String[] values = regel.split(",");
+			Date lesBeginTijd = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.UK).parse(values[1]);
+			Date lesEindTijd = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.UK).parse(values[2]);
+			Afwezigheid b = new Afwezigheid(values[0],lesBeginTijd,lesEindTijd,values[3],values[4],values[5],values[6]);
+			afwezigBestaand.add(b);
+			regel = br.readLine();
+		}
+		br.close();
+		return afwezigBestaand;
 	}
+
+	
 	}

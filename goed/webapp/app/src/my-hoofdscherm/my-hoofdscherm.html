@@ -56,7 +56,10 @@
       display: block;
       text-align: center;
     }
-    section.student [verborgen]{
+    section.student[verborgen]{
+      background-color: red;
+    }
+    td[background="red"]{
       background-color: red;
     }
 
@@ -87,7 +90,7 @@
     <data-table-column name="Maandag {{ma}}">
       <template>
       <table>
-      <tr><td colspan="2" id="vak">[[item.les.vak]]</td></tr>
+      <tr><td colspan="2" id="vak" style="background-color:[[item.les.afwezigheid]];">[[item.les.vak]]</td></tr>
       <tr><td><span class="tijden">[[item.les.startTijd]]</span></td><td><span class="tijden">[[item.les.eindTijd]]</span></td></tr>
       <tr><td>[[item.les.lokaal]]</td><td>[[item.les.klas]]</td></tr>
       <tr><td colspan="2">[[item.les.emailDocent]]</td></tr>
@@ -99,7 +102,7 @@
     <data-table-column name="Dinsdag {{di}}">
       <template>
       <table>
-      <tr><td colspan="2">[[item.les.vak]]</td></tr>
+      <tr><td colspan="2" background={{back}}>[[item.les.vak]]</td></tr>
       <tr><td><span class="tijden">[[item.les.startTijd]]</span></td><td><span class="tijden">[[item.les.eindTijd]]</span></td></tr>
       <tr><td>[[item.les.lokaal]]</td><td>[[item.les.klas]]</td></tr>
       <tr><td colspan="2">[[item.les.emailDocent]]</td></tr>
@@ -111,7 +114,7 @@
     <data-table-column name="Woensdag {{wo}}">
       <template>
       <table>
-      <tr><td colspan="2">[[item.les.vak]]</td></tr>
+      <tr><td colspan="2"> [[item.les.vak]]</td></tr>
       <tr><td><span class="tijden">[[item.les.startTijd]]</span></td><td><span class="tijden">[[item.les.eindTijd]]</span></td></tr>
       <tr><td>[[item.les.lokaal]]</td><td>[[item.les.klas]]</td></tr>
       <tr><td colspan="2">[[item.les.emailDocent]]</td></tr>
@@ -194,6 +197,11 @@
           c_username:{
             type: String,
             notify: true,
+          },
+          back:{
+            type: String,
+            notify: true,
+            value: "red",
           },
           selectedZondag:{
             type: Date,
@@ -335,7 +343,7 @@
            }
            },
           _use_case_response_handler: function(request) {
-            console.log("_usecase_response useCase= " + request.detail.response.terugString);
+            console.log("_usecase_response " + request.detail.response.terugString);
            },
           _toast_clicked: function(e) {
             var lToast = this.$.toast_invalid_aanroep;        // meldt ongeldige aanroep

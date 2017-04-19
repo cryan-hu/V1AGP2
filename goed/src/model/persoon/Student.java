@@ -3,6 +3,7 @@ package model.persoon;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import model.presentie.Afwezigheid;
 
@@ -52,9 +53,9 @@ public class Student extends Persoon {
 		}
 
 	public Afwezigheid getActieveZiektemelding(){
-		Calendar nowDate = Calendar.getInstance(); 
+		Date nowDate = new Date();
 		for (Afwezigheid a: afwezigheden){
-			if(nowDate.before(a.getEindDatum())){
+			if(nowDate.before(a.getBeginTijd())){
 				return a;
 			}
 		} // returnt actieve melding die open staat.
