@@ -49,6 +49,7 @@ public class Application {
   	server.registerHandler("/student/studenten/ophalen", studentenController);
   	server.registerHandler("/student/studenten/opslaan", studentenController);
   	server.registerHandler("/student/useCase/ophalen", afwezigheidsController);
+  	server.registerHandler("/student/useCase/opslaan", afwezigheidsController);
   	server.registerHandler("/student/ziekmelden/opslaan", studentenController);  	
 		
 		server.start();

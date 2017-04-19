@@ -12,6 +12,55 @@ public class Afwezigheid {
 	private Date eindTijd;
 	private String useCase;
 	private String username;
+	
+	public Date getEindTijd() {
+		return eindTijd;
+	}
+
+	public void setEindTijd(Date eindTijd) {
+		this.eindTijd = eindTijd;
+	}
+
+	public String getVak() {
+		return vak;
+	}
+
+	public void setVak(String vak) {
+		this.vak = vak;
+	}
+
+	public String getKlas() {
+		return klas;
+	}
+
+	public void setKlas(String klas) {
+		this.klas = klas;
+	}
+
+	public String getDocent() {
+		return docent;
+	}
+
+	public void setDocent(String docent) {
+		this.docent = docent;
+	}
+
+	public String getLokaal() {
+		return lokaal;
+	}
+
+	public void setLokaal(String lokaal) {
+		this.lokaal = lokaal;
+	}
+
+	public void setUseCase(String useCase) {
+		this.useCase = useCase;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
 	private String vak;
 	private String klas;
 	private String docent;
@@ -29,25 +78,18 @@ public class Afwezigheid {
 		this.lokaal = lokaal;
 	}
 
-	public Date geteindTijd() { //aanpassen
-		return this.eindTijd;
-	}
-	
-	public Date getBeginTijd() { //aanpassen
-		return this.beginTijd;
+
+
+	public Date getBeginTijd() {
+		return beginTijd;
 	}
 
 	public String getUseCase() {
 		return useCase;
 	}
-	
+
 	public String getUsername() {
 		return username;
-	}
-
-	public String getAfwezigheid() {
-		String s= "De afwezigheid is van " + this.beginTijd + " tot " + this.eindTijd; 
-		return s; // datum + eindTijd;
 	}
 
 	public boolean isActieveZiektemelding() {

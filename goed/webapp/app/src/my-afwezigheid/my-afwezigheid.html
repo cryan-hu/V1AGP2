@@ -37,11 +37,11 @@
         border-bottom: 1px solid red;           /* a red line */
         padding-bottom: 2px;                    /* space above the border line */
       }
-      .voornaam {
+      .startTijd {
         min-width: 100px;
         text-align: left;
        }
-      .achternaam {
+      .eindTijd {
         min-width: 100px;
         text-align: left;
       }
@@ -61,15 +61,28 @@
     <div class="my-title">Overzicht van afwezigheid [[c_rol]] [[c_username]]</div>
     <table>
       <tr>
+        <th class="type">Afwezigheid </th>
       	<th class="datum">Datum </th>
-        <th class="voornaam">Voornaam </th>
-        <th class="achternaam">Achternaam </th>
+        <th class="startTijd">Begintijd </th>
+        <th class="eindTijd">Eindtijd </th>
+        <th class="vak">Vak </th>
+        <th class="klas">Klas </th>
+        <th class="lokaal">Lokaal </th>
+        <th class="docent">Docent </th>
+
       </tr>
-      <template is="dom-repeat" items="[[_c_afwezigheid]]">
+      <template is="dom-repeat" items="[[_c_afwezigheden]]">
         <tr>
+          <td class="type">[[item.usecase]]</td>
           <td class="datum">[[item.datum]]</td>
-          <td class="voornaam">[[item.firstName]]</td>
-          <td class="achternaam">[[item.lastName]]</td>
+          <td class="startTijd">[[item.startTijd]]</td>
+          <td class="eindTijd">[[item.eindTijd]]</td>
+          <td class="vak">[[item.vak]]</td>
+          <td class="klas">[[item.klas]]</td>
+          <td class="lokaal">[[item.lokaal]]</td>
+          <td class="docent">[[item.docent]]</td>
+        
+
         </tr>
       </template>
     </table>
@@ -77,7 +90,7 @@
     <iron-ajax
       id="ajax_afwezigheid_ophalen"
       method="POST"
-      url="/student/afwezigheid/ophalen"
+      url="/student/useCase/opslaan"
       handle-as="json"
       on-response="_afwezigheid_ophalen_response_handler">
     </iron-ajax>
@@ -96,7 +109,7 @@
         is: 'my-afwezigheid',
 
         properties: {
-          _c_afwezigheid: {
+          _c_afwezigheden: {
             type: Array,           /* array<student-info>: student-info = {id, firstName, lastName, datum} 
 										array is constant groepnr is changable */
           },
@@ -144,9 +157,9 @@
           this.$.ajax_afwezigheid_ophalen.generateRequest();
         },
 
-        _studenten_ophalen_response_handler: function(request) {
-          console.log("_afwezigheid_ophalen_response_handler aantal studenten="+request.detail.response.length);
-          this._c_studenten = request.detail.response;
+        _afwezigheid_ophalen_response_handler: function(request) {
+          this._c_afwezigheden = request.detail.response;
+          console.log(this._c_afwezigheden);
         },
 
         

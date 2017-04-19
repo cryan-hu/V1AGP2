@@ -167,12 +167,24 @@ public class AfwezigheidsController implements Handler {
 		JsonArrayBuilder lJsonArrayBuilder = Json.createArrayBuilder();	
 		
 		for(Afwezigheid a : afwezigheden){
-			JsonObjectBuilder lJob =	Json.createObjectBuilder(); 
-			lJob
-			.add("vollegdige afwezigheid", a.getAfwezigheid());
-			
-			lJsonArrayBuilder.add(lJob);
-			
+			if(a.getUsername().equals(lGebruikersnaam)){
+				String datum = new SimpleDateFormat("dd-MM-yyyy").format(a.getBeginTijd());
+				String startTijd = new SimpleDateFormat("HH:mm").format(a.getBeginTijd());
+				String eindTijd = new SimpleDateFormat("HH:mm").format(a.getEindTijd());	
+  			JsonObjectBuilder lJob =	Json.createObjectBuilder();   			
+  			lJob
+  			.add("datum", datum)
+  			.add("startTijd", startTijd)
+  			.add("eindTijd", eindTijd)
+  			.add("vak", a.getVak())
+  			.add("klas", a.getKlas())
+  			.add("lokaal", a.getLokaal())
+  			.add("docent", a.getDocent())
+  			.add("usecase", a.getUseCase());	
+  			
+  			
+  			lJsonArrayBuilder.add(lJob);
+			}
 		}
   	
   	
@@ -180,6 +192,7 @@ public class AfwezigheidsController implements Handler {
   	
    	//nothing to return use only errorcode to signal: ready!
   	String lJsonOutStr = lJsonArrayBuilder.build().toString();
+  	System.out.println(lJsonOutStr);
  		conversation.sendJSONMessage(lJsonOutStr);					// terug naar de Polymer-GUI!
 	}
 
