@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 
 public class PrIS {
@@ -74,15 +76,9 @@ public class PrIS {
 		vulVakken(deVakken);
 
 		vulLessen(deLessen);
-
-
 		
-	
-	} //Einde Pris constructor
-	
-	//deze method is static onderdeel van PrIS omdat hij als hulp methode 
-	//in veel controllers gebruikt wordt
-	//een standaardDatumString heeft formaat YYYY-MM-DD
+	}
+
 	public static Calendar standaardDatumStringToCal(String pStadaardDatumString) {
 		Calendar lCal = Calendar.getInstance();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -117,15 +113,6 @@ public class PrIS {
 		return lString;
 	}
 
-	private Vak getVak(String vakCode){
-		for (Vak lVak : deVakken) {
-			if (lVak.getVakCode().equals(vakCode)){
-				return lVak;
-			}
-		}
-		return null;
-	}
-	
 	public Docent getDocent(String gebruikersnaam) {
 		Docent resultaat = null;
 		
@@ -222,6 +209,100 @@ public ArrayList<Presentie> getPresentieStudent(String student){
 			}
 		}return presentieStudent;
 	}
+
+public ArrayList<Klas> getKlassenDocent(String username){
+  	String lGebruikersnaam = username;
+  	String csvFile2 = "././CSV/rooster.csv";
+  	BufferedReader br2 = null;
+  	String line2 = "";
+  	ArrayList<Klas> klassen = new ArrayList<Klas>();
+  	try {
+  		br2 = new BufferedReader(new FileReader(csvFile2));
+  		while ((line2 = br2.readLine()) != null) {
+  				String[] element = line2.split(",");
+  				String docentcsv = element[4];
+  				String klascsv = element[6];
+  				String klasnaam = klascsv.substring(klascsv.length() - 3);
+  				Klas klas = new Klas(klascsv,klasnaam);
+  				if(docentcsv.equals(lGebruikersnaam)){
+  					if(!klassen.contains(klas)){
+  						klassen.add(klas);
+  					}
+  				}
+  
+  		}
+  	} catch (FileNotFoundException e1) {
+  		// TODO Auto-generated catch block
+  		e1.printStackTrace();
+  	} catch (IOException e) {
+  		// TODO Auto-generated catch block
+  		e.printStackTrace();
+  	}finally {
+  		if (br2 != null) {
+  			try {
+  				br2.close();
+  			} catch (IOException e) {
+  				e.printStackTrace();
+  			}
+  		}
+  	}	
+  	
+		Collections.sort(klassen, new Comparator<Klas>() {
+	    public int compare(Klas k1, Klas k2) {
+	        return k1.getNaam().compareTo(k2.getNaam());
+	    }
+		});
+  	return klassen;
+  }
+public ArrayList<Student> getStudentenKlassen(ArrayList<Klas> klassen){
+	Student lStudent;
+	ArrayList <Student> alleStudenten = new ArrayList<Student>();
+	for (Klas k : klassen) {			
+		String csvFile = "././CSV/" + k.getNaam() + ".csv";
+		BufferedReader br = null;
+		String line = "";
+		String cvsSplitBy = ",";
+
+		try {
+
+			br = new BufferedReader(new FileReader(csvFile));
+			
+			while ((line = br.readLine()) != null) {
+
+			    // use comma as separator
+				String[] element = line.split(cvsSplitBy);
+				String gebruikersnaam = (element[3] + "." + element[2] + element[1] + "@student.hu.nl").toLowerCase();
+				String klas = k.getNaam();
+				// verwijder spaties tussen  dubbele voornamen en tussen bv van der 
+				gebruikersnaam = gebruikersnaam.replace(" ","");
+				String lStudentNrString  = element[0];
+				int lStudentNr = Integer.parseInt(lStudentNrString);
+				lStudent = new Student(element[3], element[2], element[1], "geheim", gebruikersnaam, lStudentNr,klas); //Volgorde 3-2-1 = voornaam, tussenvoegsel en achternaam
+				alleStudenten.add(lStudent);
+				k.voegStudentToe(lStudent);
+				
+				//System.out.println(gebruikersnaam);
+		
+			}
+
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			if (br != null) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}	
+		
+	}	
+	return alleStudenten;
+	
+}
 	
 	public Student getStudent(String pGebruikersnaam) {
 		// used
@@ -343,8 +424,6 @@ public ArrayList<Presentie> getPresentieStudent(String student){
 				String tussenvoegsel = element[2];
 				String achternaam = element[3];
 				pDocenten.add(new Docent(voornaam, tussenvoegsel, achternaam, "geheim", gebruikersnaam, 1));
-				
-				//System.out.println(gebruikersnaam);
 		
 			}
 	
@@ -406,8 +485,6 @@ public ArrayList<Presentie> getPresentieStudent(String student){
 					lStudent = new Student(element[3], element[2], element[1], "geheim", gebruikersnaam, lStudentNr); //Volgorde 3-2-1 = voornaam, tussenvoegsel en achternaam
 					pStudenten.add(lStudent);
 					k.voegStudentToe(lStudent);
-					
-					//System.out.println(gebruikersnaam);
 			
 				}
 
