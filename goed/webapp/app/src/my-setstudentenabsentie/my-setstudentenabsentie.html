@@ -47,15 +47,21 @@
         text-align: left;
        }
       .achternaam {
-        min-width: 100px;
+        min-width: 130px;
         text-align: left;
       }
-      .groepid-header {
-        min-width: 100px;
+      .klas {
+        min-width: 50px;
         text-align: left;
+      }
+      .aanwezig {
+        min-width: 100px;
+        text-align: center;
+
       }
       .groepid{
         min-width: 100px;
+
       }
       .my-button {
         width: 100%;
@@ -85,14 +91,15 @@
       <tr>
         <th class="voornaam">Voornaam </th>
         <th class="achternaam">Achternaam </th>
-        <th class="groepid-header">Klas </th>
+        <th class="klas">Klas </th>
+        <th class="aanwezig">Aanwezig </th>
       </tr>
       <template is="dom-repeat" items="[[_c_studenten]]">
         <tr>
           <td class="voornaam">[[item.firstName]]</td>
           <td class="achternaam">[[item.lastName]]</td>
           <td class="klas">[[item.klas]]</td>
-          <td class="groepid">
+          <td class="aanwezig">
              <paper-checkbox
               class="my-check"
               checked="{{item.sameGroup}}">
@@ -112,7 +119,7 @@
     <td>
     <paper-button
       class="my-button"
-      on-click="_studenten_opslaan_request_handler">Opslaan
+      on-click="_absentie_opslaan_request_handler">Opslaan
     </paper-button>
     </td>
     </tr>
@@ -129,11 +136,11 @@
     </iron-ajax>
  
     <iron-ajax
-      id="ajax_studenten_opslaan"
+      id="ajax_absentie_opslaan"
       method="POST"
-      url="/student/studenten/opslaan"
+      url="/docent/absentie/opslaan"
       handle-as="json"
-      on-response="_studenten_opslaan_response_handler">
+      on-response="_absentie_opslaan_response_handler">
     </iron-ajax>
 
   </template>
@@ -164,18 +171,6 @@
           c_rol: {
             type: String,
           },
-          datum:{
-            type: String,
-            notify: true,
-          },
-          start:{
-            type: String,
-            notify: true,
-          },
-          eind:{
-            type: String,
-            notify: true,
-          },
           c_username: {
             type: String,
           },
@@ -185,6 +180,10 @@
             observer: '_initializing',                          /* wordt ook aangeroepen bijwisseling van true naar false.
                                                                    regel in de functie dat er niets gebeurd
                                                                    als c_visible false is */
+          },
+          aanwezig: {
+            type: Boolean,
+            value: true,
           },
         },
 
@@ -232,18 +231,20 @@
           this._c_studenten = request.detail.response;
         },
 
-        _studenten_opslaan_request_handler: function() {
-          console.log("_studenten_opslaan_request_handler user="+this.c_username);
-          this.$.ajax_studenten_opslaan.contentType="application/json";
-          this.$.ajax_studenten_opslaan.body={
+        _absentie_opslaan_request_handler: function() {
+          console.log("_absentie_opslaan_request_handler user="+this.c_username);
+          this.$.ajax_absentie_opslaan.contentType="application/json";
+          this.$.ajax_absentie_opslaan.body={
               "username":this.c_username,
-              "groupMembers": this._c_studenten
+              "les": this.les,
+              "studenten" : this._c_studenten
           };
-          this.$.ajax_studenten_opslaan.generateRequest();
+          console.log(this._c_studenten);
+          this.$.ajax_absentie_opslaan.generateRequest();
         },
 
-        _studenten_opslaan_response_handler: function(request) {
-          console.log("_studenten_opslaan_response_handler errorcode="+request.detail.response.errorcode);
+        _absentie_opslaan_response_handler: function(request) {
+          console.log(request.detail.response.terugString);
           this._go_back();		/* verlaat de pagina en ga terug naar home page */
         },
 

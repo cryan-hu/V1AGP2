@@ -191,7 +191,6 @@ public class RoosterControllerDocent implements Handler {
 				 lJsonTotaal.add("donderdag", lJsonDonderdag);
 				 lJsonTotaal.add("vrijdag", lJsonVrijdag);
 			   String lJsonOutStr = lJsonTotaal.build().toString();												// maak er een string van
-			   System.out.println(lJsonOutStr);
 			   conversation.sendJSONMessage(lJsonOutStr);		
 			} catch (FileNotFoundException e1) {
 				// TODO Auto-generated catch block

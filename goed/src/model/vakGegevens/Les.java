@@ -2,22 +2,23 @@ package model.vakGegevens;
 
 
 
-import java.util.Calendar;
+import java.util.Date;
+import java.util.Date;
 
 import model.klas.Klas;
 import model.persoon.Docent;
 
 public class Les {
-	private Calendar startDate;
-	private Calendar eindDate;
+	private Date startDate;
+	private Date eindDate;
 	private String locatie;
 	private Vak hetVak;
 	private Klas deKlas; 
 	private Docent deDocent;
 	
 	public Les(
-			Calendar startDate, 
-			Calendar eindDate, 
+			Date startDate, 
+			Date eindDate, 
 			String locatie, 
 			Vak hetVak, 
 			Klas deKlas, 
@@ -54,19 +55,19 @@ public class Les {
 		this.deKlas = deKlas;
 	}
 	
-	public Calendar getStartDateTime(){
+	public Date getStartDateTime(){
 		return startDate;
 	}
 	
-	public void setStartDateTime(Calendar startDate){
+	public void setStartDateTime(Date startDate){
 		this.startDate = startDate;
 	}
 	
-	public Calendar getEindDateTime(){
+	public Date getEindDateTime(){
 		return eindDate;
 	}
 	
-	public void setEindDateTime(Calendar eindDate){
+	public void setEindDateTime(Date eindDate){
 		this.eindDate = eindDate;
 	}
 	

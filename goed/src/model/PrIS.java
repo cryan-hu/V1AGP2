@@ -162,14 +162,7 @@ public class PrIS {
 		}return null;
 	}
 	
-	public Presentie getPresentie(Les les, Student student){
-		for(Presentie p : dePresenties){
-			if(p.getStudent().equals(student)&&
-					p.getLes().equals(les)){
-				return p;
-			}
-		}return null;
-	}
+
 	
 	//public int getPresentieType(Les les, Student student){
 	//	return (Integer) null;
@@ -192,23 +185,9 @@ public class PrIS {
 		return dePresenties;
 	}
 		
-	public ArrayList<Presentie> getPresentieDocent(Docent docent){
-		ArrayList<Presentie> presentieDocent = new ArrayList<Presentie>();
-		for (Presentie p : dePresenties){
-			if(p.getLes().getDocent().equals(docent)){
-				presentieDocent.add(p);
-			}
-		}return presentieDocent;
-	}
+
 	
-public ArrayList<Presentie> getPresentieStudent(String student){
-		ArrayList<Presentie> presentieStudent = new ArrayList<Presentie>();
-		for (Presentie p : dePresenties){
-			if(p.getStudent().equals(student)){
-				presentieStudent.add(p);
-			}
-		}return presentieStudent;
-	}
+
 
 public ArrayList<Klas> getKlassenDocent(String username){
   	String lGebruikersnaam = username;
@@ -332,15 +311,7 @@ public ArrayList<Student> getStudentenKlassen(ArrayList<Klas> klassen){
 		return lGevondenStudent;
 	}
 
-	public boolean inPresentie(Student student, Les les){
-		boolean status = false;
-		for (Presentie p : dePresenties){
-			if (p.getStudent().equals(student)&& p.getLes().equals(les)){
-				status = true;
-			}
-		}
-		return status;
-	}
+
 	
 	public String login(String gebruikersnaam, String wachtwoord) {
 		for (Docent d : deDocenten) {
@@ -362,19 +333,9 @@ public ArrayList<Student> getStudentenKlassen(ArrayList<Klas> klassen){
 		return "undefined";
 	}
 	
-	public void nieuwePresentie(boolean isAanwezig, Les les, boolean opnameDoorDocent, Student student){
-		Presentie nieuwePresentie = new Presentie(isAanwezig, student, les, opnameDoorDocent);
-		dePresenties.add(nieuwePresentie);
-		}
+
 	
-	public void verwijderPresentie(Student student, Les les){
-		for (Presentie p : dePresenties){
-			if (p.getLes().equals(les)&& 
-					p.getStudent().equals(student)){
-				dePresenties.remove(p);
-			}
-		}
-	}
+
 	
 	private void vulVakken(ArrayList<Vak> pVakken){
 		String csvFile = "././CSV/vakken.csv";
@@ -556,14 +517,7 @@ public ArrayList<Student> getStudentenKlassen(ArrayList<Klas> klassen){
 						lesKlas = k;
 					}
 				}		
-				
-				lessen.add(new Les(
-						lesBeginDatumTijdCal, 
-						lesEindDatumTijdCal, 
-						lesLocatie, 
-						lesVak, 
-						lesKlas, 
-						lesDocent));
+			
 
 			}
 	

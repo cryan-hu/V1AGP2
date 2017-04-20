@@ -70,7 +70,6 @@ private void ophalenklas(Conversation conversation) {
 		Klas klas = new Klas(sKlas,klasnaam);
 		ArrayList<Klas> klassen2 = new ArrayList<Klas>();
 		klassen2.add(klas);
-		System.out.println(klassen2);
 		
 		ArrayList<Student> alleStudenten = informatieSysteem.getStudentenKlassen(klassen2);			
 
