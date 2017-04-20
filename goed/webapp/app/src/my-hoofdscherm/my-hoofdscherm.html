@@ -75,7 +75,7 @@
       text="U hebt dit scherm op een illegale manier geactiveerd. U wordt verwezen naar de home page!">
         <paper-button on-click="_toast_clicked" class="toast-button">Sluiten</paper-button>
     </paper-toast>
-  <span><iron-icon icon="arrow-back" on-click="terug"></iron-icon>Week 19<iron-icon icon="arrow-forward" on-click="verder"></iron-icon></span>
+  <span style="font-weight: {{dik}};"><iron-icon icon="arrow-back" on-click="terug"></iron-icon>{{deze}} Week {{weeknummer}}<iron-icon icon="arrow-forward" on-click="verder"></iron-icon></span>
 	<iron-ajax
     id="ajax_rooster_ophalen" 
     url="/student/rooster/ophalen" 
@@ -225,6 +225,18 @@
             type: Date,
             notify: true,
           },
+          weeknummer: {
+            type: String,
+            notify: true,
+          },
+          deze: {
+            type:String,
+            notify: true,
+          },
+          dik: {
+            type: String,
+            notify : true,
+          },
           selectedItems:Array,
           c_visible: {
             type: Boolean,                                      /* true when element is the active visible item */
@@ -244,6 +256,7 @@
                                                         // zal ook de url echt wijzigen
          },
         _rooster_ophalen_request_handler: function() {
+             this.getWeekNummer(this.zondagDate);
              console.log("_rooster_request user="+this.c_username);
              this.$.ajax_rooster_ophalen.contentType="application/json";
              this.$.ajax_rooster_ophalen.body={
@@ -291,6 +304,34 @@
               }
             }
           },
+          getWeekNummer: function(d) { 
+              var target  = new Date(d.valueOf());   
+              var dayNr   = (d.getDay() + 6) % 7; 
+              target.setDate(target.getDate() - dayNr + 3);  
+              var jan4    = new Date(target.getFullYear(), 0, 4); 
+              var dayDiff = (target - jan4) / 86400000;   
+              var weekNr = 1 + Math.ceil(dayDiff / 7);  
+              this.weeknummer = weekNr; 
+
+              var d2 = new Date();
+              var target2  = new Date(d2.valueOf());   
+              var dayNr2   = (d2.getDay() + 6) % 7; 
+              target2.setDate(target2.getDate() - dayNr2 + 3);  
+              var jan42    = new Date(target2.getFullYear(), 0, 4); 
+              var dayDiff2 = (target2 - jan42) / 86400000;   
+              var weekNr2 = Math.ceil(dayDiff2 / 7); 
+              console.log(weekNr2 + " " + weekNr);
+              console.log(weekNr2 == weekNr);
+              if(weekNr2 == weekNr){
+                this.deze = "Deze";
+                this.dik = "bold";
+              }
+              else{
+                this.deze = "";
+                this.dik = "normal";
+              }
+
+            },
           terug: function(){
             let options = {  
                 year: 'numeric',
