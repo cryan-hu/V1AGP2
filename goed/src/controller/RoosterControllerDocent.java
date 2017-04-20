@@ -109,8 +109,9 @@ public class RoosterControllerDocent implements Handler {
 								lJsonObjectBuilderVoorLesMa.add("eindTijd", element[2]);
 								lJsonObjectBuilderVoorLesMa.add("vak", element[3]);
 								lJsonObjectBuilderVoorLesMa.add("emailDocent", element[4]);
-								lJsonObjectBuilderVoorLesMa.add("locatie", element[5]);
+								lJsonObjectBuilderVoorLesMa.add("lokaal", element[5]);
 								lJsonObjectBuilderVoorLesMa.add("klas", element[6]);
+								lJsonObjectBuilderVoorLesMa.add("datum", format1.format(maandag));
 							lJsonObjectBuilderLesMa.add("les",lJsonObjectBuilderVoorLesMa);
 							lJsonArrayBuilderMa.add(lJsonObjectBuilderLesMa);
 							}
@@ -121,8 +122,9 @@ public class RoosterControllerDocent implements Handler {
 								lJsonObjectBuilderVoorLesDi.add("eindTijd", element[2]);
 								lJsonObjectBuilderVoorLesDi.add("vak", element[3]);
 								lJsonObjectBuilderVoorLesDi.add("emailDocent", element[4]);
-								lJsonObjectBuilderVoorLesDi.add("locatie", element[5]);
+								lJsonObjectBuilderVoorLesDi.add("lokaal", element[5]);
 								lJsonObjectBuilderVoorLesDi.add("klas", element[6]);
+								lJsonObjectBuilderVoorLesDi.add("datum", format1.format(dinsdag));
 							lJsonObjectBuilderLesDi.add("les",lJsonObjectBuilderVoorLesDi);
 							lJsonArrayBuilderDi.add(lJsonObjectBuilderLesDi);
 							}
@@ -133,8 +135,9 @@ public class RoosterControllerDocent implements Handler {
 								lJsonObjectBuilderVoorLesWo.add("eindTijd", element[2]);
 								lJsonObjectBuilderVoorLesWo.add("vak", element[3]);
 								lJsonObjectBuilderVoorLesWo.add("emailDocent", element[4]);
-								lJsonObjectBuilderVoorLesWo.add("locatie", element[5]);
+								lJsonObjectBuilderVoorLesWo.add("lokaal", element[5]);
 								lJsonObjectBuilderVoorLesWo.add("klas", element[6]);
+								lJsonObjectBuilderVoorLesWo.add("datum", format1.format(woensdag));
 							lJsonObjectBuilderLesWo.add("les",lJsonObjectBuilderVoorLesWo);
 							lJsonArrayBuilderWo.add(lJsonObjectBuilderLesWo);
 							}
@@ -145,8 +148,9 @@ public class RoosterControllerDocent implements Handler {
 								lJsonObjectBuilderVoorLesDo.add("eindTijd", element[2]);
 								lJsonObjectBuilderVoorLesDo.add("vak", element[3]);
 								lJsonObjectBuilderVoorLesDo.add("emailDocent", element[4]);
-								lJsonObjectBuilderVoorLesDo.add("locatie", element[5]);
+								lJsonObjectBuilderVoorLesDo.add("lokaal", element[5]);
 								lJsonObjectBuilderVoorLesDo.add("klas", element[6]);
+								lJsonObjectBuilderVoorLesDo.add("datum", format1.format(donderdag));
 							lJsonObjectBuilderLesDo.add("les",lJsonObjectBuilderVoorLesDo);
 							lJsonArrayBuilderDo.add(lJsonObjectBuilderLesDo);
 							}
@@ -157,8 +161,9 @@ public class RoosterControllerDocent implements Handler {
 								lJsonObjectBuilderVoorLesVr.add("eindTijd", element[2]);
 								lJsonObjectBuilderVoorLesVr.add("vak", element[3]);
 								lJsonObjectBuilderVoorLesVr.add("emailDocent", element[4]);
-								lJsonObjectBuilderVoorLesVr.add("locatie", element[5]);
+								lJsonObjectBuilderVoorLesVr.add("lokaal", element[5]);
 								lJsonObjectBuilderVoorLesVr.add("klas", element[6]);
+								lJsonObjectBuilderVoorLesVr.add("datum", format1.format(vrijdag));
 							lJsonObjectBuilderLesVr.add("les",lJsonObjectBuilderVoorLesVr);
 							lJsonArrayBuilderVr.add(lJsonObjectBuilderLesVr);
 							}
@@ -186,6 +191,7 @@ public class RoosterControllerDocent implements Handler {
 				 lJsonTotaal.add("donderdag", lJsonDonderdag);
 				 lJsonTotaal.add("vrijdag", lJsonVrijdag);
 			   String lJsonOutStr = lJsonTotaal.build().toString();												// maak er een string van
+			   System.out.println(lJsonOutStr);
 			   conversation.sendJSONMessage(lJsonOutStr);		
 			} catch (FileNotFoundException e1) {
 				// TODO Auto-generated catch block

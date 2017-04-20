@@ -50,6 +50,9 @@
           this.docentnaam = null;
           this.studentnummer = null;
           this.studentnaam = null;
+          var lApp = document.querySelector('my-app');  //het polymer element <my-app>
+          lApp.dataset.klas = null;
+          console.log("weg" + lApp.dataset.klas);
           this._go_home();
          },
         

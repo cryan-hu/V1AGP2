@@ -21,6 +21,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../my-logout/my-logout.html"> <!-- gewijzigd tov PSK -->
 <link rel="import" href="../my-medestudenten/my-medestudenten.html"> <!-- gewijzigd tov PSK -->
 <link rel="import" href="../my-studenten/my-studenten.html"> <!-- gewijzigd tov PSK -->
+<link rel="import" href="../my-docentrooster/my-docentrooster.html"> <!-- gewijzigd tov PSK -->
 
 <dom-module id="my-app">
   <template>
@@ -198,6 +199,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <iron-icon icon="account-box"></iron-icon>
             <span>Medestudenten</span>
           </a>
+          <a name="docentrooster" href$="[[_c_baseURL]]docentrooster"  verborgen$="[[_are_strings_equal(rol, 'undefined', 'student')]]">
+            <iron-icon icon="account-box"></iron-icon>
+            <span>Docent Rooster</span>
+          </a>
           <a name="studenten" href$="[[_c_baseURL]]studenten"  verborgen$="[[_are_strings_equal(rol, 'undefined', 'student')]]">
             <iron-icon icon="account-box"></iron-icon>
             <span>Studentenlijst</span>
@@ -320,6 +325,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </paper-material>
           </section>
 
+          <section name="docentrooster" 
+                   title="Docent Rooster"
+                   element="my-docentrooster">
+            <paper-material elevation="2">
+              <my-docentrooster
+                c_username="[[username]]"
+                c_visible="[[_are_strings_equal(_ar_page, 'docentrooster')]]"
+                rol="[[rol]]">
+              </my-docentrooster>
+            </paper-material>
+          </section>
+
       <section name="medestudenten" 
 
                    title="MEDESTUDENTEN"
@@ -347,6 +364,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               	c_username="[[username]]"
                 c_visible="[[_are_strings_equal(_ar_page, 'afwezigheid')]]"
                 c_rol="[[rol]]">
+
               </my-afwezigheid>
             </paper-material>
          	 </section>
@@ -362,6 +380,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               	</my-studentenabsentie>
             	</paper-material>
          	 </section>
+
+
+            <section name="setstudentenabsentie" 
+                   title="ZET ABSENTIE VAN STUDENTEN"
+                   element="my-setstudentenabsentie">
+              <paper-material elevation="2">
+                <my-setstudentenabsentie
+                  c_username="[[username]]"
+                  c_visible="[[_are_strings_equal(_ar_page, 'setstudentenabsentie')]]"
+                  c_rol="[[rol]]">
+                </my-setstudentenabsentie>
+              </paper-material>
+           </section>
 
 </template>
   <script>
@@ -468,7 +499,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           if(this.rol=="student"){
           lAppRouter.data={page: "hoofdscherm"};
           }else{
-            lAppRouter.data={page: "studenten"};
+            lAppRouter.data={page: "docentrooster"};
           }                   // vul het data attribute met de homepage url
                                                         // door de two way binding in <app-route> en <app-location>
                                                         // zal ook de url echt wijzigen
@@ -603,6 +634,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 		  var eenDatumObject             = new Date(); // is vandaag
 		  this._systeemdatumstandaard    = this.date_to_standaard_string(eenDatumObject);
 		  this._systeemdatumlokaal       = eenDatumObject.toLocaleDateString();
+      var lApp = document.querySelector('my-app');  //het polymer element <my-app>
+      lApp.dataset.klas = null;
 		  console.log("application ready to run");
         },
 	      

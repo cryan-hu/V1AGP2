@@ -4,7 +4,7 @@
 <link rel="import" href="../../bower_components/paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../../bower_components/paper-toast/paper-toast.html">
 <link rel="import" href="../../bower_components/iron-ajax/iron-ajax.html">
-<dom-module id="my-hoofdscherm">
+<dom-module id="my-docentrooster">
   <template>
     <style>
       :host {
@@ -54,10 +54,12 @@
       display: block;
       text-align: center;
     }
-    section.student[verborgen]{
+    section.docent[verborgen]{
       background-color: red;
     }
-
+    td[background="red"]{
+      background-color: red;
+    }
     table#dag{
       table-layout:fixed;
       width: 100%;
@@ -78,7 +80,7 @@
   <span><iron-icon icon="arrow-back" on-click="terug"></iron-icon>Week 19<iron-icon icon="arrow-forward" on-click="verder"></iron-icon></span>
 	<iron-ajax
     id="ajax_rooster_ophalen" 
-    url="/student/rooster/ophalen" 
+    url="/docent/rooster/ophalen" 
     method="POST" 
     on-response="_rooster_ophalen_response_handler" 
     last-response="{{data}}" >      
@@ -90,10 +92,10 @@
     on-response="_use_case_response_handler" >      
   </iron-ajax>
 
-  <iron-data-table datum="{{ma}}" items="[[data.maandag.lesgegevens]]" selection-enabled multi-selection>
+  <iron-data-table datum="{{ma}}" items="[[data.maandag.lesgegevens]]">
     <data-table-column name="Maandag {{ma}}">
       <template>
-      <div class="jumbotron" style="background-color:[[item.les.afwezigheid]];">
+      <div class="jumbotron" style="background-color:[[item.les.afwezigheid]];"  on-click="testen">
       <table class="dag" >
       <tr><td colspan="2" id="vak">[[item.les.vak]]</td></tr>
       <tr><td><span class="tijden">[[item.les.startTijd]]</span></td><td><span class="tijden">[[item.les.eindTijd]]</span></td></tr>
@@ -104,10 +106,10 @@
       </template>
     </data-table-column>
   </iron-data-table>
-  <iron-data-table datum="{{di}}" items="[[data.dinsdag.lesgegevens]]" selection-enabled multi-selection>
+  <iron-data-table datum="{{di}}" items="[[data.dinsdag.lesgegevens]]">
     <data-table-column name="Dinsdag {{di}}">
       <template>
-      <div class="jumbotron" style="background-color:[[item.les.afwezigheid]];">
+      <div class="jumbotron" style="background-color:[[item.les.afwezigheid]];" on-click="testen">
       <table class="dag" >
       <tr><td colspan="2" id="vak">[[item.les.vak]]</td></tr>
       <tr><td><span class="tijden">[[item.les.startTijd]]</span></td><td><span class="tijden">[[item.les.eindTijd]]</span></td></tr>
@@ -118,10 +120,10 @@
       </template>
     </data-table-column>
   </iron-data-table>
-  <iron-data-table datum="{{wo}}" items="[[data.woensdag.lesgegevens]]" selection-enabled multi-selection>
+  <iron-data-table datum="{{wo}}" items="[[data.woensdag.lesgegevens]]">
     <data-table-column name="Woensdag {{wo}}">
       <template>
-      <div class="jumbotron" style="background-color:[[item.les.afwezigheid]];">
+      <div class="jumbotron" style="background-color:[[item.les.afwezigheid]];" on-click="testen">
       <table class="dag" >
       <tr><td colspan="2" id="vak">[[item.les.vak]]</td></tr>
       <tr><td><span class="tijden">[[item.les.startTijd]]</span></td><td><span class="tijden">[[item.les.eindTijd]]</span></td></tr>
@@ -132,10 +134,10 @@
       </template>
     </data-table-column>
   </iron-data-table>
-  <iron-data-table datum="{{do}}" items="[[data.donderdag.lesgegevens]]" selection-enabled multi-selection>
+  <iron-data-table datum="{{do}}" items="[[data.donderdag.lesgegevens]]">
     <data-table-column name="Donderdag {{do}}">
       <template>
-      <div class="jumbotron" style="background-color:[[item.les.afwezigheid]];">
+      <div class="jumbotron" style="background-color:[[item.les.afwezigheid]];" on-click="testen" >
       <table class="dag" >
       <tr><td colspan="2" id="vak">[[item.les.vak]]</td></tr>
       <tr><td><span class="tijden">[[item.les.startTijd]]</span></td><td><span class="tijden">[[item.les.eindTijd]]</span></td></tr>
@@ -146,10 +148,10 @@
       </template>
     </data-table-column>
   </iron-data-table>
-  <iron-data-table datum="{{vr}}" items="[[data.vrijdag.lesgegevens]]" selection-enabled multi-selection>
+  <iron-data-table datum="{{vr}}" items="[[data.vrijdag.lesgegevens]]">
     <data-table-column name="Vrijdag {{vr}}">
       <template>
-      <div class="jumbotron" style="background-color:[[item.les.afwezigheid]];">
+      <div class="jumbotron" style="background-color:[[item.les.afwezigheid]];" on-click="testen" >
       <table class="dag" >
       <tr><td colspan="2" id="vak">[[item.les.vak]]</td></tr>
       <tr><td><span class="tijden">[[item.les.startTijd]]</span></td><td><span class="tijden">[[item.les.eindTijd]]</span></td></tr>
@@ -160,16 +162,8 @@
       </template>
     </data-table-column>
   </iron-data-table>
-  
- 
-	<table id="opties">
-	<tr>
-	<td><paper-button on-click="_use_case_request_handler" args="ziekMelden" id="ziekMelden" class="optie" raised>Ziek melden</paper-button></td>
-	<td><paper-button on-click="_use_case_request_handler" args="afwezigMelden" id="afwezigMelden" class="optie" raised>Afwezig melden</paper-button></td></tr>
-	<tr><td><paper-button on-click="_use_case_request_handler" args="beterMelden" id="beterMelden" class="optie" raised>Beter melden</paper-button></td>
-	<td><paper-button on-click="_use_case_request_handler" args="afwezigheidVerwijderen" id="afwezigheidVerwijderen" class="optie" raised>Afwezigheid verwijderen</paper-button></td></tr>
-	</table>
   </template>
+ 
 
   <script>
     (function() {
@@ -180,13 +174,17 @@
          xxxx  public               : two way external databinding {{xxxx}} - notify nodig
       */
       Polymer({
-        is: 'my-hoofdscherm',
+        is: 'my-docentrooster',
 
         properties: {
 		
           rol: {
             type: String,
             notify: true,
+          },
+          klas: {
+          	type: String,
+          	notify: true,
           },
           ma: {
             type: String,
@@ -234,7 +232,6 @@
                                                                    als c_visible false is */
           },
         },	
-
       
         _go_home: function() {
           var lApp = document.querySelector('my-app');  //het polymer element <my-app>
@@ -267,6 +264,7 @@
             this.wo = request.detail.response.woensdag.datum;
             this.do = request.detail.response.donderdag.datum;
             this.vr = request.detail.response.vrijdag.datum; 
+            this.updateStyles();
            },
           _get_zondag: function(d){
                 d = new Date(d);
@@ -276,7 +274,9 @@
           },
           _initializing: function(){
             if(this.c_visible){
-              if(this.rol=="student"){
+            	console.log(this.rol + "zichtbaar");
+              if(this.rol=="docent"){
+              	console.log(this.rol +  "zichtbaar");
                 let options = {  
                     year: 'numeric',
                     month: '2-digit',
@@ -315,51 +315,35 @@
             console.log(this.selectedZondag);
             this._rooster_ophalen_request_handler();
           },
-          _get_selectie: function(){
-            this.selectedItems = this.shadowRoot.querySelectorAll('data-table-row[selected]');
-            var afwezigheden = [];
-            for(var i=this.selectedItems.length - 1; i >= 0; i--){
-              var tDatum = this.selectedItems[i].parentElement.datum;
-              var lines =this.selectedItems[i].innerText.split('\n');
-              var tVak = lines[0];
-              var tStart = lines[1];
-              var tEind = lines[2];
-              var tKlas = lines[3];
-              var tLokaal = lines[4];
-              var tDocent = lines[5];
-              var tLes = [tDatum,tVak,tStart,tEind,tLokaal,tKlas,tDocent];
-              console.log(tLes);
-              afwezigheden.push(tLes);
-            }
-              return afwezigheden;
-
-          },
-
-          _use_case_request_handler: function(e) {
-            var useCase = e.target.getAttribute('args');
-            if(this._get_selectie().length>0){
-             console.log("_usecase_request useCase= " + useCase);
-             this.$.ajax_use_case.contentType="application/json";
-             this.$.ajax_use_case.body={
-               "afwezigheden":this._get_selectie(),
-               "useCase":useCase,
-               "username":this.c_username
-             };
-             this.$.ajax_use_case.generateRequest();
-             this._rooster_ophalen_request_handler();
-           } else{
-            console.log("geen selectie");
-            this.updateStyles();
-           }
-           },
-          _use_case_response_handler: function(request) {
-            console.log("_usecase_response " + request.detail.response.terugString);
-           },
           _toast_clicked: function(e) {
             var lToast = this.$.toast_invalid_aanroep;        // meldt ongeldige aanroep
             lToast.toggle();
             this._go_home();
           },
+          testen: function(e){
+          	var model =  e.model;
+          	console.log(model);
+          	var klas = model.__data__.item.les.klas;
+          	var klasNaam = klas.substr(klas.length - 3);
+          	var datum = model.__data__.item.les.datum;
+            var vak = model.__data__.item.les.vak;
+            var start = model.__data__.item.les.startTijd;
+            var eind = model.__data__.item.les.eindTijd;
+            var docent = model.__data__.item.les.emailDocent;
+            var lokaal = model.__data__.item.les.lokaal;
+            var les = [datum,start,eind,klas,vak,lokaal,docent];
+
+
+
+
+          	var lApp = document.querySelector('my-app');  //het polymer element <my-app>
+          	lApp.dataset.klas = klasNaam;
+          	lApp.dataset.les = les;
+          	var lAppRouter = lApp.$.approuter;            // het html-element <app-route> met id=approuter
+          	lAppRouter.data={page: "setstudentenabsentie"};                   // vul het data attribute met de homepage url
+                                                        // door de two way binding in <app-route> en <app-location>
+                                                        // zal ook de url echt wijzigen
+          }
 
       });
     })();
