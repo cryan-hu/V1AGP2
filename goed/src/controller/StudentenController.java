@@ -63,6 +63,43 @@ public class StudentenController implements Handler {
 	 * 
 	 * @param conversation - alle informatie over het request
 	 */
+private void ophalenklas(Conversation conversation) {		
+		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
+		String sKlas = lJsonObjectIn.getString("klas");
+		String klasnaam = sKlas.substring(sKlas.length() - 3);
+		Klas klas = new Klas(sKlas,klasnaam);
+		ArrayList<Klas> klassen2 = new ArrayList<Klas>();
+		klassen2.add(klas);
+		System.out.println(klassen2);
+		
+		ArrayList<Student> alleStudenten = informatieSysteem.getStudentenKlassen(klassen2);			
+
+		
+		JsonArrayBuilder lJsonArrayBuilder = Json.createArrayBuilder();						// Uiteindelijk gaat er een array...		
+		for (Student student : alleStudenten) {									        // met daarin voor elke medestudent een JSON-object... 
+				JsonObjectBuilder lJsonObjectBuilderVoorStudent = Json.createObjectBuilder(); // maak het JsonObject voor een student
+				String lLastName = student.getVolledigeAchternaam();
+				String klas2 = student.getKlas();
+				lJsonObjectBuilderVoorStudent
+					.add("id", student.getStudentNummer())																	//vul het JsonObject		     
+					.add("firstName", student.getVoornaam())	
+					.add("lastName", lLastName)
+					.add("klas", klas2);
+			  
+			  lJsonArrayBuilder.add(lJsonObjectBuilderVoorStudent);													//voeg het JsonObject aan het array toe				     
+		}
+		
+    String lJsonOutStr = lJsonArrayBuilder.build().toString();												// maak er een string van
+		conversation.sendJSONMessage(lJsonOutStr);																				// string gaat terug naar de Polymer-GUI!
+	}
+
+	/**
+	 * Deze methode haalt eerst de opgestuurde JSON-data op. Op basis van deze gegevens 
+	 * het domeinmodel gewijzigd. Een eventuele errorcode wordt tenslotte
+	 * weer (als JSON) teruggestuurd naar de Polymer-GUI!
+	 * 
+	 * @param conversation - alle informatie over het request
+	 */
 	private void opslaan(Conversation conversation) {
 		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
 		String lGebruikersnaam = lJsonObjectIn.getString("username");
@@ -103,6 +140,8 @@ public class StudentenController implements Handler {
 	public void handle(Conversation conversation) {
 		if (conversation.getRequestedURI().startsWith("/student/studenten/ophalen")) {
 			ophalen(conversation);
+		}else if(conversation.getRequestedURI().startsWith("/student/studentenklas/ophalen")) {
+			ophalenklas(conversation);
 		}else{
 		opslaan(conversation);
 		}

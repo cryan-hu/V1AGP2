@@ -34,6 +34,11 @@
       .my-title {
         font-size: 20px;
         color: blue;
+        padding-bottom: 2px;                    /* space above the border line */
+      }
+      .my-subtitle {
+        font-size: 16px;
+        color: blue;
         border-bottom: 1px solid red;           /* a red line */
         padding-bottom: 2px;                    /* space above the border line */
       }
@@ -53,12 +58,18 @@
         min-width: 100px;
       }
       .my-button {
-        width: 100%;                        /* full width */
+        width: 100%;
         color: white;                       /* white tekst */
         background: #1a9fd9;                /* kind of blue */
         --paper-button-ink-color: #00567B;  /* kind of dark blue */
         margin-top: 5px;                    /* enlarge thet default */
         margin-left: 0px;                   /* reduce the default */
+      }
+      .opties{
+        margin-left: auto;
+        margin-right: auto;
+        table-layout:fixed;
+        width: 100%;
       }
     </style>
 
@@ -68,17 +79,53 @@
       text="U hebt dit scherm op een illegale manier geactiveerd. U wordt verwezen naar de home page!">
         <paper-button on-click="_toast_clicked" class="toast-button">Sluiten</paper-button>
     </paper-toast>
-      klas={{klas}}
-      les={{les}}
+    <div class="my-title"> Aanwezigheid invoeren voor de les op {{les.0}} van {{les.1}} tot {{les.2}}</div>
+    <div class="my-subtitle"> Klas: {{les.3}}&emsp; Vak: {{les.4}} &emsp;   Lokaal: {{les.5}} </div>
+    <table>
+      <tr>
+        <th class="voornaam">Voornaam </th>
+        <th class="achternaam">Achternaam </th>
+        <th class="groepid-header">Klas </th>
+      </tr>
+      <template is="dom-repeat" items="[[_c_studenten]]">
+        <tr>
+          <td class="voornaam">[[item.firstName]]</td>
+          <td class="achternaam">[[item.lastName]]</td>
+          <td class="klas">[[item.klas]]</td>
+          <td class="groepid">
+             <paper-checkbox
+              class="my-check"
+              checked="{{item.sameGroup}}">
+            </paper-checkbox>
+          </td>
+        </tr>
+      </template>
+    </table>
+    <table class="opties">
+    <tr>
+    <td>
+    <paper-button
+      class="my-button"
+      on-click="_go_back">Terug
+    </paper-button>
+    </td>
+    <td>
+    <paper-button
+      class="my-button"
+      on-click="_studenten_opslaan_request_handler">Opslaan
+    </paper-button>
+    </td>
+    </tr>
+    </table>
 
 
 
     <iron-ajax
-      id="ajax_studenten_ophalen"
+      id="ajax_studenten_ophalenklas"
       method="POST"
-      url="/student/studenten/ophalen"
+      url="/student/studentenklas/ophalen"
       handle-as="json"
-      on-response="_studenten_ophalen_response_handler">
+      on-response="_studenten_ophalenklas_response_handler">
     </iron-ajax>
  
     <iron-ajax
@@ -108,7 +155,7 @@
 										array is constant groepnr is changable */
           },
           les: {
-            type: Array,           /* array<student-info>: student-info = {id, firstName, lastName, sameGroup} 
+            type: Object,           /* array<student-info>: student-info = {id, firstName, lastName, sameGroup} 
                     array is constant groepnr is changable */
           },
           klas:{
@@ -116,6 +163,18 @@
           },
           c_rol: {
             type: String,
+          },
+          datum:{
+            type: String,
+            notify: true,
+          },
+          start:{
+            type: String,
+            notify: true,
+          },
+          eind:{
+            type: String,
+            notify: true,
           },
           c_username: {
             type: String,
@@ -136,12 +195,19 @@
                                                         // door de two way binding in <app-route> en <app-location>
                                                         // zal ook de url echt wijzigen
         },
+        _go_back: function() {
+          var lApp = document.querySelector('my-app');  //het polymer element <my-app>
+          var lAppRouter = lApp.$.approuter;            // het html-element <app-route> met id=approuter
+          lAppRouter.data={page: "docentrooster"};                   // vul het data attribute met de homepage url
+                                                        // door de two way binding in <app-route> en <app-location>
+                                                        // zal ook de url echt wijzigen
+        },
         
         _initializing : function() {
           if (this.c_visible) {                                 // zodra zichtbaar geworden moet er wat worden gedaan
             if (this.c_rol=="docent") {                        // voor studenten
               this._get_klas();
-              this._studenten_ophalen_request_handler();    //    haal info op van server
+              this._studenten_ophalenklas_request_handler();    //    haal info op van server
             } else {                                            // na handmatige url wijziging zonder login
               var lToast = this.$.toast_invalid_aanroep;        // meldt ongeldige aanroep
               lToast.open();                                    /* het sluiten van deze error verwijst  */
@@ -151,17 +217,18 @@
           }
         },
 
-        _studenten_ophalen_request_handler: function() {
-          console.log("_studenten_ophalen_request_handler user="+this.c_username);
-          this.$.ajax_studenten_ophalen.contentType="application/json";
-          this.$.ajax_studenten_ophalen.body={
-            "username":this.c_username
+        _studenten_ophalenklas_request_handler: function() {
+          console.log("_studenten_ophalenklas_request_handler user="+this.c_username);
+          this.$.ajax_studenten_ophalenklas.contentType="application/json";
+          this.$.ajax_studenten_ophalenklas.body={
+            "username":this.c_username,
+            "klas":this.klas
           };
-          this.$.ajax_studenten_ophalen.generateRequest();
+          this.$.ajax_studenten_ophalenklas.generateRequest();
         },
 
-        _studenten_ophalen_response_handler: function(request) {
-          console.log("_studenten_ophalen_response_handler aantal studenten="+request.detail.response.length);
+        _studenten_ophalenklas_response_handler: function(request) {
+          console.log("_studenten_ophalenklas_response_handler aantal studenten="+request.detail.response.length);
           this._c_studenten = request.detail.response;
         },
 
@@ -177,7 +244,7 @@
 
         _studenten_opslaan_response_handler: function(request) {
           console.log("_studenten_opslaan_response_handler errorcode="+request.detail.response.errorcode);
-          this._go_home();		/* verlaat de pagina en ga terug naar home page */
+          this._go_back();		/* verlaat de pagina en ga terug naar home page */
         },
 
        _toast_clicked: function(e) {
@@ -188,7 +255,8 @@
         _get_klas: function(){
             var lApp = document.querySelector('my-app');  //het polymer element <my-app>
             this.klas=lApp.dataset.klas;
-            this.les=lApp.dataset.les;
+            this.les=lApp.dataset.les.split(',');
+
         },  
 
       });
