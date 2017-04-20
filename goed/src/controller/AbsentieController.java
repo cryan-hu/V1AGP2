@@ -76,8 +76,14 @@ public class AbsentieController implements Handler {
     
   	for (int i=0;i<studenten.size();i++){
   		JsonObject lGroepMember_jsonObj = studenten.getJsonObject(i );
-  		boolean lZelfdeGroep = true;
-  		//boolean lZelfdeGroep = lGroepMember_jsonObj.getBoolean("sameGroup"); MOET AANGEPAST WORDEN ZODAT ALLEEN AFWEZIGE PRESENTIES ERIN GEZET WORDEN
+  		boolean lZelfdeGroep  = true;  		
+			try {
+				lGroepMember_jsonObj.getBoolean("sameGroup");
+			} catch (NullPointerException e) {
+				// TODO Auto-generated catch block
+				lZelfdeGroep = false;
+			}
+  		
   		if (lZelfdeGroep) {
     		int lStudentNummer = lGroepMember_jsonObj.getInt("id");
     		Student s = informatieSysteem.getStudent(lStudentNummer);
