@@ -77,19 +77,19 @@
       text="U hebt dit scherm op een illegale manier geactiveerd. U wordt verwezen naar de home page!">
         <paper-button on-click="_toast_clicked" class="toast-button">Sluiten</paper-button>
     </paper-toast>
-  <span><iron-icon icon="arrow-back" on-click="terug"></iron-icon>Week 19<iron-icon icon="arrow-forward" on-click="verder"></iron-icon></span>
+  <span><iron-icon icon="arrow-back" on-click="terug"></iron-icon>[[weeknummer]]<iron-icon icon="arrow-forward" on-click="verder"></iron-icon></span>
 	<iron-ajax
-    id="ajax_rooster_ophalen" 
-    url="/docent/rooster/ophalen" 
-    method="POST" 
-    on-response="_rooster_ophalen_response_handler" 
-    last-response="{{data}}" >      
+    id="ajax_rooster_ophalen"
+    url="/docent/rooster/ophalen"
+    method="POST"
+    on-response="_rooster_ophalen_response_handler"
+    last-response="{{data}}" >
   </iron-ajax>
   <iron-ajax
-    id="ajax_use_case" 
-    url="/student/useCase/ophalen" 
-    method="POST" 
-    on-response="_use_case_response_handler" >      
+    id="ajax_use_case"
+    url="/student/useCase/ophalen"
+    method="POST"
+    on-response="_use_case_response_handler" >
   </iron-ajax>
 
   <iron-data-table datum="{{ma}}" items="[[data.maandag.lesgegevens]]">
@@ -163,7 +163,7 @@
     </data-table-column>
   </iron-data-table>
   </template>
- 
+
 
   <script>
     (function() {
@@ -177,7 +177,7 @@
         is: 'my-docentrooster',
 
         properties: {
-		
+
           rol: {
             type: String,
             notify: true,
@@ -231,8 +231,13 @@
                                                                    regel in de functie dat er niets gebeurd
                                                                    als c_visible false is */
           },
-        },	
-      
+          weeknummer: {
+            type: String,
+            notify: true,
+          },
+
+        },
+
         _go_home: function() {
           var lApp = document.querySelector('my-app');  //het polymer element <my-app>
           var lAppRouter = lApp.$.approuter;            // het html-element <app-route> met id=approuter
@@ -252,7 +257,7 @@
            },
 
            _rooster_ophalen_response_handler: function(request) {
-            let options = {  
+            let options = {
                 year: 'numeric',
                 month: '2-digit',
                 day: '2-digit',
@@ -263,7 +268,7 @@
             this.di = request.detail.response.dinsdag.datum;
             this.wo = request.detail.response.woensdag.datum;
             this.do = request.detail.response.donderdag.datum;
-            this.vr = request.detail.response.vrijdag.datum; 
+            this.vr = request.detail.response.vrijdag.datum;
             this.updateStyles();
            },
           _get_zondag: function(d){
@@ -277,7 +282,7 @@
             	console.log(this.rol + "zichtbaar");
               if(this.rol=="docent"){
               	console.log(this.rol +  "zichtbaar");
-                let options = {  
+                let options = {
                     year: 'numeric',
                     month: '2-digit',
                     day: '2-digit',
@@ -285,14 +290,14 @@
                 this.zondagDate = this._get_zondag(new Date());
                 this.selectedZondag = this.zondagDate.toLocaleString('nl-nl', options); //returned als 09-04-2017;
                 this._rooster_ophalen_request_handler();
-              } else {                                        
-                var lToast = this.$.toast_invalid_aanroep;      
-                lToast.open();                             
+              } else {
+                var lToast = this.$.toast_invalid_aanroep;
+                lToast.open();
               }
             }
           },
           terug: function(){
-            let options = {  
+            let options = {
                 year: 'numeric',
                 month: '2-digit',
                 day: '2-digit',
@@ -302,9 +307,10 @@
             this.selectedZondag = d.toLocaleString('nl-nl', options); //returned als 09-04-2017
             console.log(this.selectedZondag);
             this._rooster_ophalen_request_handler();
+            this.getWeek();
           },
           verder: function(){
-            let options = {  
+            let options = {
                 year: 'numeric',
                 month: '2-digit',
                 day: '2-digit',
@@ -343,7 +349,27 @@
           	lAppRouter.data={page: "setstudentenabsentie"};                   // vul het data attribute met de homepage url
                                                         // door de two way binding in <app-route> en <app-location>
                                                         // zal ook de url echt wijzigen
-          }
+          },
+
+          getWeek: function(){
+              // Copy date so don't modify original
+              d = this.zondagDate; // deze d
+              d.setHours(0,0,0,0);
+              // Set to nearest Thursday: current date + 4 - current day number
+              // Make Sunday's day number 7
+              d.setDate(d.getDate() + 4 - (d.getDay()||7));
+              // Get first day of year
+              var yearStart = new Date(d.getFullYear(),0,1);
+              // Calculate full weeks to nearest Thursday
+              var weekNo = Math.ceil(( ( (d - yearStart) / 86400000) + 1)/7);
+              // Return array of year and week number
+              return [d.getFullYear(), weekNo];
+
+
+              var result = getWeekNumber(new Date());
+              return (result[1]); // Returns the week number as an integer
+        },
+
 
       });
     })();
