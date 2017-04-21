@@ -77,17 +77,17 @@
     </paper-toast>
   <span style="font-weight: {{dik}};"><iron-icon icon="arrow-back" on-click="terug"></iron-icon>{{deze}} Week {{weeknummer}}<iron-icon icon="arrow-forward" on-click="verder"></iron-icon></span>
 	<iron-ajax
-    id="ajax_rooster_ophalen" 
-    url="/student/rooster/ophalen" 
-    method="POST" 
-    on-response="_rooster_ophalen_response_handler" 
-    last-response="{{data}}" >      
+    id="ajax_rooster_ophalen"
+    url="/student/rooster/ophalen"
+    method="POST"
+    on-response="_rooster_ophalen_response_handler"
+    last-response="{{data}}" >
   </iron-ajax>
   <iron-ajax
-    id="ajax_use_case" 
-    url="/student/useCase/ophalen" 
-    method="POST" 
-    on-response="_use_case_response_handler" >      
+    id="ajax_use_case"
+    url="/student/useCase/ophalen"
+    method="POST"
+    on-response="_use_case_response_handler" >
   </iron-ajax>
 
   <iron-data-table datum="{{ma}}" items="[[data.maandag.lesgegevens]]" selection-enabled multi-selection>
@@ -160,8 +160,8 @@
       </template>
     </data-table-column>
   </iron-data-table>
-  
- 
+
+
 	<table id="opties">
 	<tr>
 	<td><paper-button on-click="_use_case_request_handler" args="ziekMelden" id="ziekMelden" class="optie" raised>Ziek melden</paper-button></td>
@@ -183,7 +183,7 @@
         is: 'my-hoofdscherm',
 
         properties: {
-		
+
           rol: {
             type: String,
             notify: true,
@@ -245,9 +245,9 @@
                                                                    regel in de functie dat er niets gebeurd
                                                                    als c_visible false is */
           },
-        },	
+        },
 
-      
+
         _go_home: function() {
           var lApp = document.querySelector('my-app');  //het polymer element <my-app>
           var lAppRouter = lApp.$.approuter;            // het html-element <app-route> met id=approuter
@@ -268,7 +268,7 @@
            },
 
            _rooster_ophalen_response_handler: function(request) {
-            let options = {  
+            let options = {
                 year: 'numeric',
                 month: '2-digit',
                 day: '2-digit',
@@ -279,7 +279,7 @@
             this.di = request.detail.response.dinsdag.datum;
             this.wo = request.detail.response.woensdag.datum;
             this.do = request.detail.response.donderdag.datum;
-            this.vr = request.detail.response.vrijdag.datum; 
+            this.vr = request.detail.response.vrijdag.datum;
            },
           _get_zondag: function(d){
                 d = new Date(d);
@@ -290,7 +290,7 @@
           _initializing: function(){
             if(this.c_visible){
               if(this.rol=="student"){
-                let options = {  
+                let options = {
                     year: 'numeric',
                     month: '2-digit',
                     day: '2-digit',
@@ -298,30 +298,28 @@
                 this.zondagDate = this._get_zondag(new Date());
                 this.selectedZondag = this.zondagDate.toLocaleString('nl-nl', options); //returned als 09-04-2017;
                 this._rooster_ophalen_request_handler();
-              } else {                                        
-                var lToast = this.$.toast_invalid_aanroep;      
-                lToast.open();                             
+              } else {
+                var lToast = this.$.toast_invalid_aanroep;
+                lToast.open();
               }
             }
           },
-          getWeekNummer: function(d) { 
-              var target  = new Date(d.valueOf());   
-              var dayNr   = (d.getDay() + 6) % 7; 
-              target.setDate(target.getDate() - dayNr + 3);  
-              var jan4    = new Date(target.getFullYear(), 0, 4); 
-              var dayDiff = (target - jan4) / 86400000;   
-              var weekNr = 1 + Math.ceil(dayDiff / 7);  
-              this.weeknummer = weekNr; 
+          getWeekNummer: function(d) {
+              var target  = new Date(d.valueOf());
+              var dayNr   = (d.getDay() + 6) % 7;
+              target.setDate(target.getDate() - dayNr + 3);
+              var jan4    = new Date(target.getFullYear(), 0, 4);
+              var dayDiff = (target - jan4) / 86400000;
+              var weekNr = 1 + Math.ceil(dayDiff / 7);
+              this.weeknummer = weekNr;
 
               var d2 = new Date();
-              var target2  = new Date(d2.valueOf());   
-              var dayNr2   = (d2.getDay() + 6) % 7; 
-              target2.setDate(target2.getDate() - dayNr2 + 3);  
-              var jan42    = new Date(target2.getFullYear(), 0, 4); 
-              var dayDiff2 = (target2 - jan42) / 86400000;   
+              var target2  = new Date(d2.valueOf());
+              var dayNr2   = (d2.getDay() + 6) % 7;
+              target2.setDate(target2.getDate() - dayNr2 + 3);
+              var jan42    = new Date(target2.getFullYear(), 0, 4);
+              var dayDiff2 = (target2 - jan42) / 86400000;
               var weekNr2 = Math.ceil(dayDiff2 / 7); 
-              console.log(weekNr2 + " " + weekNr);
-              console.log(weekNr2 == weekNr);
               if(weekNr2 == weekNr){
                 this.deze = "Deze";
                 this.dik = "bold";
@@ -333,7 +331,7 @@
 
             },
           terug: function(){
-            let options = {  
+            let options = {
                 year: 'numeric',
                 month: '2-digit',
                 day: '2-digit',
@@ -345,7 +343,7 @@
             this._rooster_ophalen_request_handler();
           },
           verder: function(){
-            let options = {  
+            let options = {
                 year: 'numeric',
                 month: '2-digit',
                 day: '2-digit',

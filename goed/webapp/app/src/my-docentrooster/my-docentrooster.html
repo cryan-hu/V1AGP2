@@ -245,24 +245,22 @@
           },
 
         },
-        getWeekNummer: function(d) { 
-              var target  = new Date(d.valueOf());   
-              var dayNr   = (d.getDay() + 6) % 7; 
-              target.setDate(target.getDate() - dayNr + 3);  
-              var jan4    = new Date(target.getFullYear(), 0, 4); 
-              var dayDiff = (target - jan4) / 86400000;   
-              var weekNr = 1 + Math.ceil(dayDiff / 7);  
-              this.weeknummer = weekNr;   
+        getWeekNummer: function(d) {
+              var target  = new Date(d.valueOf());
+              var dayNr   = (d.getDay() + 6) % 7;
+              target.setDate(target.getDate() - dayNr + 3);
+              var jan4    = new Date(target.getFullYear(), 0, 4);
+              var dayDiff = (target - jan4) / 86400000;
+              var weekNr = 1 + Math.ceil(dayDiff / 7);
+              this.weeknummer = weekNr;
 
               var d2 = new Date();
-              var target2  = new Date(d2.valueOf());   
-              var dayNr2   = (d2.getDay() + 6) % 7; 
-              target2.setDate(target2.getDate() - dayNr2 + 3);  
-              var jan42    = new Date(target2.getFullYear(), 0, 4); 
-              var dayDiff2 = (target2 - jan42) / 86400000;   
-              var weekNr2 = Math.ceil(dayDiff2 / 7); 
-              console.log(weekNr2 + " " + weekNr);
-              console.log(weekNr2 == weekNr);
+              var target2  = new Date(d2.valueOf());
+              var dayNr2   = (d2.getDay() + 6) % 7;
+              target2.setDate(target2.getDate() - dayNr2 + 3);
+              var jan42    = new Date(target2.getFullYear(), 0, 4);
+              var dayDiff2 = (target2 - jan42) / 86400000;
+              var weekNr2 = Math.ceil(dayDiff2 / 7);
               if(weekNr2 == weekNr){
                 this.deze = "Deze";
                 this.dik = "bold";
@@ -315,9 +313,7 @@
           },
           _initializing: function(){
             if(this.c_visible){
-            	console.log(this.rol + "zichtbaar");
               if(this.rol=="docent"){
-              	console.log(this.rol +  "zichtbaar");
                 let options = {
                     year: 'numeric',
                     month: '2-digit',

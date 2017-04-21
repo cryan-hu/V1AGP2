@@ -42,20 +42,20 @@
             type: String,
             notify: true,
           },
-        },		
-		
-		
+        },
+
+
         _logout_clicked: function() {
+          console.log(this.rol+" heeft uitgelogd");
           this.rol = "undefined";
           this.docentnaam = null;
           this.studentnummer = null;
           this.studentnaam = null;
           var lApp = document.querySelector('my-app');  //het polymer element <my-app>
           lApp.dataset.klas = null;
-          console.log("weg" + lApp.dataset.klas);
           this._go_home();
          },
-        
+
         _go_home: function() {
           var lApp = document.querySelector('my-app');  //het polymer element <my-app>
           var lAppRouter = lApp.$.approuter;            // het html-element <app-route> met id=approuter
