@@ -159,7 +159,7 @@
         properties: {
           _c_studenten: {
             type: Array,           /* array<student-info>: student-info = {id, firstName, lastName, sameGroup} 
-										array is constant groepnr is changable */
+                    array is constant groepnr is changable */
           },
           les: {
             type: Object,           /* array<student-info>: student-info = {id, firstName, lastName, sameGroup} 
@@ -245,7 +245,7 @@
 
         _absentie_opslaan_response_handler: function(request) {
           console.log(request.detail.response.terugString);
-          this._go_back();		/* verlaat de pagina en ga terug naar home page */
+          this._go_back();    /* verlaat de pagina en ga terug naar home page */
         },
 
        _toast_clicked: function(e) {

@@ -69,7 +69,7 @@
         <paper-button on-click="_toast_clicked" class="toast-button">Sluiten</paper-button>
     </paper-toast>
 
-    <div class="my-title">Overzicht van alle studenten als [[c_username]]</div>
+    <div class="my-title">Overzicht van alle studenten van [[c_username]]</div>
     <table>
       <tr>
         <th class="voornaam">Voornaam </th>
@@ -78,9 +78,9 @@
       </tr>
       <template is="dom-repeat" items="[[_c_studenten]]">
         <tr>
-          <td class="voornaam" on-click='_functie'>[[item.firstName]]</td>
-          <td class="achternaam" on-click='_functie'>[[item.lastName]]</td>
-          <td class="klas" on-click='_functie'>[[item.klas]]</td>
+          <td class="voornaam" on-click="naarAbsentieStudentFunctie">[[item.firstName]]</td>
+          <td class="achternaam" on-click="naarAbsentieStudentFunctie">[[item.lastName]]</td>
+          <td class="klas" on-click="naarAbsentieStudentFunctie">[[item.klas]]</td>
         </tr>
       </template>
     </table>
@@ -96,7 +96,7 @@
       handle-as="json"
       on-response="_studenten_ophalen_response_handler">
     </iron-ajax>
-
+ 
     <iron-ajax
       id="ajax_studenten_opslaan"
       method="POST"
@@ -120,8 +120,8 @@
 
         properties: {
           _c_studenten: {
-            type: Array,           /* array<student-info>: student-info = {id, firstName, lastName, sameGroup}
-										array is constant groepnr is changable */
+            type: Array,           /* array<student-info>: student-info = {id, firstName, lastName, sameGroup} 
+                    array is constant groepnr is changable */
           },
           c_rol: {
             type: String,
@@ -145,7 +145,7 @@
                                                         // door de two way binding in <app-route> en <app-location>
                                                         // zal ook de url echt wijzigen
         },
-
+        
         _initializing : function() {
           if (this.c_visible) {                                 // zodra zichtbaar geworden moet er wat worden gedaan
             if (this.c_rol=="docent") {                        // voor studenten
@@ -184,7 +184,7 @@
 
         _studenten_opslaan_response_handler: function(request) {
           console.log("_studenten_opslaan_response_handler errorcode="+request.detail.response.errorcode);
-          this._go_home();		/* verlaat de pagina en ga terug naar home page */
+          this._go_home();    /* verlaat de pagina en ga terug naar home page */
         },
 
        _toast_clicked: function(e) {
@@ -192,21 +192,23 @@
          lToast.toggle();
          this._go_home();
         },
-        _functie: function(e){
-          var model = e.model;
+        naarAbsentieStudentFunctie: function(e){
+          var model =  e.model;
           console.log(model);
           var voornaam = model.__data__.item.firstName;
           var achternaam = model.__data__.item.lastName;
           achternaam = achternaam.replace(/ /g,"");
-          var userStudent =voornaam +"."+achternaam+"@student.hu.nl";
-          userStudent=userStudent.toLowerCase();
-          console.log(userStudent);
+          var userStudent = voornaam + "." + achternaam + "@student.hu.nl";
+          userStudent = userStudent.toLowerCase();
+          console.log("test 1" + userStudent);
 
           var lApp = document.querySelector('my-app');  //het polymer element <my-app>
-          lApp.dataset.userStudent = userStudent;
-          var lAppRouter = lApp.$.approuter;            // het html-element <app-route> met id=approuter
-          lAppRouter.data={page: "studentenabsentie"};
-      },
+            lApp.dataset.userStudent = userStudent;
+            var lAppRouter = lApp.$.approuter;            // het html-element <app-route> met id=approuter
+            lAppRouter.data={page: "studentenabsentie"};                   // vul het data attribute met de homepage url
+                                                        // door de two way binding in <app-route> en <app-location>
+                                                        // zal ook de url echt wijzigen
+        }
 
       });
     })();

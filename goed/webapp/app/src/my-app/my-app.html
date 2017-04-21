@@ -22,7 +22,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../my-medestudenten/my-medestudenten.html"> <!-- gewijzigd tov PSK -->
 <link rel="import" href="../my-studenten/my-studenten.html"> <!-- gewijzigd tov PSK -->
 <link rel="import" href="../my-docentrooster/my-docentrooster.html"> <!-- gewijzigd tov PSK -->
-<link rel="import" href="../my-afwezigheidstudent/my-afwezigheidstudent.html"> <!-- gewijzigd tov PSK -->
+<link rel="import" href="../my-afwezigheidstudenten/my-afwezigheidstudenten.html"> <!-- gewijzigd tov PSK -->
 
 <dom-module id="my-app">
   <template>
@@ -219,12 +219,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <span>Absenties Studenten</span>
           </a>
 
-          <a name="afwezigheidstudent" href$="[[_c_baseURL]]afwezigheidstudent"  verborgen$="[[_are_strings_equal(rol, 'undefined', 'student')]]">
+          <a name="afwezigheidstudenten" href$="[[_c_baseURL]]afwezigheidstudenten"  verborgen$="[[_are_strings_equal(rol, 'undefined', 'student')]]">
             <iron-icon icon="account-box"></iron-icon>
             <span>Afwezigheid Studenten</span>
           </a>
 
-          <!-- beschikbaar voor docent---------------------------------------------------- -->
 
         </iron-selector>
       </app-drawer>
@@ -387,15 +386,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             	</paper-material>
          	 </section>
 
-           <section name="afwezigheidstudent"
+           <section name="afwezigheidstudenten"
                    title="AFWEZIGHEID VAN STUDENTEN"
-                   element="my-afwezigheidstudent">
+                   element="my-afwezigheidstudenten">
             	<paper-material elevation="2">
-              	<my-afwezigheidstudent
+              	<my-afwezigheidstudenten
 	              	c_username="[[username]]"
-	                c_visible="[[_are_strings_equal(_ar_page, 'afwezigheidstudent')]]"
+	                c_visible="[[_are_strings_equal(_ar_page, 'afwezigheidstudenten')]]"
 	                c_rol="[[rol]]">
-              	</my-afwezigheidstudent>
+              	</my-afwezigheidstudenten>
             	</paper-material>
          	 </section>
 

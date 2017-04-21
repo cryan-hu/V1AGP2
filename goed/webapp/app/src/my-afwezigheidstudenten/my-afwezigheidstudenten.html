@@ -12,7 +12,7 @@
      bij start van de applicatie.
 -->
 
-<dom-module id="my-afwezigheidstudent">
+<dom-module id="my-afwezigheidstudenten">
   <template>
     <style>
       :host {
@@ -59,13 +59,13 @@
     <div class="my-title">Overzicht van afwezigheid</div>
     <table>
       <tr>
-      	<th>Datum </th>
+        <th>Datum </th>
         <th>Begintijd </th>
         <th>Eindtijd </th>
         <th class="vak">Vak </th>
         <th>Klas </th>
         <th>Lokaal </th>
-        <th>Docent </th>
+        <th>Student </th>
 
       </tr>
       <template is="dom-repeat" items="[[_c_afwezigheden]]">
@@ -76,7 +76,7 @@
           <td class="vak">[[item.vak]]</td>
           <td>[[item.klas]]</td>
           <td>[[item.lokaal]]</td>
-          <td>[[item.docent]]</td>
+          <td>[[item.student]]</td>
         </tr>
       </template>
     </table>
@@ -91,7 +91,7 @@
         <th class="vak">Vak </th>
         <th>Klas </th>
         <th>Lokaal </th>
-        <th>Docent </th>
+        <th>Student </th>
 
       </tr>
       <template is="dom-repeat" items="[[_c_ziektes]]">
@@ -102,7 +102,7 @@
           <td class="vak">[[item.vak]]</td>
           <td>[[item.klas]]</td>
           <td>[[item.lokaal]]</td>
-          <td>[[item.docent]]</td>
+          <td>[[item.student]]</td>
         </tr>
       </template>
     </table>
@@ -126,12 +126,12 @@
          xxxx  public               : two way external databinding {{xxxx}} - notify nodig
       */
       Polymer({
-        is: 'my-afwezigheidstudent',
+        is: 'my-afwezigheidstudenten',
 
         properties: {
           _c_afwezigheden: {
             type: Array,           /* array<student-info>: student-info = {id, firstName, lastName, datum}
-										array is constant groepnr is changable */
+                    array is constant groepnr is changable */
           },
           _c_ziektes: {
             type: Array,           /* array<student-info>: student-info = {id, firstName, lastName, datum}
@@ -162,7 +162,7 @@
 
         _initializing : function() {
           if (this.c_visible) {                                 // zodra zichtbaar geworden moet er wat worden gedaan
-            if (this.c_rol=="student") {                        // voor studenten
+            if (this.c_rol=="docent") {                        // voor studenten
               this._afwezigheid_ophalen_request_handler();    //    haal info op van server
             } else {                                            // na handmatige url wijziging zonder login
               var lToast = this.$.toast_invalid_aanroep;        // meldt ongeldige aanroep
