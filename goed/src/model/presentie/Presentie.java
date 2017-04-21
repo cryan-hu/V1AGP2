@@ -33,13 +33,21 @@ public class Presentie {
 
 	public boolean equals(Object obj){
 		boolean gelijk = false;
+		
 		if (obj instanceof Presentie){
 			Presentie anderePresentie = (Presentie) obj;
-			if (anderePresentie.getUsername().equals(this.username)){
-				return gelijk;
+  		if (this.username.equals(anderePresentie.username) &&	
+  				this.startDatum.equals(anderePresentie.startDatum)	&&
+  				this.eindDatum.equals(anderePresentie.eindDatum) &&	
+  				this.vak.equals(anderePresentie.vak) &&	
+  				this.klas.equals(anderePresentie.klas) &&	
+  				this.lokaal.equals(anderePresentie.lokaal) &&
+  				this.docent.equals(anderePresentie.docent)				
+					){
+				gelijk = true;
 			}
 		}
-		return gelijk;
+		return gelijk;		
 	}
 
 

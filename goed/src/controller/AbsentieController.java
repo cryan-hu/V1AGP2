@@ -24,6 +24,7 @@ import javax.json.JsonObjectBuilder;
 
 import model.PrIS;
 import model.persoon.Student;
+import model.presentie.Afwezigheid;
 import model.presentie.Presentie;
 import model.presentie.Presentie;
 import model.vakGegevens.Les;
@@ -63,37 +64,43 @@ public class AbsentieController implements Handler {
 		for (Object o : studenten) {
 			studentenAS.add(o.toString());
 		}
-		System.out.println(studentenAS);
 
 		String lesDatum = lessenAS.get(0);
 		String lesBeginDatumTijdString = lesDatum + " " + lessenAS.get(1);
 		String lesEindDatumTijdString = lesDatum + " " + lessenAS.get(2);
 		Date lesBeginTijd = format1.parse(lesBeginDatumTijdString);
 		Date lesEindTijd = format1.parse(lesEindDatumTijdString);
-		System.out.println(lesBeginTijd);
-
-		ArrayList<Presentie> presenties = new ArrayList<Presentie>();
-
+		ArrayList<Presentie> presenties = getPresenties();
 		for (int i = 0; i < studenten.size(); i++) {
 			JsonObject lGroepMember_jsonObj = studenten.getJsonObject(i);
-			boolean lZelfdeGroep = true;
-			try {
-				lGroepMember_jsonObj.getBoolean("sameGroup");
-			} catch (NullPointerException e) {
-				// TODO Auto-generated catch block
-				lZelfdeGroep = false;
-			}
 
-			if (lZelfdeGroep) {
 				int lStudentNummer = lGroepMember_jsonObj.getInt("id");
 				Student s = informatieSysteem.getStudent(lStudentNummer);
 				String studentuser = s.getGebruikersnaam();
 				Presentie p = new Presentie(studentuser, lesBeginTijd, lesEindTijd, lessenAS.get(4), lessenAS.get(3),
 						lessenAS.get(5), lessenAS.get(6));
-				presenties.add(p);
-				System.out.println(p);
+				Boolean aangeklikt = false;
+				try{
+					aangeklikt = lGroepMember_jsonObj.getBoolean("sameGroup");
+
+				} catch(Exception e){
+				}
+			if (aangeklikt) {
+				if(!presenties.contains(p)){
+					presenties.add(p);
+				}
+			}
+			else{
+				if(presenties.contains(p)){
+					System.out.println(!presenties.contains(p));
+					presenties.remove(p);
+		      }
 			}
 		}
+
+		
+		
+		
 		writeData(presenties);
 
 		String berichtTerug = "Absentie Studenten Opgeslagen";
@@ -121,22 +128,12 @@ public class AbsentieController implements Handler {
 	}
 
 	private void writeData(ArrayList<Presentie> presenties) throws IOException, ParseException {
-		File f = new File("CSV/absenties.csv");
-		if (f.exists() && !f.isDirectory()) {
-			FileWriter fw = new FileWriter("CSV/absenties.csv", true);
-			PrintWriter pw = new PrintWriter(fw);
-			for (Presentie a : presenties) {
-				pw.println(a.toString());
-			}
-			pw.close();
-		} else {
 			FileWriter fw = new FileWriter("CSV/absenties.csv");
 			PrintWriter pw = new PrintWriter(fw);
 			for (Presentie a : presenties) {
 				pw.println(a.toString());
 			}
 			pw.close();
-		}
 	}
 
 	private void ophalen(Conversation conversation) throws ParseException, IOException {
