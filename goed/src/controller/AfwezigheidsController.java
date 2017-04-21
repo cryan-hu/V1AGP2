@@ -52,6 +52,10 @@ public class AfwezigheidsController implements Handler {
     String useCase = lJsonObjectIn.getString("useCase");
     String useCaseVoor = useCase;
     String berichtTerug = null;
+    
+    ArrayList<Afwezigheid> afwezigheden = informatieSysteem.getAfwezigheden();
+    
+    
 		if(useCase.equals("afwezigheidVerwijderen")){
 			useCaseVoor = "afwezigMelden";
 		}
@@ -59,8 +63,7 @@ public class AfwezigheidsController implements Handler {
 			useCaseVoor = "beterMelden";
 		}
     String username = lJsonObjectIn.getString("username");
-    DateFormat format1 = new SimpleDateFormat("dd-MM-yyyy HH:mm");     
-  	ArrayList<Afwezigheid> afwezigheden = getAfwezigheden();
+    DateFormat format1 = new SimpleDateFormat("dd-MM-yyyy HH:mm");  
   	
   	
 

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import model.klas.Klas;
 import model.persoon.Docent;
 import model.persoon.Student;
+import model.presentie.Afwezigheid;
 import model.presentie.Presentie;
 import model.vakGegevens.Les;
 import model.vakGegevens.Vak;
@@ -30,6 +31,7 @@ public class PrIS {
 	private ArrayList<Presentie> dePresenties;
 	private ArrayList<Vak> deVakken;
 	private ArrayList<Les> deLessen;
+	private ArrayList<Afwezigheid> deAfwezigheden;
 
 	
 	/**
@@ -62,6 +64,7 @@ public class PrIS {
 		deVakken = new ArrayList<Vak>();
 		deLessen = new ArrayList<Les>();
 		dePresenties = new ArrayList<Presentie>();
+		deAfwezigheden = new ArrayList<Afwezigheid>();
 
 
 		// Inladen klassen
@@ -113,6 +116,7 @@ public class PrIS {
 		return lString;
 	}
 
+
 	public Docent getDocent(String gebruikersnaam) {
 		Docent resultaat = null;
 		
@@ -152,6 +156,10 @@ public class PrIS {
 			}
 		}
 		return null;
+	}
+	
+	public ArrayList<Afwezigheid> getAfwezigheden(){
+		return deAfwezigheden;
 	}
 	
 	public Les getLes(String les){
