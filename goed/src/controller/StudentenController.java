@@ -1,9 +1,13 @@
 package controller;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+
 import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
@@ -12,6 +16,7 @@ import javax.json.JsonObjectBuilder;
 
 import model.PrIS;
 import model.persoon.Student;
+import model.presentie.Afwezigheid;
 import model.presentie.Presentie;
 import model.klas.Klas;
 
@@ -71,12 +76,19 @@ public class StudentenController implements Handler {
 private void ophalenklas(Conversation conversation) throws ParseException, IOException {		
 		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
 		String sKlas = lJsonObjectIn.getString("klas");
+		JsonArray les = lJsonObjectIn.getJsonArray("les");
 		String klasnaam = sKlas.substring(sKlas.length() - 3);
 		Klas klas = new Klas(sKlas,klasnaam);
 		ArrayList<Klas> klassen2 = new ArrayList<Klas>();
 		klassen2.add(klas);
 		
-		ArrayList<Student> alleStudenten = informatieSysteem.getStudentenKlassen(klassen2);			
+		ArrayList<Student> alleStudenten = informatieSysteem.getStudentenKlassen(klassen2);		
+		
+		
+		ArrayList<String> lesInfo = new ArrayList<String>();
+		for (Object o : les) {
+			lesInfo.add(o.toString());
+		}
 
 		
 		JsonArrayBuilder lJsonArrayBuilder = Json.createArrayBuilder();						// Uiteindelijk gaat er een array...		
@@ -84,7 +96,7 @@ private void ophalenklas(Conversation conversation) throws ParseException, IOExc
 				JsonObjectBuilder lJsonObjectBuilderVoorStudent = Json.createObjectBuilder(); // maak het JsonObject voor een student
 				String lLastName = student.getVolledigeAchternaam();
 				String klas2 = student.getKlas();
-				Boolean in = inAbsenties(student);
+				Boolean in = inAbsenties(student,lesInfo);
 				lJsonObjectBuilderVoorStudent
 					.add("id", student.getStudentNummer())																	//vul het JsonObject		     
 					.add("firstName", student.getVoornaam())	
@@ -109,15 +121,28 @@ private void ophalenklas(Conversation conversation) throws ParseException, IOExc
 	 * @throws ParseException 
 	 */
 
-	private boolean inAbsenties(Student s) throws ParseException, IOException{
+	private boolean inAbsenties(Student s,ArrayList<String> lesInfo) throws ParseException, IOException{
+		DateFormat format1 = new SimpleDateFormat("dd-MM-yyyy HH:mm"); 
 		ArrayList<Presentie> presenties = informatieSysteem.getPresenties();
-		Boolean test = false;
-		for(Presentie p : presenties){
-			if(p.getUsername().equals(s.getGebruikersnaam())){
-				test = true;
-			}
+		String lesDatum = lesInfo.get(0).replace("\"", "");
+		String startDatum = lesInfo.get(1).replace("\"", "");
+		String eindDatum = lesInfo.get(2).replace("\"", "");
+		String klas = lesInfo.get(3).replace("\"", "");
+		String vak = lesInfo.get(4).replace("\"", "");
+		String lokaal = lesInfo.get(5).replace("\"", "");
+		String docent = lesInfo.get(6).replace("\"", "");
+  	String lesBeginDatumTijdString = lesDatum+" "+startDatum;
+		String lesEindDatumTijdString = lesDatum+" "+eindDatum;	
+		Date lesBeginTijd = format1.parse(lesBeginDatumTijdString);
+		Date lesEindTijd = format1.parse(lesEindDatumTijdString);
+		Presentie q = new Presentie(s.getGebruikersnaam(), lesBeginTijd, lesEindTijd, vak, klas,lokaal, docent);
+		
+		Boolean terug = false;
+		if(presenties.contains(q)){
+			terug = true;
 		}
-		return test;
+		return terug;
+
 		
 
 	}

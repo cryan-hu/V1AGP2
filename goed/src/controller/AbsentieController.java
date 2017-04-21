@@ -92,7 +92,6 @@ public class AbsentieController implements Handler {
 			}
 			else{
 				if(presenties.contains(p)){
-					System.out.println(!presenties.contains(p));
 					presenties.remove(p);
 		      }
 			}
@@ -137,8 +136,6 @@ public class AbsentieController implements Handler {
 		});
 		
 		for(Presentie q : presenties){
-			System.out.println(q.getUsername() + "  " +  usernameStudent);
-			System.out.println(q.getUsername().equals(usernameStudent));
 			if(q.getUsername().equals(usernameStudent)){
 				String datum = new SimpleDateFormat("dd-MM-yyyy").format(q.getEindDatum());
 				String startTijd = new SimpleDateFormat("HH:mm").format(q.getStartDatum());
@@ -180,8 +177,6 @@ public class AbsentieController implements Handler {
 		});
 		
 		for(Presentie q : presenties){
-			System.out.println(q.getUsername() + "  " +  usernameStudent);
-			System.out.println(q.getUsername().equals(usernameStudent));
 			if(q.getUsername().equals(usernameStudent)){
 				String datum = new SimpleDateFormat("dd-MM-yyyy").format(q.getEindDatum());
 				String startTijd = new SimpleDateFormat("HH:mm").format(q.getStartDatum());

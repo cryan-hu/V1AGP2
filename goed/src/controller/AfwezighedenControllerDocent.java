@@ -15,7 +15,7 @@ import javax.json.JsonObjectBuilder;
 import model.PrIS;
 import model.persoon.Docent;
 import model.presentie.Afwezigheid;
-
+import model.presentie.Presentie;
 import server.Conversation;
 import server.Handler;
 
@@ -41,6 +41,12 @@ public class AfwezighedenControllerDocent implements Handler {
 		String lGebruikersnaam = lJsonObjectIn.getString("username");
 		
 		ArrayList<Afwezigheid> afwezigheden = informatieSysteem.getAfwezigheden();
+		
+		Collections.sort(afwezigheden, new Comparator<Afwezigheid>() {
+			public int compare(Afwezigheid m1, Afwezigheid m2) {
+				return m1.getBeginTijd().compareTo(m2.getEindTijd());
+			}
+		});
     
 		JsonArrayBuilder lJsonArrayZiektes = Json.createArrayBuilder();
 		JsonArrayBuilder lJsonArrayAfwezigheden = Json.createArrayBuilder();

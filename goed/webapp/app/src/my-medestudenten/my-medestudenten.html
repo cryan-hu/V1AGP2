@@ -74,25 +74,14 @@
       <tr>
         <th class="voornaam">Voornaam </th>
         <th class="achternaam">Achternaam </th>
-        <th class="groepid-header">Mede groepleden </th>
       </tr>
       <template is="dom-repeat" items="[[_c_studenten]]">
         <tr>
           <td class="voornaam">[[item.firstName]]</td>
           <td class="achternaam">[[item.lastName]]</td>
-          <td class="groepid">
-             <paper-checkbox
-              class="my-check"
-              checked="{{item.sameGroup}}">
-            </paper-checkbox>
-      	  </td>
         </tr>
       </template>
     </table>
-    <paper-button
-      class="my-button"
-      on-click="_medestudenten_opslaan_request_handler">Opslaan
-    </paper-button>
 
     <iron-ajax
       id="ajax_medestudenten_ophalen"

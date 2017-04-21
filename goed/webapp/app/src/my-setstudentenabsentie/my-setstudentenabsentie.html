@@ -221,7 +221,8 @@
           this.$.ajax_studenten_ophalenklas.contentType="application/json";
           this.$.ajax_studenten_ophalenklas.body={
             "username":this.c_username,
-            "klas":this.klas
+            "klas":this.klas,
+            "les":this.les
           };
           this.$.ajax_studenten_ophalenklas.generateRequest();
         },
@@ -257,7 +258,6 @@
             var lApp = document.querySelector('my-app');  //het polymer element <my-app>
             this.klas=lApp.dataset.klas;
             this.les=lApp.dataset.les.split(',');
-            console.log(this.les);
 
         },  
 

@@ -37,14 +37,10 @@
         border-bottom: 1px solid red;           /* a red line */
         padding-bottom: 2px;                    /* space above the border line */
       }
-      .voornaam {
-        min-width: 100px;
+      .standaard {
+        min-width: 80px;
         text-align: left;
        }
-      .achternaam {
-        min-width: 100px;
-        text-align: left;
-      }
       .groepid-header {
         min-width: 100px;
         text-align: left;
@@ -72,27 +68,32 @@
     <div class="my-title">Overzicht absentie van {{usernameStudent}}</div>
     <table>
       <tr>
-        <th>Datum </th>
-        <th>Begintijd </th>
-        <th>Eindtijd </th>
-        <th class="vak">Vak </th>
-        <th>Klas </th>
-        <th>Lokaal </th>
-        <th>Docent </th>
+        <th class="standaard">Datum </th>
+        <th class="standaard">Begintijd </th>
+        <th class="standaard">Eindtijd </th>
+        <th class="standaard">Vak </th>
+        <th class="standaard"> Klas </th>
+        <th class="standaard">Lokaal </th>
+        <th class="standaard">Docent </th>
 
       </tr>
       <template is="dom-repeat" items="[[_c_absenties]]">
         <tr>
-          <td>[[item.datum]]</td>
-          <td>[[item.startTijd]]</td>
-          <td>[[item.eindTijd]]</td>
-          <td class="vak">[[item.vak]]</td>
-          <td>[[item.klas]]</td>
-          <td>[[item.lokaal]]</td>
-          <td>[[item.docent]]</td>   
+          <td class="standaard">[[item.datum]]</td>
+          <td class="standaard">[[item.startTijd]]</td>
+          <td class="standaard">[[item.eindTijd]]</td>
+          <td class="standaard">[[item.vak]]</td>
+          <td class="standaard">[[item.klas]]</td>
+          <td class="standaard">[[item.lokaal]]</td>
+          <td class="standaard">[[item.docent]]</td>   
         </tr>
       </template>
     </table>
+
+    <paper-button
+      class="my-button"
+      on-click="_go_back">Terug
+    </paper-button>
     
    
 
@@ -147,6 +148,18 @@
           lAppRouter.data={page: ""};                   // vul het data attribute met de homepage url
                                                         // door de two way binding in <app-route> en <app-location>
                                                         // zal ook de url echt wijzigen
+        },
+
+        _go_back: function() {
+          var lApp = document.querySelector('my-app');
+          var lAppRouter = lApp.$.approuter;          
+
+          if(this.c_rol=="student"){
+            lAppRouter.data={page: "hoofdscherm"}; 
+            }
+          else{
+            lAppRouter.data={page: "studenten"};
+          }    
         },
         
         _initializing : function() {

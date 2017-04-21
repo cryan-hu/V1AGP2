@@ -34,8 +34,14 @@
       .my-title {
         font-size: 20px;
         color: blue;
+        padding-bottom: 2px;                    /* space above the border line */
+      }
+      .my-subtitle {
+        font-size: 14px;
+        color: darkblue;
         border-bottom: 1px solid red;           /* a red line */
         padding-bottom: 2px;                    /* space above the border line */
+        font-weight: bold;
       }
       .voornaam {
         min-width: 100px;
@@ -70,6 +76,7 @@
     </paper-toast>
 
     <div class="my-title">Overzicht van alle studenten van [[c_username]]</div>
+    <div class="my-subtitle">Klik op een naam om de absentie van de student in te zien!</div>
     <table>
       <tr>
         <th class="voornaam">Voornaam </th>
@@ -84,10 +91,6 @@
         </tr>
       </template>
     </table>
-    <paper-button
-      class="my-button"
-      on-click="_studenten_opslaan_request_handler">Opslaan
-    </paper-button>
 
     <iron-ajax
       id="ajax_studenten_ophalen"

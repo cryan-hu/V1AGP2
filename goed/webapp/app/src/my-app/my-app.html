@@ -135,6 +135,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         margin: 16px auto 16px auto;
         background: var(--app-lightgrey);
       }
+      paper-icon-button[verborgen]{
+        display: none;
+      }
 
 
     </style>
@@ -216,7 +219,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           <a name="studentenabsentie" href$="[[_c_baseURL]]studentenabsentie"  verborgen$="[[_are_strings_equal(rol, 'undefined', 'docent')]]">
             <iron-icon icon="account-box"></iron-icon>
-            <span>Absenties Studenten</span>
+            <span>Absentie Student</span>
           </a>
 
           <a name="afwezigheidstudenten" href$="[[_c_baseURL]]afwezigheidstudenten"  verborgen$="[[_are_strings_equal(rol, 'undefined', 'student')]]">
@@ -231,7 +234,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <!-- Main Content -->
       <!-- blue title toolbar in menu -->
       <app-toolbar class="toolbar" >
-        <paper-icon-button  icon="menu" drawer-toggle></paper-icon-button>
+        <paper-icon-button  icon="menu" drawer-toggle verborgen$="[[_are_strings_equal(rol, 'undefined')]]"></paper-icon-button>
         <span>[[_ar_selected_object.title]] ([[_systeemdatumlokaal]]) </span>
         <iron-selector selected="[[_ar_page]]" attr-for-selected="name" class="drawer-list" role="navigation">
           <a name="inlog" href$="[[_c_baseURL]]" verborgen$="[[_are_strings_equal(rol, 'docent', 'student')]]">
