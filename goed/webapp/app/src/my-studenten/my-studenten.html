@@ -78,15 +78,9 @@
       </tr>
       <template is="dom-repeat" items="[[_c_studenten]]">
         <tr>
-          <td class="voornaam">  <a href$="#/student/details/[[item.firstName]]-[[item.lastName]]">[[item.firstName]]</a></td>
-          <td class="achternaam"><a href$="#/student/details/[[item.firstName]]-[[item.lastName]]">[[item.lastName]] </a></td>
-          <td class="klas"><a href$="#/student/details/[[item.firstName]]-[[item.lastName]]">[[item.klas]] </a></td>
-          <td class="groepid">
-             <paper-checkbox
-              class="my-check"
-              checked="{{item.sameGroup}}">
-            </paper-checkbox>
-      	  </td>
+          <td class="voornaam" on-click='_functie'>[[item.firstName]]</td>
+          <td class="achternaam" on-click='_functie'>[[item.lastName]]</td>
+          <td class="klas" on-click='_functie'>[[item.klas]]</td>
         </tr>
       </template>
     </table>
@@ -102,7 +96,7 @@
       handle-as="json"
       on-response="_studenten_ophalen_response_handler">
     </iron-ajax>
- 
+
     <iron-ajax
       id="ajax_studenten_opslaan"
       method="POST"
@@ -126,7 +120,7 @@
 
         properties: {
           _c_studenten: {
-            type: Array,           /* array<student-info>: student-info = {id, firstName, lastName, sameGroup} 
+            type: Array,           /* array<student-info>: student-info = {id, firstName, lastName, sameGroup}
 										array is constant groepnr is changable */
           },
           c_rol: {
@@ -151,7 +145,7 @@
                                                         // door de two way binding in <app-route> en <app-location>
                                                         // zal ook de url echt wijzigen
         },
-        
+
         _initializing : function() {
           if (this.c_visible) {                                 // zodra zichtbaar geworden moet er wat worden gedaan
             if (this.c_rol=="docent") {                        // voor studenten
@@ -198,6 +192,21 @@
          lToast.toggle();
          this._go_home();
         },
+        _functie: function(e){
+          var model = e.model;
+          console.log(model);
+          var voornaam = model.__data__.item.firstName;
+          var achternaam = model.__data__.item.lastName;
+          achternaam = achternaam.replace(/ /g,"");
+          var userStudent =voornaam +"."+achternaam+"@student.hu.nl";
+          userStudent=userStudent.toLowerCase();
+          console.log(userStudent);
+
+          var lApp = document.querySelector('my-app');  //het polymer element <my-app>
+          lApp.dataset.userStudent = userStudent;
+          var lAppRouter = lApp.$.approuter;            // het html-element <app-route> met id=approuter
+          lAppRouter.data={page: "studentenabsentie"};
+      },
 
       });
     })();

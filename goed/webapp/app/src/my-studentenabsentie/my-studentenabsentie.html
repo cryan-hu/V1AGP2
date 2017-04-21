@@ -69,7 +69,7 @@
         <paper-button on-click="_toast_clicked" class="toast-button">Sluiten</paper-button>
     </paper-toast>
 
-    <div class="my-title">Overzicht van alle studenten als [[c_username]]</div>
+    <div class="my-title">Overzicht absentie van [[c_username]]</div>
     <table>
       <tr>
         <th class="voornaam">Voornaam </th>
@@ -102,7 +102,7 @@
       handle-as="json"
       on-response="_studenten_ophalen_response_handler">
     </iron-ajax>
- 
+
     <iron-ajax
       id="ajax_studenten_opslaan"
       method="POST"
@@ -126,7 +126,7 @@
 
         properties: {
           _c_studenten: {
-            type: Array,           /* array<student-info>: student-info = {id, firstName, lastName, sameGroup} 
+            type: Array,           /* array<student-info>: student-info = {id, firstName, lastName, sameGroup}
 										array is constant groepnr is changable */
           },
           c_rol: {
@@ -142,6 +142,10 @@
                                                                    regel in de functie dat er niets gebeurd
                                                                    als c_visible false is */
           },
+          usernameStudent,
+          type: String,
+          notify: true,
+        },
         },
 
         _go_home: function() {
@@ -151,10 +155,11 @@
                                                         // door de two way binding in <app-route> en <app-location>
                                                         // zal ook de url echt wijzigen
         },
-        
+
         _initializing : function() {
           if (this.c_visible) {                                 // zodra zichtbaar geworden moet er wat worden gedaan
-            if (this.c_rol=="docent") {                        // voor studenten
+            if (this.c_rol=="docent" || this.c_rol=="student") {
+              this._get_usernameStudent;     // voor studenten
               this._studenten_ophalen_request_handler();    //    haal info op van server
             } else {                                            // na handmatige url wijziging zonder login
               var lToast = this.$.toast_invalid_aanroep;        // meldt ongeldige aanroep
@@ -198,6 +203,14 @@
          lToast.toggle();
          this._go_home();
         },
+        _get_usernameStudent: function(){
+            var lApp = document.querySelector('my-app');  //het polymer element <my-app>
+            if(this.c_rol =='student'){
+            this.usernameStudent=this.username;
+          }else{
+            this.usernameStudent=lApp.dataset.userStudent;
+          }
+      },
 
       });
     })();

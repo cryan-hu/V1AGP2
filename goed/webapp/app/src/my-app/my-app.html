@@ -22,6 +22,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../my-medestudenten/my-medestudenten.html"> <!-- gewijzigd tov PSK -->
 <link rel="import" href="../my-studenten/my-studenten.html"> <!-- gewijzigd tov PSK -->
 <link rel="import" href="../my-docentrooster/my-docentrooster.html"> <!-- gewijzigd tov PSK -->
+<link rel="import" href="../my-afwezigheidstudent/my-afwezigheidstudent.html"> <!-- gewijzigd tov PSK -->
 
 <dom-module id="my-app">
   <template>
@@ -39,16 +40,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       	background-color: var(--app-bluegrey);
       }
 
-      app-drawer {                                                   /*toegevoegd tov psk */ 
-         --app-drawer-content-container: {                      
-          background-color: var(--app-highlight);  
-         } 
+      app-drawer {                                                   /*toegevoegd tov psk */
+         --app-drawer-content-container: {
+          background-color: var(--app-highlight);
+         }
        }
-       
+
       /*Main toolbar*/
       .toolbar {
         @apply(--layout-center-justified);
-        background: var(--app-primary-color);                            
+        background: var(--app-primary-color);
         color: white;
         height: 56px;                                           /* to have a fixed height */
         padding-left: 450px;
@@ -56,12 +57,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       /*Onderste toolbar*/
       .toolbar2 {
         @apply(--layout-center-justified);
-        background: var(--app-secondary-color);                            
+        background: var(--app-secondary-color);
         color: white;
         height: 30px;                                           /* to have a fixed height */
         font-size: 13px;
       }
-      
+
       #toolbarlogo {
       	@apply(--layout-fit);
         height: 37px;
@@ -70,13 +71,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         padding-left: 350px;                                     /* to adjust the icon position */
       	margin: 0 10px;
       }
-      
+
       .drawer-list {
         margin: 0 20px;
         font-size: 14px;				                        /*toegevoegd tov psk */
         font-weight: 400;                                       /*toegevoegd tov psk */
        }
- 
+
        .drawer-list a {
          display: block;
          padding: 0 160px;
@@ -85,24 +86,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
          line-height: 40px;
       }
 
-      .drawer-list a.iron-selected {            
-		/* rode highlight, gewijzigd tov psk      */     
+      .drawer-list a.iron-selected {
+		/* rode highlight, gewijzigd tov psk      */
         color: var(--app-highlight);
         font-weight: bold;
       }
-                                
-      .drawer-list a[verborgen] {               /* toegevoegd tov PSK               */	
+
+      .drawer-list a[verborgen] {               /* toegevoegd tov PSK               */
                         				        /* als verborgen true is dan ..     */
         display: none;							/* onzichtbaar maken                */
       }
       /*navigatiemenu links*/
-      
+
  	  .drawer-list2 {
  	  	margin: 0 10px;
         font-size: 14px;				                        /*toegevoegd tov psk */
         font-weight: 400;
  	  }
- 	  
+
  	  .drawer-list2 a {
          display: block;
          padding: 0 40px;
@@ -111,78 +112,78 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
          line-height: 40px;
       }
 
-      .drawer-list2 a.iron-selected {            
-							/* rode highlight, gewijzigd tov psk      */     
+      .drawer-list2 a.iron-selected {
+							/* rode highlight, gewijzigd tov psk      */
         color: var(--app-secondary-color);
         font-weight: bold;
         background: var(--app-bluegrey);
       }
-                                
-      .drawer-list2 a[verborgen] {               /* toegevoegd tov PSK               */	
+
+      .drawer-list2 a[verborgen] {               /* toegevoegd tov PSK               */
                         				        /* als verborgen true is dan ..     */
         display: none;							/* onzichtbaar maken                */
       }
 
-      .toolbar2 span[verborgen] {               /* toegevoegd tov PSK               */ 
+      .toolbar2 span[verborgen] {               /* toegevoegd tov PSK               */
                                         /* als verborgen true is dan ..     */
         display: none;              /* onzichtbaar maken                */
       }
-      
+
       paper-material {
         padding: 16px 16px 16px  16px;
         width: calc(80% - 132px);
         margin: 16px auto 16px auto;
-        background: var(--app-lightgrey);  
+        background: var(--app-lightgrey);
       }
-       
-       
+
+
     </style>
-    
+
     <app-location route="{{_ar_route}}" use-hash-as-path></app-location>
- 
-    <!--  Matches everything starting with / 
+
+    <!--  Matches everything starting with /
           and stores it in _ar_route_data.page
           id toegevoegd zodat element ook in andere polymerElementen benaderbaar wordt
           middels: document.querySelector('my-app').$.approuter.data={page: "xx"}
-    --> 
+    -->
     <app-route id="approuter"
       route="{{_ar_route}}"
       pattern="/:page"
       data="{{_ar_route_data}}"
       tail="{{_ar_subroute}}">
     </app-route>
-    <!--  Matches everything starting with /xxx/ 
+    <!--  Matches everything starting with /xxx/
           and stores it in _ar_subroute_data.subpage
           geen id nodig -->
-    <app-route 
+    <app-route
       route="{{_ar_subroute}}"
       pattern="/:subpage"
       data="{{_ar_subroute_data}}"
       tail="{{_ar_subsubroute}}">
     </app-route>
-    <!--  Matches everything starting with /xxx/yyy/ 
+    <!--  Matches everything starting with /xxx/yyy/
           and stores it in _ar_subsubroute_data.subsubpage
           geen id nodig -->
-    <app-route 
+    <app-route
       route="{{_ar_subsubroute}}"
       pattern="/:subsubpage"
       data="{{_ar_subsubroute_data}}">
     </app-route>
-     
-  
+
+
     <!-- Main Toolbar -->
-    <app-drawer-layout  force-narrow> 
- 	  <app-drawer id="drawer"> 
- 	    <!--  _ar_page bepaald welk menu geselecteerd is. 
+    <app-drawer-layout  force-narrow>
+ 	  <app-drawer id="drawer">
+ 	    <!--  _ar_page bepaald welk menu geselecteerd is.
  			  het menu dat de gebruiker klikt veroorzaakt een andere url
  			  deze url wordt door <app-location> en <app-route> omgezet in variabelen
  			  _ar_route , _ar_route_data en _ar_subroute
- 			  let op: _ar_page wordt niet door de selectie gewijzigd maar 
+ 			  let op: _ar_page wordt niet door de selectie gewijzigd maar
  					  vanuit de URL via een observer functie
  					  er is dus een sterke gelijkenis tussen _ar_page en de URL
  					  met name URL "xx/yy"  wordt _ar_page "xx_yy" maar ook
  						       URL "/"      wordt _ar_page "inloggen" en
- 						       overige URL  wordt _ar_page "view404". 
+ 						       overige URL  wordt _ar_page "view404".
  		-->
  		<!-- blue (empty) toolbar in menu -->
         <app-toolbar class="toolbar">
@@ -190,7 +191,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </app-toolbar>
           <iron-selector selected="[[_ar_page]]" attr-for-selected="name" class="drawer-list2" role="navigation">
           <!-- altijd beschikbaar--------------------------------------------------------- -->
- 
+
 		      <a name="hoofdscherm" href$="[[_c_baseURL]]hoofdscherm"  verborgen$="[[_are_strings_equal(rol, 'undefined', 'docent')]]">
             <iron-icon icon="home"></iron-icon>
             <span>Hoofdscherm</span>
@@ -207,15 +208,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <iron-icon icon="account-box"></iron-icon>
             <span>Studentenlijst</span>
           </a>
-          
+
           <a name="afwezigheid" href$="[[_c_baseURL]]afwezigheid"  verborgen$="[[_are_strings_equal(rol, 'undefined', 'docent')]]">
             <iron-icon icon="account-box"></iron-icon>
-            <span>Mijn afwezigheid</span>
+            <span>Mijn Afwezigheid</span>
           </a>
-          
-          <a name="studentenabsentie" href$="[[_c_baseURL]]studentenabsentie"  verborgen$="[[_are_strings_equal(rol, 'undefined', 'student')]]">
+
+          <a name="studentenabsentie" href$="[[_c_baseURL]]studentenabsentie"  verborgen$="[[_are_strings_equal(rol, 'undefined', 'docent')]]">
             <iron-icon icon="account-box"></iron-icon>
-            <span>Absenties studenten</span>
+            <span>Absenties Studenten</span>
+          </a>
+
+          <a name="afwezigheidstudent" href$="[[_c_baseURL]]afwezigheidstudent"  verborgen$="[[_are_strings_equal(rol, 'undefined', 'student')]]">
+            <iron-icon icon="account-box"></iron-icon>
+            <span>Afwezigheid Studenten</span>
           </a>
 
           <!-- beschikbaar voor docent---------------------------------------------------- -->
@@ -233,21 +239,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <iron-icon icon="home"></iron-icon>
             <span>Inloggen</span>
           </a>
-        
+
         <a name="logout" href$="[[_c_baseURL]]logout"  verborgen$="[[_are_strings_equal(rol, 'undefined')]]">
             <iron-icon icon="account-box"></iron-icon>
             <span>Uitloggen</span>
           </a>
       </iron-selector>
       </app-toolbar>
- 
+
  	  <app-toolbar class="toolbar2">
       	<span class="logt" verborgen$="[[_are_strings_equal(rol, 'undefined')]]" >Ingelogd als [[rol]] [[docentnaam]][[studentnaam]] [[studentnummer]]</span>
       </app-toolbar>
- 
-      <iron-pages 
-        attr-for-selected="name" 
-        selected="[[_ar_page]]" 
+
+      <iron-pages
+        attr-for-selected="name"
+        selected="[[_ar_page]]"
         selected-item="{{_ar_selected_object}}"
         fallback-selection="view404"
         role="main">
@@ -258,11 +264,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
        	     element bepaald worden gebruik makend van _ar_selected_object.attributes["element$"].nodeValue
        	     en de titel via _ar_selected_object.title
         -->
- 
+
         <!-- sections voor iedereen ---------------------------------------------------------------- -->
         <!-- element$="none" of weglaten van element$ geeft beide aan dat er geen polymerElement gebruikt zal gaan worden -->
-        <section name="inloggen" title="INLOGGEN" element$="none"> 
-		
+        <section name="inloggen" title="INLOGGEN" element$="none">
+
 		    <paper-toast id="toast_reeds_aangelogd" duration="0" text="U bent al ingelogd!">
 				<paper-button on-click="_toast_clicked" class="toast-button">Sluiten</paper-button>
 			</paper-toast>
@@ -292,15 +298,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 			</paper-material>
         </section>
 
-          <section name="logout" 
+          <section name="logout"
                    title="UITLOGGEN"
                    element="my-logout">
             <paper-material elevation="1">
               <my-logout rol="{{rol}}" docentnaam="{{docentnaam}}" studentnaam="{{studentnaam}}" studentnummer="{{studentnummer}}"></my-logout>
             </paper-material>
           </section>
-		  
-		  <section name="hoofdscherm" 
+
+		  <section name="hoofdscherm"
                    title="HOOFDSCHERM"
                    element="my-hoofdscherm">
             <paper-material elevation="2">
@@ -312,8 +318,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               </my-hoofdscherm>
             </paper-material>
           </section>
-          
-          <section name="studenten" 
+
+          <section name="studenten"
                    title="STUDENTEN"
                    element="my-studenten">
             <paper-material elevation="2">
@@ -325,7 +331,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </paper-material>
           </section>
 
-          <section name="docentrooster" 
+          <section name="docentrooster"
                    title="Docent Rooster"
                    element="my-docentrooster">
             <paper-material elevation="2">
@@ -337,7 +343,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </paper-material>
           </section>
 
-      <section name="medestudenten" 
+      <section name="medestudenten"
 
                    title="MEDESTUDENTEN"
                    element="my-medestudenten">
@@ -356,7 +362,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             </paper-material>
           </section>
 
-			<section name="afwezigheid" 
+			<section name="afwezigheid"
                    title="AFWEZIGHEID"
                    element="my-afwezigheid">
             <paper-material elevation="2">
@@ -368,8 +374,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
               </my-afwezigheid>
             </paper-material>
          	 </section>
-         	 
-         	 <section name="studentenabsentie" 
+
+         	 <section name="studentenabsentie"
                    title="ABSENTIE VAN STUDENTEN"
                    element="my-studentenabsentie">
             	<paper-material elevation="2">
@@ -381,8 +387,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             	</paper-material>
          	 </section>
 
+           <section name="afwezigheidstudent"
+                   title="AFWEZIGHEID VAN STUDENTEN"
+                   element="my-afwezigheidstudent">
+            	<paper-material elevation="2">
+              	<my-afwezigheidstudent
+	              	c_username="[[username]]"
+	                c_visible="[[_are_strings_equal(_ar_page, 'afwezigheidstudent')]]"
+	                c_rol="[[rol]]">
+              	</my-afwezigheidstudent>
+            	</paper-material>
+         	 </section>
 
-            <section name="setstudentenabsentie" 
+
+            <section name="setstudentenabsentie"
                    title="AANWEZIGHEID INVOEREN"
                    element="my-setstudentenabsentie">
               <paper-material elevation="2">
@@ -436,7 +454,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           },
           _c_baseURL: {
             type: String,
-            value: "/#/",                          
+            value: "/#/",
           },
           _ar_page: {
             type: String,
@@ -446,7 +464,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           _ar_route: {                  //route-object betreffende deel 1 van de URL vanwege pattern "/"
             type: Object,
           },
-          _ar_route_data: {                 
+          _ar_route_data: {
             type: Object,               //{page: "xxx"} met xxx url-deel1
           },
           _ar_selected_object: {
@@ -455,25 +473,25 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                         //.title=yyyy  met yyy is de title voor in de header
             observer: '_ar_selected_object_changed',
           },
-          _ar_subroute: {							
+          _ar_subroute: {
             type: Object,				//route-object dat niet matched vanuit <_ar_route> dwz alles na /xxx/ in de url
           },
-          _ar_subroute_data: {                           
+          _ar_subroute_data: {
             type: Object,               //{subpage: "yyy"} dat matched na /xxx/ in de url
           },
-          _ar_subsubroute: {                           
+          _ar_subsubroute: {
             type: Object,               //route-object dat niet matched vanuit <_ar_subroute> dwz alles na /xxx/yyy/ in de url
           },
-          _ar_subsubroute_data: {                           
+          _ar_subsubroute_data: {
               type: Object,             //{subsubpage: "zzz"} dat matched na /xxx/yyy/ in de url
           },
          _systeemdatumlokaal: {		//used as global in many element
             type: String,
           },
-          _systeemdatumstandaard: {		
+          _systeemdatumstandaard: {
             type: String,
           },
-          _username: {		
+          _username: {
             type: String,
           },
         },  //end of properties
@@ -504,7 +522,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                                         // door de two way binding in <app-route> en <app-location>
                                                         // zal ook de url echt wijzigen
          },
-         
+
          _go_studenten: function() {
              var lApp = document.querySelector('my-app');  //het polymer element <my-app>
              var lAppRouter = lApp.$.approuter;            // het html-element <app-route> met id=approuter
@@ -512,7 +530,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                                                            // door de two way binding in <app-route> en <app-location>
                                                            // zal ook de url echt wijzigen
             },
-            
+
         _go_medestudenten: function() {
           var lApp = document.querySelector('my-app');  //het polymer element <my-app>
           var lAppRouter = lApp.$.approuter;            // het html-element <app-route> met id=approuter
@@ -559,14 +577,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           var lToast = e.path[1];       //path[0] is de button. path[1] is de owner etc.
           lToast.toggle();              //sluit de foutmelding
           this._go_home();              // en ga verder op de home page
-        },        
+        },
 
-		
+
         observers: [
           '_ar_route_data_page_changed(_ar_route_data.page)',
           '_ar_subroute_data_subpage_changed(_ar_subroute_data.subpage)',
         ],
-        
+
         _ar_route_data_page_changed: function(pNewPage) {
           if (!this.$.drawer.persistent) {
             this.$.drawer.close();
@@ -574,10 +592,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           if ((pNewPage == "") || (pNewPage == undefined)){
               this._ar_page = "inloggen";
             } else {
-              this._ar_page = pNewPage;         
-            } 
+              this._ar_page = pNewPage;
+            }
         },
-         
+
          _ar_selected_object_changed: function(pSelectedObject) {
           // Load page import on demand. Show 404 page if fails
           if (pSelectedObject == undefined) {
@@ -604,12 +622,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         _ar_subroute_data_subpage_changed(pNewSubpage) {
           if ((pNewSubpage == "") || (pNewSubpage == undefined)){
-        	 // nothing to do 
+        	 // nothing to do
           } else {
             this._ar_page =this._ar_route_data.page + "_" + pNewSubpage;
           }
         },
-       
+
         /* de volgende functie wordt gebruikt om een boolean te produceren
           die true is als de twee strings gelijk zijn.
           wordt gebruikt in index.html
@@ -622,7 +640,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         else{
           return ((p_str1==p_str2) || (p_str1==p_str3))
         }
-	    },   
+	    },
 	    ready: function()  {
 	      /* deze functie wordt eenamalig aangeroepen wanneer de applicatie start
 		  /*  _systeemdatumlokaal variabele wordt gebruikt om de huidige systeem datum (of de test systeemdatum)
@@ -638,7 +656,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       lApp.dataset.klas = null;
 		  console.log("application ready to run");
         },
-	      
+
          // convert a JSDate-object to standaard format (=YYYY-MM-DD)
 	    date_to_standaard_string: function(p_JSDate) {
 	      var lJaar = p_JSDate.getFullYear();
@@ -659,7 +677,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             lDagStr;
           return lString;
         },
-      
+
 	    // convert a YY-MM-DD string to local format (dutch lokaal: DD-MM-YYYY)
 	    standaarddatumstring_to_lokaledatumstring: function(p_standaarddatumstring) {
 	      var lokaledatumstring = "";
@@ -672,11 +690,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 	      }
 	      return lokaledatumstring;
         },
-      
+
       });
 
     })();
   </script>
-  
-</dom-module>
 
+</dom-module>
