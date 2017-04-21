@@ -23,6 +23,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.Locale;
 
 public class PrIS {
 	private ArrayList<Docent> deDocenten;
@@ -158,8 +159,38 @@ public class PrIS {
 		return null;
 	}
 	
-	public ArrayList<Afwezigheid> getAfwezigheden(){
-		return deAfwezigheden;
+	public ArrayList<Afwezigheid> getAfwezigheden() throws IOException, ParseException{
+		FileReader fr = new FileReader("CSV/afwezigheden.csv");
+		BufferedReader br = new BufferedReader(fr);
+  	ArrayList<Afwezigheid> afwezigBestaand = new ArrayList<Afwezigheid>();
+  	String regel = br.readLine();
+		while(regel != null){
+			String[] values = regel.split(",");
+			Date lesBeginTijd = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.UK).parse(values[1]);
+			Date lesEindTijd = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.UK).parse(values[2]);
+			Afwezigheid b = new Afwezigheid(values[0],lesBeginTijd,lesEindTijd,values[3],values[4],values[5],values[6],values[7]);
+			afwezigBestaand.add(b);
+			regel = br.readLine();
+		}
+		br.close();
+		return afwezigBestaand;
+	}
+	
+	public ArrayList<Presentie> getPresenties() throws ParseException, IOException {
+		FileReader fr = new FileReader("CSV/absenties.csv");
+		BufferedReader br = new BufferedReader(fr);
+		ArrayList<Presentie> presentieBestaand = new ArrayList<Presentie>();
+		String regel = br.readLine();
+		while (regel != null) {
+			String[] values = regel.split(",");
+			Date lesBeginTijd = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.UK).parse(values[1]);
+			Date lesEindTijd = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.UK).parse(values[2]);
+			Presentie b = new Presentie(values[0], lesBeginTijd, lesEindTijd, values[3], values[4], values[5], values[6]);
+			presentieBestaand.add(b);
+			regel = br.readLine();
+		}
+		br.close();
+		return presentieBestaand;
 	}
 	
 	public Les getLes(String les){

@@ -35,8 +35,8 @@ public class AfwezighedenControllerDocent implements Handler {
 	}
 
 
-	@Override
-	public void handle(Conversation conversation) {
+	private void ophalenAfwezigheden(Conversation conversation) throws ParseException, IOException {
+
 		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
 		String lGebruikersnaam = lJsonObjectIn.getString("username");
 		
@@ -48,9 +48,7 @@ public class AfwezighedenControllerDocent implements Handler {
 		
 		Docent docentVanStudent = informatieSysteem.getDocent(lGebruikersnaam);
 		for(Afwezigheid a : afwezigheden){
-			
 			if(a.getDocent().equals(docentVanStudent.getGebruikersnaam())){
-				System.out.println("great");
 				String datum = new SimpleDateFormat("dd-MM-yyyy").format(a.getBeginTijd());
 				String startTijd = new SimpleDateFormat("HH:mm").format(a.getBeginTijd());
 				String eindTijd = new SimpleDateFormat("HH:mm").format(a.getEindTijd());	
@@ -75,18 +73,31 @@ public class AfwezighedenControllerDocent implements Handler {
     			.add("vak", a.getVak())
     			.add("klas", a.getKlas())
     			.add("lokaal", a.getLokaal())
-    			.add("studnent", a.getUsername());
+    			.add("student", a.getUsername());
     			lJsonArrayAfwezigheden.add(lJob);
   			}
 			}
 		}
-		lTotaal.add("Ziektes", lJsonArrayZiektes);
-		lTotaal.add("Afwezigheden", lJsonArrayAfwezigheden);
+		lTotaal.add("ziektes", lJsonArrayZiektes);
+		lTotaal.add("afwezigheden", lJsonArrayAfwezigheden);
 		
    	//nothing to return use only errorcode to signal: ready!
   	String lJsonOutStr = lTotaal.build().toString();
  		conversation.sendJSONMessage(lJsonOutStr);					// terug naar de Polymer-GUI!
   	
 		}
+	@Override
+	public void handle(Conversation conversation) {
+		if (conversation.getRequestedURI().startsWith("/docent/afwezigStudenten/ophalen")) {
+			try {
+				ophalenAfwezigheden(conversation);
+			} catch (ParseException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else{
+				System.out.println("nope");
+		}
+	}
 	
 }

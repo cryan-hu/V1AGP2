@@ -71,7 +71,6 @@ public class AfwezigheidsController implements Handler {
     for (Object o : lineItems) { 
     	lessenAS.add(o.toString());
     }
-    System.out.println(useCase + " voor " + username);
     
     for(String s : lessenAS){
     	String[] element = s.split("\",\"");

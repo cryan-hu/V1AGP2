@@ -85,14 +85,14 @@
       text="U hebt dit scherm op een illegale manier geactiveerd. U wordt verwezen naar de home page!">
         <paper-button on-click="_toast_clicked" class="toast-button">Sluiten</paper-button>
     </paper-toast>
-    <div class="my-title"> Aanwezigheid invoeren voor de les op {{les.0}} van {{les.1}} tot {{les.2}}</div>
+    <div class="my-title"> Afwezigheid invoeren voor de les op {{les.0}} van {{les.1}} tot {{les.2}}</div>
     <div class="my-subtitle"> Klas: {{les.3}}&emsp; Vak: {{les.4}} &emsp;   Lokaal: {{les.5}} </div>
     <table>
       <tr>
         <th class="voornaam">Voornaam </th>
         <th class="achternaam">Achternaam </th>
         <th class="klas">Klas </th>
-        <th class="aanwezig">Aanwezig </th>
+        <th class="aanwezig">Afwezig </th>
       </tr>
       <template is="dom-repeat" items="[[_c_studenten]]">
         <tr>
@@ -257,6 +257,7 @@
             var lApp = document.querySelector('my-app');  //het polymer element <my-app>
             this.klas=lApp.dataset.klas;
             this.les=lApp.dataset.les.split(',');
+            console.log(this.les);
 
         },  
 

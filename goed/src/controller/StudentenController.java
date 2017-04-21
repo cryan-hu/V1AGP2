@@ -1,5 +1,7 @@
 package controller;
 
+import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import javax.json.Json;
@@ -10,6 +12,7 @@ import javax.json.JsonObjectBuilder;
 
 import model.PrIS;
 import model.persoon.Student;
+import model.presentie.Presentie;
 import model.klas.Klas;
 
 import server.Conversation;
@@ -62,8 +65,10 @@ public class StudentenController implements Handler {
 	 * weer (als JSON) teruggestuurd naar de Polymer-GUI!
 	 * 
 	 * @param conversation - alle informatie over het request
+	 * @throws IOException 
+	 * @throws ParseException 
 	 */
-private void ophalenklas(Conversation conversation) {		
+private void ophalenklas(Conversation conversation) throws ParseException, IOException {		
 		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
 		String sKlas = lJsonObjectIn.getString("klas");
 		String klasnaam = sKlas.substring(sKlas.length() - 3);
@@ -79,11 +84,13 @@ private void ophalenklas(Conversation conversation) {
 				JsonObjectBuilder lJsonObjectBuilderVoorStudent = Json.createObjectBuilder(); // maak het JsonObject voor een student
 				String lLastName = student.getVolledigeAchternaam();
 				String klas2 = student.getKlas();
+				Boolean in = inAbsenties(student);
 				lJsonObjectBuilderVoorStudent
 					.add("id", student.getStudentNummer())																	//vul het JsonObject		     
 					.add("firstName", student.getVoornaam())	
 					.add("lastName", lLastName)
-					.add("klas", klas2);
+					.add("klas", klas2)
+					.add("sameGroup", in);
 			  
 			  lJsonArrayBuilder.add(lJsonObjectBuilderVoorStudent);													//voeg het JsonObject aan het array toe				     
 		}
@@ -98,7 +105,22 @@ private void ophalenklas(Conversation conversation) {
 	 * weer (als JSON) teruggestuurd naar de Polymer-GUI!
 	 * 
 	 * @param conversation - alle informatie over het request
+	 * @throws IOException 
+	 * @throws ParseException 
 	 */
+
+	private boolean inAbsenties(Student s) throws ParseException, IOException{
+		ArrayList<Presentie> presenties = informatieSysteem.getPresenties();
+		Boolean test = false;
+		for(Presentie p : presenties){
+			if(p.getUsername().equals(s.getGebruikersnaam())){
+				test = true;
+			}
+		}
+		return test;
+		
+
+	}
 	private void opslaan(Conversation conversation) {
 		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
 		String lGebruikersnaam = lJsonObjectIn.getString("username");
@@ -140,7 +162,12 @@ private void ophalenklas(Conversation conversation) {
 		if (conversation.getRequestedURI().startsWith("/student/studenten/ophalen")) {
 			ophalen(conversation);
 		}else if(conversation.getRequestedURI().startsWith("/student/studentenklas/ophalen")) {
-			ophalenklas(conversation);
+			try {
+				ophalenklas(conversation);
+			} catch (ParseException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}else{
 		opslaan(conversation);
 		}

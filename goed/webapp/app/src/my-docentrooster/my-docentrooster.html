@@ -343,7 +343,6 @@
             this.selectedZondag = d.toLocaleString('nl-nl', options); //returned als 09-04-2017
             console.log(this.selectedZondag);
             this._rooster_ophalen_request_handler();
-            this.getWeek();
           },
           verder: function(){
             let options = {
@@ -364,7 +363,6 @@
           },
           testen: function(e){
           	var model =  e.model;
-          	console.log(model);
           	var klas = model.__data__.item.les.klas;
           	var klasNaam = klas.substr(klas.length - 3);
           	var datum = model.__data__.item.les.datum;

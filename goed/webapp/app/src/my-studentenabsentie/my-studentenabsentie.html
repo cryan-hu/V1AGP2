@@ -70,13 +70,36 @@
     </paper-toast>
 
     <div class="my-title">Overzicht absentie van {{usernameStudent}}</div>
+    <table>
+      <tr>
+        <th>Datum </th>
+        <th>Begintijd </th>
+        <th>Eindtijd </th>
+        <th class="vak">Vak </th>
+        <th>Klas </th>
+        <th>Lokaal </th>
+        <th>Docent </th>
+
+      </tr>
+      <template is="dom-repeat" items="[[_c_absenties]]">
+        <tr>
+          <td>[[item.datum]]</td>
+          <td>[[item.startTijd]]</td>
+          <td>[[item.eindTijd]]</td>
+          <td class="vak">[[item.vak]]</td>
+          <td>[[item.klas]]</td>
+          <td>[[item.lokaal]]</td>
+          <td>[[item.docent]]</td>   
+        </tr>
+      </template>
+    </table>
     
    
 
     <iron-ajax
       id="ajax_absentie_ophalen"
       method="POST"
-      url="/student/studenten/ophalen"
+      url="/absentie/ophalen"
       handle-as="json"
       on-response="_absentie_ophalen_response_handler">
     </iron-ajax>
@@ -140,7 +163,7 @@
 
         _absentie_ophalen_request_handler: function() {
           this._get_usernameStudent();
-          console.log("_absentie_ophalen_request_handler user="+this.c_username);
+          console.log("_absentie_ophalen_request_handler student="+this.usernameStudent);
           this.$.ajax_absentie_ophalen.contentType="application/json";
           this.$.ajax_absentie_ophalen.body={
             "usernameStudent":this.usernameStudent
@@ -149,7 +172,8 @@
         },
 
         _absentie_ophalen_response_handler: function(request) {
-          this._c_absenties = request.detail.response.absenties;
+          console.log(request.detail.response);
+          this._c_absenties = request.detail.response.presenties;
         },
        _toast_clicked: function(e) {
          var lToast = this.$.toast_invalid_aanroep;        // meldt ongeldige aanroep

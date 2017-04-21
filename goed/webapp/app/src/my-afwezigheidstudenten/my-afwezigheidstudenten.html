@@ -110,7 +110,7 @@
     <iron-ajax
       id="ajax_afwezigheid_ophalen"
       method="POST"
-      url="/student/useCase/opslaan"
+      url="/docent/afwezigStudenten/ophalen"
       handle-as="json"
       on-response="_afwezigheid_ophalen_response_handler">
     </iron-ajax>
@@ -182,8 +182,10 @@
         },
 
         _afwezigheid_ophalen_response_handler: function(request) {
+          console.log(request.detail.response);
           this._c_afwezigheden = request.detail.response.afwezigheden;
           this._c_ziektes = request.detail.response.ziektes;
+          console.log(this._c_afwezigheden);
         },
 
 

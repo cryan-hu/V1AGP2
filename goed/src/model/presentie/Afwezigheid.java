@@ -12,6 +12,22 @@ public class Afwezigheid {
 	private Date eindTijd;
 	private String useCase;
 	private String username;
+	private String vak;
+	private String klas;
+	private String docent;
+	private String lokaal;
+	
+
+	public Afwezigheid(String useCase, Date beginTijd, Date eindTijd, String username, String vak, String klas, String lokaal, String docent) {
+		this.useCase = useCase;
+		this.beginTijd= beginTijd;
+		this.eindTijd = eindTijd;
+		this.username = username;
+		this.vak = vak;
+		this.klas = klas;
+		this.docent = docent;
+		this.lokaal = lokaal;
+	}
 	
 	public Date getEindTijd() {
 		return eindTijd;
@@ -38,7 +54,7 @@ public class Afwezigheid {
 	}
 
 	public String getDocent() {
-		return docent;
+		return this.docent;
 	}
 
 	public void setDocent(String docent) {
@@ -60,25 +76,6 @@ public class Afwezigheid {
 	public void setUsername(String username) {
 		this.username = username;
 	}
-
-	private String vak;
-	private String klas;
-	private String docent;
-	private String lokaal;
-	
-
-	public Afwezigheid(String useCase, Date beginTijd, Date eindTijd, String username, String vak, String klas, String lokaal, String docent) {
-		this.useCase = useCase;
-		this.beginTijd= beginTijd;
-		this.eindTijd = eindTijd;
-		this.username = username;
-		this.vak = vak;
-		this.klas = klas;
-		this.docent = docent;
-		this.lokaal = lokaal;
-	}
-
-
 
 	public Date getBeginTijd() {
 		return beginTijd;

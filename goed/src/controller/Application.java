@@ -60,6 +60,7 @@ public class Application {
   	server.registerHandler("/docent/rooster/opslaan", roosterControllerDocent); 
   	server.registerHandler("/docent/absentie/opslaan", absentieController); 
   	server.registerHandler("/docent/absentie/ophalen", absentieController); 
+  	server.registerHandler("/absentie/ophalen", absentieController); 
 
   	server.registerHandler("/docent/afwezigStudenten/ophalen", afwezigheidStudenten); 
   	

@@ -70,7 +70,7 @@ public class AbsentieController implements Handler {
 		String lesEindDatumTijdString = lesDatum + " " + lessenAS.get(2);
 		Date lesBeginTijd = format1.parse(lesBeginDatumTijdString);
 		Date lesEindTijd = format1.parse(lesEindDatumTijdString);
-		ArrayList<Presentie> presenties = getPresenties();
+		ArrayList<Presentie> presenties = informatieSysteem.getPresenties();
 		for (int i = 0; i < studenten.size(); i++) {
 			JsonObject lGroepMember_jsonObj = studenten.getJsonObject(i);
 
@@ -110,22 +110,7 @@ public class AbsentieController implements Handler {
 
 	}
 
-	private ArrayList<Presentie> getPresenties() throws ParseException, IOException {
-		FileReader fr = new FileReader("CSV/absenties.csv");
-		BufferedReader br = new BufferedReader(fr);
-		ArrayList<Presentie> presentieBestaand = new ArrayList<Presentie>();
-		String regel = br.readLine();
-		while (regel != null) {
-			String[] values = regel.split(",");
-			Date lesBeginTijd = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.UK).parse(values[1]);
-			Date lesEindTijd = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.UK).parse(values[2]);
-			Presentie b = new Presentie(values[0], lesBeginTijd, lesEindTijd, values[3], values[4], values[5], values[6]);
-			presentieBestaand.add(b);
-			regel = br.readLine();
-		}
-		br.close();
-		return presentieBestaand;
-	}
+
 
 	private void writeData(ArrayList<Presentie> presenties) throws IOException, ParseException {
 			FileWriter fw = new FileWriter("CSV/absenties.csv");
@@ -138,21 +123,84 @@ public class AbsentieController implements Handler {
 
 	private void ophalen(Conversation conversation) throws ParseException, IOException {
 		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
-		String lGebruikersnaam = lJsonObjectIn.getString("username");
+		String usernameStudent = lJsonObjectIn.getString("usernameStudent");
 
-		ArrayList<Presentie> presenties = getPresenties();
-		JsonArrayBuilder lJsonArrayZiektes = Json.createArrayBuilder();
-		JsonArrayBuilder lJsonArraypresenties = Json.createArrayBuilder();
+		ArrayList<Presentie> presenties = informatieSysteem.getPresenties();
+		ArrayList<Presentie> presentiesStudent = new ArrayList<Presentie>();
+		JsonArrayBuilder lJsonArrayPresenties = Json.createArrayBuilder();
 		JsonObjectBuilder lTotaal = Json.createObjectBuilder();
-
-		Collections.sort(presenties, new Comparator<Presentie>() {
+		
+		Collections.sort(presentiesStudent, new Comparator<Presentie>() {
 			public int compare(Presentie m1, Presentie m2) {
 				return m1.getStartDatum().compareTo(m2.getEindDatum());
 			}
 		});
+		
+		for(Presentie q : presenties){
+			System.out.println(q.getUsername() + "  " +  usernameStudent);
+			System.out.println(q.getUsername().equals(usernameStudent));
+			if(q.getUsername().equals(usernameStudent)){
+				String datum = new SimpleDateFormat("dd-MM-yyyy").format(q.getEindDatum());
+				String startTijd = new SimpleDateFormat("HH:mm").format(q.getStartDatum());
+				String eindTijd = new SimpleDateFormat("HH:mm").format(q.getEindDatum());	
+  			JsonObjectBuilder lJob =	Json.createObjectBuilder(); 
+    			lJob
+    			.add("datum", datum)
+    			.add("startTijd", startTijd)
+    			.add("eindTijd", eindTijd)
+    			.add("vak", q.getVak())
+    			.add("klas", q.getKlas())
+    			.add("lokaal", q.getLokaal())
+    			.add("docent", q.getDocent());
+    			lJsonArrayPresenties.add(lJob);
+			}
+		}
 
-		lTotaal.add("ziektes", lJsonArrayZiektes);
-		lTotaal.add("presenties", lJsonArraypresenties);
+
+		lTotaal.add("presenties", lJsonArrayPresenties);
+
+		// nothing to return use only errorcode to signal: ready!
+		String lJsonOutStr = lTotaal.build().toString();
+		conversation.sendJSONMessage(lJsonOutStr); // terug naar de Polymer-GUI!
+	}
+	
+	private void getAbsentie(Conversation conversation) throws ParseException, IOException {
+		JsonObject lJsonObjectIn = (JsonObject) conversation.getRequestBodyAsJSON();
+		String usernameStudent = lJsonObjectIn.getString("usernameStudent");
+
+		ArrayList<Presentie> presenties = informatieSysteem.getPresenties();
+		ArrayList<Presentie> presentiesStudent = new ArrayList<Presentie>();
+		JsonArrayBuilder lJsonArrayPresenties = Json.createArrayBuilder();
+		JsonObjectBuilder lTotaal = Json.createObjectBuilder();
+		
+		Collections.sort(presentiesStudent, new Comparator<Presentie>() {
+			public int compare(Presentie m1, Presentie m2) {
+				return m1.getStartDatum().compareTo(m2.getEindDatum());
+			}
+		});
+		
+		for(Presentie q : presenties){
+			System.out.println(q.getUsername() + "  " +  usernameStudent);
+			System.out.println(q.getUsername().equals(usernameStudent));
+			if(q.getUsername().equals(usernameStudent)){
+				String datum = new SimpleDateFormat("dd-MM-yyyy").format(q.getEindDatum());
+				String startTijd = new SimpleDateFormat("HH:mm").format(q.getStartDatum());
+				String eindTijd = new SimpleDateFormat("HH:mm").format(q.getEindDatum());	
+  			JsonObjectBuilder lJob =	Json.createObjectBuilder(); 
+    			lJob
+    			.add("datum", datum)
+    			.add("startTijd", startTijd)
+    			.add("eindTijd", eindTijd)
+    			.add("vak", q.getVak())
+    			.add("klas", q.getKlas())
+    			.add("lokaal", q.getLokaal())
+    			.add("docent", q.getDocent());
+    			lJsonArrayPresenties.add(lJob);
+			}
+		}
+
+
+		lTotaal.add("presenties", lJsonArrayPresenties);
 
 		// nothing to return use only errorcode to signal: ready!
 		String lJsonOutStr = lTotaal.build().toString();
@@ -164,6 +212,13 @@ public class AbsentieController implements Handler {
 		if (conversation.getRequestedURI().startsWith("/docent/absentie/opslaan")) {
 			try {
 				opslaan(conversation);
+			} catch (ParseException | IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		} else if(conversation.getRequestedURI().startsWith("/absentie/ophalen")) {
+			try {
+				getAbsentie(conversation);
 			} catch (ParseException | IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
